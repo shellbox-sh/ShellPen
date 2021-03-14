@@ -18,6 +18,19 @@ shellpen() {
   local __shellpen__mainCliCommands_command1="$1"
   shift
   case "$__shellpen__mainCliCommands_command1" in
+    "--")
+      local __shellpen__mainCliCommandDepth="2"
+      __shellpen__mainCliCommands+=("$1")
+      local __shellpen__mainCliCommands_command2="$1"
+      shift
+      case "$__shellpen__mainCliCommands_command2" in
+        *)
+          echo "Unknown 'shellpen --' command: $__shellpen__mainCliCommands_command2" >&2
+          return 1
+          ;;
+      esac
+
+        ;;
     "comment")
       shellpen writeln "# $*"
 
