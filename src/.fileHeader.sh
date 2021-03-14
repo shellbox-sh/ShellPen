@@ -1,0 +1,8 @@
+# Private Variables
+_SHELLPEN_SOURCES=("default")
+_SHELLPEN_SOURCECODE=("")
+_SHELLPEN_INDENT_LEVELS=(0)
+_SHELLPEN_CURRENT_INDEX=0
+
+# Public Variables
+[ -z "$SHELLPEN_INDENT" ] && SHELLPEN_INDENT="  "

@@ -33,9 +33,3 @@ source greetings.sh
 greetings Rebecca
 # => Hello Rebecca!
 ```
-
-## what? why?
-
-I have a few libraries which generate shell script source code.
-
-Extracted this library to have a dedicated tool for BASH codegen.

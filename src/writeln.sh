@@ -1,0 +1,1 @@
+_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_INDEX]+="$( FN indentation )$*\n"
