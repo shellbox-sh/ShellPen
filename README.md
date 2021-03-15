@@ -1,38 +1,72 @@
 # 🖋️ Shell Pen
 
-> Generate Shell Script Source Code
+> Generate Shell Script Source Code using a familiar DSL!
+
+---
+
+Download the [latest version](https://github.com/shellbox-sh/shellpen/archive/v0.1.0.tar.gz) or download using the installer:
+
+```sh
+curl -o- https://shellpen.sh/installer.sh | bash
+```
+
+## BASH Codegen
+
+⬇️ Import the `shellpen` library:
+
+```sh
+source shellpen.sh         
+```
+
+🖋️ Use the DSL to define variables, functions, conditionals, etc!
+
+```sh
+shellpen :
+
+: function sayHello
+  : local command="\$1"
+  : shift
+  : case "\$command"
+    : option hello
+      : echo "Hello \$*!"
+    : option goodbye
+      : echo "Goodbye \$*!"
+
+: main sayHello
+```
+
+🔍 Preview the current source code content
+
+```sh
+shellpen preview
+```
 
 ```sh
 #! /usr/bin/env bash
-shopt -s expand_aliases
 
-source shellpen.sh
+sayHello() {
+  local command=$1
+  shift
+  case "$command" in
+    hello)
+      echo "Hello $*!"
+      ;;
+    goodbye)
+      echo "Goodbye $*!"
+      ;;
+  esac
+}
 
-alias 🖋️=shellpen
-
-🖋️ function greetings {
-   🖋️ if [ '$#' -eq 0 ]
-      🖋️ error '$0: no argument provided'
-   🖋️ else
-      🖋️ echo 'Hello $1!'
-   🖋️ fi
-🖋️ }
-
-🖋️ result
-# => greetings() {
-# =>   if [ $# -eq 0 ]
-# =>   then
-# =>     echo "$0: no argument provided" >&2
-# =>     return 1
-# =>   else
-# =>     echo "Hello $1"
-# =>   fi
-# => }
-
-🖋️ save greetings.sh
-
-source greetings.sh
-
-greetings Rebecca
-# => Hello Rebecca!
+[ "${BASH_SOURCE[0]}" = "$0" ] && "sayHello" "$@"
 ```
+
+💾 Save and run it!
+
+```sh
+shellpen save say-hello.sh
+```
+
+```sh
+./say-hello.sh hello Rebecca
+# => "Hello Rebecca!"
+````
