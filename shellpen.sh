@@ -1,11 +1,15 @@
 #! /usr/bin/env bash
 
 # Private Variables
+_SHELLPEN_CURRENT_SOURCE_INDEX=0
 _SHELLPEN_SOURCES=("default")
 _SHELLPEN_SOURCECODE=("")
-_SHELLPEN_OPTION_OPEN=("")
 _SHELLPEN_INDENT_LEVELS=(0)
-_SHELLPEN_CURRENT_SOURCE_INDEX=0
+_SHELLPEN_OPTION_OPEN=("")
+_SHELLPEN_FUNCTION_OPEN=("")
+_SHELLPEN_CASE_OPEN=("")
+_SHELLPEN_MAIN_FUNCTION=("")
+_SHELLPEN_SHEBANG=("#! /usr/bin/env bash")
 
 # Public Variables
 [ -z "$SHELLPEN_INDENT" ] && SHELLPEN_INDENT="  "
@@ -25,6 +29,128 @@ shellpen() {
       local __shellpen__mainCliCommands_command2="$1"
       shift
       case "$__shellpen__mainCliCommands_command2" in
+        "alias")
+          shopt -s expand_aliases
+          alias "$1"=shellpen
+  
+            ;;
+        "blocks")
+            local __shellpen__mainCliCommandDepth="3"
+            __shellpen__mainCliCommands+=("$1")
+            local __shellpen__mainCliCommands_command3="$1"
+            shift
+            case "$__shellpen__mainCliCommands_command3" in
+              "cases")
+                    local __shellpen__mainCliCommandDepth="4"
+                    __shellpen__mainCliCommands+=("$1")
+                    local __shellpen__mainCliCommands_command4="$1"
+                    shift
+                    case "$__shellpen__mainCliCommands_command4" in
+                      "close")
+                        if [ "${_SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
+                        then
+                          shellpen esac
+                        fi
+                        _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+            
+                          ;;
+                      "open")
+                        _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+            
+                          ;;
+                      *)
+                        echo "Unknown 'shellpen -- blocks cases' command: $__shellpen__mainCliCommands_command4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              "closeAll")
+                shellpen -- blocks options close
+                shellpen -- blocks cases close
+                shellpen -- blocks functions close
+      
+                  ;;
+              "functions")
+                    local __shellpen__mainCliCommandDepth="4"
+                    __shellpen__mainCliCommands+=("$1")
+                    local __shellpen__mainCliCommands_command4="$1"
+                    shift
+                    case "$__shellpen__mainCliCommands_command4" in
+                      "close")
+                        if [ "${_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
+                        then
+                          shellpen }
+                        fi
+                        _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+            
+                          ;;
+                      "open")
+                        _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+            
+                          ;;
+                      *)
+                        echo "Unknown 'shellpen -- blocks functions' command: $__shellpen__mainCliCommands_command4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              "options")
+                    local __shellpen__mainCliCommandDepth="4"
+                    __shellpen__mainCliCommands+=("$1")
+                    local __shellpen__mainCliCommands_command4="$1"
+                    shift
+                    case "$__shellpen__mainCliCommands_command4" in
+                      "close")
+                        # Close existing option, if open
+                        if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
+                        then
+                          shellpen writeln ";;"
+                          shellpen indent--
+                        fi
+                        _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+            
+                          ;;
+                      "open")
+                        _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+            
+                          ;;
+                      *)
+                        echo "Unknown 'shellpen -- blocks options' command: $__shellpen__mainCliCommands_command4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              *)
+                echo "Unknown 'shellpen -- blocks' command: $__shellpen__mainCliCommands_command3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        "dump")
+          ( set -o posix; set ) | grep SHELLPEN
+  
+            ;;
+        "writeMain")
+          if [ -n "${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
+          then
+            shellpen writeln
+            shellpen writeln "[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ] && \"${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}\" \"\$@\""
+          fi
+          _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]=""
+  
+            ;;
+        "writeShebang")
+          
+          if [ -n "${_SHELLPEN_SHEBANG[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
+          then
+            _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]="${_SHELLPEN_SHEBANG[$_SHELLPEN_CURRENT_SOURCE_INDEX]}\n${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
+          fi
+  
+            ;;
         *)
           echo "Unknown 'shellpen --' command: $__shellpen__mainCliCommands_command2" >&2
           return 1
@@ -33,8 +159,13 @@ shellpen() {
 
         ;;
     "case")
-      shellpen writeln "case $1 in"
+      shellpen writeln "case \"$1\" in"
       shellpen indent++
+      shellpen -- blocks cases open
+
+        ;;
+    "code")
+      shellpen result "$@"
 
         ;;
     "comment")
@@ -64,13 +195,6 @@ shellpen() {
         ;;
     "esac")
       # Close existing option, if open
-      if [ "${_SHELLPEN_OPTION_OPEN[_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
-      then
-        shellpen writeln ";;"
-        _SHELLPEN_OPTION_OPEN[_SHELLPEN_CURRENT_SOURCE_INDEX]=false
-      fi
-      
-      shellpen indent--
       shellpen indent--
       shellpen writeln "esac"
 
@@ -80,10 +204,15 @@ shellpen() {
       shellpen writeln "fi"
 
         ;;
+    "fn")
+      shellpen function "$@"
+
+        ;;
     "function")
       shellpen writeln
       shellpen writeln "${1%()}() {"
       shellpen indent++
+      shellpen -- blocks functions open
 
         ;;
     "if")
@@ -126,21 +255,26 @@ shellpen() {
       fi
 
         ;;
+    "main")
+      _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$1"
+
+        ;;
     "option")
-      # Close existing option, if open
-      if [ "${_SHELLPEN_OPTION_OPEN[_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
-      then
-        shellpen writeln ";;"
-        shellpen indent--
-      fi
-      
+      shellpen -- blocks options close
       shellpen writeln "$1)"
+      shellpen -- blocks options open
       shellpen indent++
-      
-      _SHELLPEN_OPTION_OPEN[_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+
+        ;;
+    "preview")
+      shellpen result "$@"
 
         ;;
     "result")
+      shellpen -- blocks closeAll
+      shellpen -- writeMain
+      shellpen -- writeShebang
+      
       if [ "$1" = "-n" ]
       then
         echo -e "${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" | cat -n
@@ -159,12 +293,34 @@ shellpen() {
 
         ;;
     "save")
-      echo -e "${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" > "$1"
+      shellpen result > "$1"
+      chmod +x "$1"
+
+        ;;
+    "-")
+      shellpen -- alias -
+
+        ;;
+    ":")
+      shellpen -- alias :
+
+        ;;
+    "_")
+      shellpen -- alias _
 
         ;;
     "}")
       shellpen indent--
       shellpen writeln "}"
+      _SHELLPEN_OPTION_OPEN[_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+
+        ;;
+    "shebang")
+      _SHELLPEN_SHEBANG[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$*"
+
+        ;;
+    "shift")
+      shellpen writeln shift
 
         ;;
     "writeln")

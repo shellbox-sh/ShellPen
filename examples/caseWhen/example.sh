@@ -1,9 +1,8 @@
 #! /usr/bin/env bash
-shopt -s expand_aliases
 
 source shellpen.sh
 
-alias :=shellpen
+shellpen -- alias :
 
 : function myFunction {
   : if [ '$#' -eq 0 ]

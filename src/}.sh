@@ -1,2 +1,3 @@
 FN indent--
 FN writeln "}"
+_SHELLPEN_OPTION_OPEN[_SHELLPEN_CURRENT_SOURCE_INDEX]=false

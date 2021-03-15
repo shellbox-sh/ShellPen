@@ -1,1 +1,2 @@
-echo -e "${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" > "$1"
+FN result > "$1"
+chmod +x "$1"
