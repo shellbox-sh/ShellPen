@@ -1,8 +1,3 @@
-# 🖋️ Shell Pen
-
-> Generate Shell Script Source Code
-
-```sh
 #! /usr/bin/env bash
 shopt -s expand_aliases
 
@@ -19,7 +14,7 @@ alias 🖋️=shellpen
 🖋️ }
 
 🖋️ result
-# => greetings() {
+# => function greetings() {
 # =>   if [ $# -eq 0 ]
 # =>   then
 # =>     echo "$0: no argument provided" >&2
@@ -35,4 +30,3 @@ source greetings.sh
 
 greetings Rebecca
 # => Hello Rebecca!
-```

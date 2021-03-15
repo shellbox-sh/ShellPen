@@ -82,7 +82,7 @@ shellpen() {
         ;;
     "function")
       shellpen writeln
-      shellpen writeln "$1() {"
+      shellpen writeln "${1%()}() {"
       shellpen indent++
 
         ;;
@@ -159,7 +159,7 @@ shellpen() {
 
         ;;
     "save")
-      
+      echo -e "${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" > "$1"
 
         ;;
     "}")
