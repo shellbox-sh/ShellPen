@@ -15,6 +15,3 @@ alias :=shellpen
 
 # Load the generated code
 eval "$( shellpen result )"
-
-# Run the function!
-myFunction "$@"
