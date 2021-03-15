@@ -4,9 +4,7 @@ source vendor/expect.sh
 source vendor/run.sh
 source shellpen.sh
 
-# `alias` is not happy in the spec environment,
-# using a function here instead.
-_() { shellpen "$@"; }
+# shellpen :
 
 loadExample() {
   [ -z "$EXAMPLE_DIR" ] && { echo "Please configure EXAMPLE_DIR to use loadExample()" >&2; return 1; }

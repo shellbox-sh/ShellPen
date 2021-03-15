@@ -149,6 +149,7 @@ shellpen() {
           then
             _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]="${_SHELLPEN_SHEBANG[$_SHELLPEN_CURRENT_SOURCE_INDEX]}\n${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
           fi
+          _SHELLPEN_SHEBANG[$_SHELLPEN_CURRENT_SOURCE_INDEX]=""
   
             ;;
         *)
@@ -194,6 +195,8 @@ shellpen() {
 
         ;;
     "esac")
+      shellpen -- blocks options close
+      _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
       # Close existing option, if open
       shellpen indent--
       shellpen writeln "esac"
@@ -245,13 +248,13 @@ shellpen() {
       then
         if [[ "$1" =~ ^[^=]+=[^=]+$ ]]
         then
-          shellpen writeln "local $1"
+          shellpen writeln "local ${1%%=*}=\"${1#*=}\""
         else
           shellpen writeln "local $*"
         fi
       elif [ $# -eq 2 ]
       then
-        shellpen writeln "local $1=$2"
+        shellpen writeln "local $1=\"$2\""
       fi
 
         ;;
@@ -312,7 +315,7 @@ shellpen() {
     "}")
       shellpen indent--
       shellpen writeln "}"
-      _SHELLPEN_OPTION_OPEN[_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+      _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 
         ;;
     "shebang")
