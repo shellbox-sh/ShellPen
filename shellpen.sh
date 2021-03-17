@@ -336,7 +336,6 @@ shellpen() {
         ;;
     *)
       echo "Unknown 'shellpen' command: $__shellpen__mainCliCommands_command1" >&2
-      return 1
       ;;
   esac
 

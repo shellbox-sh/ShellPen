@@ -192,9 +192,9 @@ $(<"$fileFooterFilePath")
           caseEsacCompiler _loadSourceFile "$topLevelFunctionName $subCommandName" "$subCommandFolder/.index.sh" | sed "s/^/$indentation    /"
         else
           echo "${indentation}    echo \"Unknown '$topLevelFunctionName $subCommandName' command: \$__${topLevelFunctionName}__mainCliCommands_command${commandDepth}\" >&2"
+          echo "${indentation}    return 1"
         fi
       fi
-      echo "${indentation}    return 1"
       echo "${indentation}    ;;"
       echo "${indentation}esac"
       ;;
