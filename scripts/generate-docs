@@ -1,0 +1,71 @@
+#! /usr/bin/env bash
+
+TEMPLATE=docs/_templates/command_reference.shx.md
+API_ROOT=api
+
+source vendor/docgen.sh
+source vendor/shx.sh
+
+tree="$( mktemp -d )"
+
+docgen parseTree setRoot "$tree"
+docgen parseToTree shellpen.sh
+docgen context create new
+
+tree "$tree"
+
+context() { docgen context "$@"; }
+command() { docgen context commands "$@"; }
+
+generateREADME() {
+  cp docs/_templates/readmeHeader.md README.md
+  cat docs/_templates/index.md >> README.md
+}
+
+generateWebsiteIndex() {
+  cp docs/_templates/websiteHeader.md docs/index.md
+  cat docs/_templates/index.md >> docs/index.md
+  echo >> docs/index.md
+  echo '{% endraw %}' >> docs/index.md
+}
+
+writeMarkdownFile() {
+  local markdownFile="docs/${1/#"@commands"/"$API_ROOT"}.md"
+
+  mkdir -p "${markdownFile%/*}"
+
+  [ "${markdownFile##*/}" = ':.md' ] && markdownFile="${markdownFile/%:.md/colon.md}"
+
+  shx render "$TEMPLATE" > "$markdownFile"
+}
+
+writeMarkdownFiles() {
+  local commandPath="$1"
+
+  echo "writeMarkdownFiles $commandPath"
+
+  docgen context goto path "$commandPath"
+
+  echo "$( writeMarkdownFile "$commandPath" )"
+
+  declare -a commandPaths=()
+  if docgen context commands list commandPaths
+  then
+    commandPath=''
+    for commandPath in "${commandPaths[@]}"
+    do
+      echo "$( writeMarkdownFiles "$commandPath" )"
+    done
+  fi
+}
+
+generateWebsiteIndex
+generateREADME
+
+if [ $# -eq 0 ]
+then
+  writeMarkdownFiles "@commands/shellpen"
+else
+  # accepts a command path relative to shellpen
+  writeMarkdownFiles "@commands/shellpen/$1"
+fi

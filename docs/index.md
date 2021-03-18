@@ -2,7 +2,6 @@
 ---
 
 {% raw %}
-
 # 🖋️ Shell Pen
 
 > 🖋️ Generate Shell Script Source Code using a familiar DSL!
@@ -18,7 +17,7 @@ curl -o- https://shellpen.sh/installer.sh | bash
 🖋️ Import the `shellpen` library:
 
 ```sh
-source shellpen.sh         
+source shellpen.sh
 ```
 
 🖋️ Use the DSL to define variables, functions, conditionals, etc!
@@ -78,8 +77,8 @@ shellpen save say-hello.sh
 
 `shellpen` can write to one or multiple sources.
 
- - A source represents a snippet of source code to write
- - A source can optionally be tied to a local file
+- A source represents a snippet of source code to write
+- A source can optionally be tied to a local file
 
 Sources allow you to manage multiple pieces of source code.
 

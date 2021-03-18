@@ -31,7 +31,6 @@
   # Can add one with an associated filepath
   shellpen sources new dog dogs.sh
 
-  # Yeah yeah, I'll get to this
   expect { shellpen sources getFilePath dog } toEqual dogs.sh
   expect { shellpen sources getFilePath foo } toFail "foo"
   expect { shellpen sources getFilePath } toFail "foo"
