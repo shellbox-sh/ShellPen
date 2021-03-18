@@ -1,15 +1,21 @@
 #! /usr/bin/env bash
 
-# Private Variables
+_SHELLPEN_SHEBANG=("#! /usr/bin/env bash")
+
+_SHELLPEN_PENS=("default")
+_SHELLPEN_CURRENT_PEN_NAME="default"
+_SHELLPEN_CURRENT_PEN_INDEX=0
+
 _SHELLPEN_CURRENT_SOURCE_INDEX=0
+_SHELLPEN_CURRENT_SOURCE_NAME="default"
 _SHELLPEN_SOURCES=("default")
 _SHELLPEN_SOURCECODE=("")
+_SHELLPEN_SOURCES_FILE_PATHS=("")
 _SHELLPEN_INDENT_LEVELS=(0)
 _SHELLPEN_OPTION_OPEN=("")
 _SHELLPEN_FUNCTION_OPEN=("")
 _SHELLPEN_CASE_OPEN=("")
 _SHELLPEN_MAIN_FUNCTION=("")
-_SHELLPEN_SHEBANG=("#! /usr/bin/env bash")
 
 # Public Variables
 [ -z "$SHELLPEN_INDENT" ] && SHELLPEN_INDENT="  "
@@ -132,6 +138,76 @@ shellpen() {
             ;;
         "dump")
           ( set -o posix; set ) | grep SHELLPEN
+  
+            ;;
+        "errors")
+            local __shellpen__mainCliCommandDepth="3"
+            __shellpen__mainCliCommands+=("$1")
+            local __shellpen__mainCliCommands_command3="$1"
+            shift
+            case "$__shellpen__mainCliCommands_command3" in
+              "argumentError")
+                if [ $# -gt 0 ]
+                then
+                  printf '`shellpen` [Argument Error] ' >&2
+                  printf "$@" >&2
+                else
+                  printf '`shellpen` [Argument Error]' >&2
+                fi
+                shellpen -- errors printStackTrace
+      
+                  ;;
+              "getFileLine")
+                ## $1 Path to the file
+                ## $2 Line to print
+                ##
+                if [ "$2" = "0" ]
+                then
+                  sed "1q;d" "$1" | sed 's/^ *//g'
+                else
+                  sed "${2}q;d" "$1" | sed 's/^ *//g'
+                fi
+      
+                  ;;
+              "printStackTrace")
+                ## $1 (_Optional_) How many levels to skip (default: `2`)
+                ## $2 (_Optional_) How many levels deep to show (default: `100`)
+                
+                local __shellpen__x_errors_printStackTrace_levelsToSkip="${1-3}"
+                local __shellpen__x_errors_printStackTrace_levelsToShow="${2-100}"
+                
+                if [ "$SHELLPEN_SILENCE" != "true" ]
+                then
+                  echo >&2
+                  echo >&2
+                  echo "Stacktrace:" >&2
+                  echo >&2
+                  local __shellpen__i=1
+                  local __shellpen__stackIndex="$__shellpen__x_errors_printStackTrace_levelsToSkip"
+                  while [ $__shellpen__stackIndex -lt ${#BASH_SOURCE[@]} ] && [ $__shellpen__i -lt $__shellpen__x_errors_printStackTrace_levelsToShow ]
+                  do
+                    local __shellpen__errors_printStackTrace_line=''
+                    __shellpen__errors_printStackTrace_line="$( echo "$(shellpen -- errors getFileLine "${BASH_SOURCE[$__shellpen__stackIndex]}" "${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]}")" | sed 's/^/    /' 2>&1 )"
+                    # Catches sed errors
+                    if [ $? -eq 0 ]
+                    then
+                      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
+                      echo "  $__shellpen__errors_printStackTrace_line" >&2
+                    else
+                      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
+                    fi
+                    echo >&2
+                    : "$(( __shellpen__stackIndex++ ))"
+                    : "$(( __shellpen__i++ ))"
+                  done
+                fi
+      
+                  ;;
+              *)
+                echo "Unknown 'shellpen -- errors' command: $__shellpen__mainCliCommands_command3" >&2
+                return 1
+                ;;
+            esac
   
             ;;
         "writeMain")
@@ -269,6 +345,19 @@ shellpen() {
       shellpen indent++
 
         ;;
+    "pens")
+      local __shellpen__mainCliCommandDepth="2"
+      __shellpen__mainCliCommands+=("$1")
+      local __shellpen__mainCliCommands_command2="$1"
+      shift
+      case "$__shellpen__mainCliCommands_command2" in
+        *)
+          echo "Unknown 'shellpen pens' command: $__shellpen__mainCliCommands_command2" >&2
+          return 1
+          ;;
+      esac
+
+        ;;
     "preview")
       shellpen result "$@"
 
@@ -324,6 +413,190 @@ shellpen() {
         ;;
     "shift")
       shellpen writeln shift
+
+        ;;
+    "sources")
+      local __shellpen__mainCliCommandDepth="2"
+      __shellpen__mainCliCommands+=("$1")
+      local __shellpen__mainCliCommands_command2="$1"
+      shift
+      case "$__shellpen__mainCliCommands_command2" in
+        "current")
+          if [ -n "$1" ]
+          then
+            printf -v "$1" '%s' "${_SHELLPEN_SOURCES[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
+          else
+            printf '%s' "${_SHELLPEN_SOURCES[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
+          fi
+  
+            ;;
+        "exists")
+          local __shellpen__sources_exists_sourceIndex=''
+          for __shellpen__sources_exists_sourceIndex in "${!_SHELLPEN_SOURCES[@]}"
+          do
+            if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
+            then
+              if [ $# -eq 2 ]
+              then
+                printf -v "$2" "$__shellpen__sources_exists_sourceIndex" 
+              fi
+              return 0
+            fi
+          done
+          return 1
+  
+            ;;
+        "getFilePath")
+          
+  
+            ;;
+        "getSource")
+          
+  
+            ;;
+        "hasFilePath")
+          
+  
+            ;;
+        "list")
+          local __shellpen__sources_list_sourceName=''
+          [ $# -eq 2 ] && [ "$1" = "-" ] && eval "$2=()"
+          for __shellpen__sources_list_sourceName in "${_SHELLPEN_SOURCES[@]}"
+          do
+            if [ $# -eq 2 ] && [ "$1" = "-" ]
+            then
+              eval "$2+=(\"\$__shellpen__sources_list_sourceName\")"
+            else
+              echo "$__shellpen__sources_list_sourceName"
+            fi
+          done
+  
+            ;;
+        "new")
+          ## $ sources new
+          ##
+          ## $1 Optional source name (else randomly generated)
+          ## $2 Optional path to file for this source to represent
+          ## $@ If `-` provided, following array argument will be cleared and appended with source names.
+          ##
+          ## ### Valid signatures:
+          ##
+          ## - [1] name
+          ## - [2] name -
+          ## - [2] name filePath
+          ## - [2] - varName
+          ## - [3] name filePath -
+          ## - [3] name - varName
+          ## - [4] name filePath - varName
+          
+          local __shellpen__sources_new_newSourceName=''
+          local __shellpen__sources_new_sourceFilePath=''
+          local __shellpen__sources_new_shouldOutputName=false
+          local __shellpen__sources_new_outputVariableName=''
+          
+          if [ $# -eq 1 ]
+          then
+            __shellpen__sources_new_newSourceName="$1"
+          elif [ $# -eq 2 ]
+          then
+            if [ "$1" = '-' ]
+            then
+              __shellpen__sources_new_shouldOutputName=true
+              __shellpen__sources_new_outputVariableName="$2"
+            elif [ "$2" = '-' ]
+            then
+              __shellpen__sources_new_newSourceName="$1"
+              __shellpen__sources_new_outputVariableName="$1"
+              __shellpen__sources_new_shouldOutputName=true
+            else
+              __shellpen__sources_new_newSourceName="$1"
+              __shellpen__sources_new_sourceFilePath="$2"
+            fi
+          elif [ $# -eq 3 ]
+          then
+            if [ "$2" = '-' ]
+            then
+              __shellpen__sources_new_newSourceName="$1"
+              __shellpen__sources_new_shouldOutputName=true
+              __shellpen__sources_new_outputVariableName="$2"
+            elif [ "$3" = '-' ]
+            then
+              __shellpen__sources_new_newSourceName="$1"
+              __shellpen__sources_new_sourceFilePath="$2"
+              __shellpen__sources_new_shouldOutputName=true
+              __shellpen__sources_new_outputVariableName="$1"
+            else
+              shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+              return 1
+            fi
+          elif [ $# -eq 4 ]
+          then
+            if [ "$3" = '-' ]
+            then
+              __shellpen__sources_new_newSourceName="$1"
+              __shellpen__sources_new_sourceFilePath="$2"
+              __shellpen__sources_new_shouldOutputName=true
+              __shellpen__sources_new_outputVariableName="$4"
+            else
+              shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+              return 1
+            fi
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+          
+          # if output variable, verify that it's a valid looking variable name, yo
+          
+          if shellpen sources exists "$__shellpen__sources_new_newSourceName"
+          then
+            shellpen -- errors argumentError '%s\n%s' "Source '$__shellpen__sources_new_newSourceName' already exists" "Command: ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+          
+          [ -z "$__shellpen__sources_new_newSourceName" ] && __shellpen__sources_new_newSourceName="$( cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
+          
+          if [ "$__shellpen__sources_new_shouldOutputName" = true ]
+          then
+            printf -v "$__shellpen__sources_new_outputVariableName" '%s' "$__shellpen__sources_new_newSourceName" 
+          fi
+          
+          if [ -z "$__shellpen__sources_new_sourceFilePath" ]
+          then
+            _SHELLPEN_SOURCES_FILE_PATHS+=("$__shellpen__sources_new_sourceFilePath")
+          fi
+          
+          _SHELLPEN_SOURCES+=("$__shellpen__sources_new_newSourceName")
+          _SHELLPEN_SOURCECODE+=("")
+          _SHELLPEN_INDENT_LEVELS+=(0)
+          _SHELLPEN_OPTION_OPEN+=("")
+          _SHELLPEN_FUNCTION_OPEN+=("")
+          _SHELLPEN_CASE_OPEN+=("")
+          _SHELLPEN_MAIN_FUNCTION+=("")
+  
+            ;;
+        "use")
+          if [ $# -eq 1 ]
+          then
+            local __shellpen__sources_use_sourceIndex=''
+            if shellpen sources exists "$1" __shellpen__sources_use_sourceIndex
+            then
+              _SHELLPEN_CURRENT_SOURCE_INDEX="$__shellpen__sources_use_sourceIndex"
+            else
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: ${__shellpen__originalCliCommands[*]}"
+              return 1
+            fi
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+  
+            ;;
+        *)
+          echo "Unknown 'shellpen sources' command: $__shellpen__mainCliCommands_command2" >&2
+          return 1
+          ;;
+      esac
 
         ;;
     "writeln")

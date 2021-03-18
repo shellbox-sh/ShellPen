@@ -73,7 +73,7 @@ shellpen save say-hello.sh
 
 # 📝 Sources
 
-`shellpen` can write to one or multiple sources
+`shellpen` can write to one or multiple sources.
 
 - A source represents a snippet of source code to write
 - A source can optionally be tied to a local file
