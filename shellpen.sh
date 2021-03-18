@@ -30,36 +30,29 @@ shellpen() {
   local __shellpen__mainCliCommands_command1="$1"
   shift
   case "$__shellpen__mainCliCommands_command1" in
-    ## @command shellpen --
     "--")
+    ## @command shellpen --
       local __shellpen__mainCliCommandDepth="2"
       __shellpen__mainCliCommands+=("$1")
       local __shellpen__mainCliCommands_command2="$1"
       shift
       case "$__shellpen__mainCliCommands_command2" in
-        ## @command shellpen -- alias
-        "alias")
-          shopt -s expand_aliases
-          alias "$1"=shellpen
-        ## @
-  
-            ;;
-        ## @command shellpen -- blocks
         "blocks")
+        ## @command shellpen -- blocks
             local __shellpen__mainCliCommandDepth="3"
             __shellpen__mainCliCommands+=("$1")
             local __shellpen__mainCliCommands_command3="$1"
             shift
             case "$__shellpen__mainCliCommands_command3" in
-              ## @command shellpen -- blocks cases
               "cases")
+              ## @command shellpen -- blocks cases
                     local __shellpen__mainCliCommandDepth="4"
                     __shellpen__mainCliCommands+=("$1")
                     local __shellpen__mainCliCommands_command4="$1"
                     shift
                     case "$__shellpen__mainCliCommands_command4" in
-                      ## @command shellpen -- blocks cases close
                       "close")
+                      ## @command shellpen -- blocks cases close
                         if [ "${_SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
                         then
                           shellpen esac
@@ -68,8 +61,8 @@ shellpen() {
                       ## @
             
                           ;;
-                      ## @command shellpen -- blocks cases open
                       "open")
+                      ## @command shellpen -- blocks cases open
                         _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
                       ## @
             
@@ -82,23 +75,23 @@ shellpen() {
               ## @
       
                   ;;
-              ## @command shellpen -- blocks closeAll
               "closeAll")
+              ## @command shellpen -- blocks closeAll
                 shellpen -- blocks options close
                 shellpen -- blocks cases close
                 shellpen -- blocks functions close
               ## @
       
                   ;;
-              ## @command shellpen -- blocks functions
               "functions")
+              ## @command shellpen -- blocks functions
                     local __shellpen__mainCliCommandDepth="4"
                     __shellpen__mainCliCommands+=("$1")
                     local __shellpen__mainCliCommands_command4="$1"
                     shift
                     case "$__shellpen__mainCliCommands_command4" in
-                      ## @command shellpen -- blocks functions close
                       "close")
+                      ## @command shellpen -- blocks functions close
                         if [ "${_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
                         then
                           shellpen }
@@ -107,8 +100,8 @@ shellpen() {
                       ## @
             
                           ;;
-                      ## @command shellpen -- blocks functions open
                       "open")
+                      ## @command shellpen -- blocks functions open
                         _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
                       ## @
             
@@ -121,27 +114,27 @@ shellpen() {
               ## @
       
                   ;;
-              ## @command shellpen -- blocks options
               "options")
+              ## @command shellpen -- blocks options
                     local __shellpen__mainCliCommandDepth="4"
                     __shellpen__mainCliCommands+=("$1")
                     local __shellpen__mainCliCommands_command4="$1"
                     shift
                     case "$__shellpen__mainCliCommands_command4" in
-                      ## @command shellpen -- blocks options close
                       "close")
+                      ## @command shellpen -- blocks options close
                         # Close existing option, if open
                         if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
                         then
-                          shellpen writeln ";;"
+                          shellpen append writeln ";;"
                           shellpen indent--
                         fi
                         _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
                       ## @
             
                           ;;
-                      ## @command shellpen -- blocks options open
                       "open")
+                      ## @command shellpen -- blocks options open
                         _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
                       ## @
             
@@ -162,21 +155,21 @@ shellpen() {
         ## @
   
             ;;
-        ## @command shellpen -- dump
         "dump")
+        ## @command shellpen -- dump
           ( set -o posix; set ) | grep SHELLPEN
         ## @
   
             ;;
-        ## @command shellpen -- errors
         "errors")
+        ## @command shellpen -- errors
             local __shellpen__mainCliCommandDepth="3"
             __shellpen__mainCliCommands+=("$1")
             local __shellpen__mainCliCommands_command3="$1"
             shift
             case "$__shellpen__mainCliCommands_command3" in
-              ## @command shellpen -- errors argumentError
               "argumentError")
+              ## @command shellpen -- errors argumentError
                 if [ $# -gt 0 ]
                 then
                   printf '`shellpen` [Argument Error] ' >&2
@@ -188,8 +181,8 @@ shellpen() {
               ## @
       
                   ;;
-              ## @command shellpen -- errors getFileLine
               "getFileLine")
+              ## @command shellpen -- errors getFileLine
                 ## $1 Path to the file
                 ## $2 Line to print
                 ##
@@ -202,8 +195,8 @@ shellpen() {
               ## @
       
                   ;;
-              ## @command shellpen -- errors printStackTrace
               "printStackTrace")
+              ## @command shellpen -- errors printStackTrace
                 ## $1 (_Optional_) How many levels to skip (default: `2`)
                 ## $2 (_Optional_) How many levels deep to show (default: `100`)
                 
@@ -225,10 +218,10 @@ shellpen() {
                     # Catches sed errors
                     if [ $? -eq 0 ]
                     then
-                      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
+                      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
                       echo "  $__shellpen__errors_printStackTrace_line" >&2
                     else
-                      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
+                      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
                     fi
                     echo >&2
                     : "$(( __shellpen__stackIndex++ ))"
@@ -246,19 +239,72 @@ shellpen() {
         ## @
   
             ;;
-        ## @command shellpen -- writeMain
+        "getSourceIndex")
+        ## @command shellpen -- getSourceIndex
+          ## > Get the internal `shellpen` index of the current or provided source
+          ##
+          ## ### Valid signatures:
+          ##
+          ## || Argument List | Description
+          ## -|-
+          ## `0` || Print the index of the current source
+          ## `1` | `[source]` | Print the index of the provided source
+          ## `2` | `[-] [varName]` | Get the index of the current source
+          ## `3` | `[source] [-] [varName]` | Get the index of the provided source
+          ##
+          if [ $# -eq 0 ]
+          then
+            printf '%s' "$_SHELLPEN_CURRENT_SOURCE_INDEX"
+          elif [ $# -eq 1 ]
+          then
+            local __shellpen__sources_exists_sourceIndex=''
+            for __shellpen__sources_exists_sourceIndex in "${!_SHELLPEN_SOURCES[@]}"
+            do
+              if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
+              then
+                if [ $# -eq 2 ]
+                then
+                  printf '%s' "$__shellpen__sources_exists_sourceIndex" 
+                fi
+                return 0
+              fi
+            done
+            return 1
+          elif [ $# -eq 2 ] && [ "$1" = '-' ]
+          then
+            printf -v "$2" '%s' "$_SHELLPEN_CURRENT_SOURCE_INDEX" 
+          elif [ $# -eq 3 ] && [ "$2" = '-' ]
+          then
+            local __shellpen__sources_exists_sourceIndex=''
+            for __shellpen__sources_exists_sourceIndex in "${!_SHELLPEN_SOURCES[@]}"
+            do
+              if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
+              then
+                printf -v "$3" '%s' "$__shellpen__sources_exists_sourceIndex" 
+                return 0
+              fi
+            done
+            return 1
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+        ## @
+  
+            ;;
         "writeMain")
+        ## @command shellpen -- writeMain
           if [ -n "${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
           then
-            shellpen writeln
-            shellpen writeln "[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ] && \"${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}\" \"\$@\""
+            shellpen append writeln
+            shellpen append writeln "[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ] && \"${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}\" \"\$@\""
           fi
           _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]=""
         ## @
   
             ;;
-        ## @command shellpen -- writeShebang
         "writeShebang")
+        ## @command shellpen -- writeShebang
           
           if [ -n "${_SHELLPEN_SHEBANG[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
           then
@@ -276,168 +322,239 @@ shellpen() {
     ## @
 
         ;;
-    ## @command shellpen case
-    "case")
-      shellpen writeln "case \"$1\" in"
-      shellpen indent++
-      shellpen -- blocks cases open
-    ## @
-
-        ;;
-    ## @command shellpen code
-    "code")
-      shellpen result "$@"
-    ## @
-
-        ;;
-    ## @command shellpen comment
-    "comment")
-      ## $1 foo
-      ## $@ stuff
-      ##
-      ## Some stuff about the comment
-      ##
-      ## Here come some params:
-      ##
-      ##
-      ## Hello
-      ##
-      
-      shellpen writeln "# $*"
-    ## @
-
-        ;;
-    ## @command shellpen echo
-    "echo")
-      shellpen writeln "echo \"$*\""
-    ## @
-
-        ;;
-    ## @command shellpen else
-    "else")
-      shellpen indent--
-      shellpen writeln "else"
-      shellpen indent++
-    ## @
-
-        ;;
-    ## @command shellpen error
-    "error")
-      if [ $# -eq 1 ]
-      then
-        shellpen writeln echo \"$*\" '>&2'
-        shellpen return 1
-      else
-        shellpen writeln printf $@ '>&2'
-        shellpen return 1
-      fi
-    ## @
-
-        ;;
-    ## @command shellpen esac
-    "esac")
-      shellpen -- blocks options close
-      _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
-      # Close existing option, if open
-      shellpen indent--
-      shellpen writeln "esac"
-    ## @
-
-        ;;
-    ## @command shellpen fi
-    "fi")
-      shellpen indent--
-      shellpen writeln "fi"
-    ## @
-
-        ;;
-    ## @command shellpen fn
-    "fn")
-      shellpen function "$@"
-    ## @
-
-        ;;
-    ## @command shellpen function
-    "function")
-      shellpen writeln
-      shellpen writeln "${1%()}() {"
-      shellpen indent++
-      shellpen -- blocks functions open
-    ## @
-
-        ;;
-    ## @command shellpen if
-    "if")
-      shellpen writeln "if $*"
-      shellpen writeln "then"
-      shellpen indent++
-    ## @
-
-        ;;
-    ## @command shellpen indentation
-    "indentation")
-      local __shellpen__indentation=""
-      local __shellpen__indentationLevel=0
-      while [ $__shellpen__indentationLevel -lt "${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
-      do
-        __shellpen__indentation+="$SHELLPEN_INDENT"
-        : "$(( __shellpen__indentationLevel++ ))"
-      done
-      printf "$__shellpen__indentation"
-    ## @
-
-        ;;
-    ## @command shellpen indent++
-    "indent++")
-      _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
-    ## @
-
-        ;;
-    ## @command shellpen indent--
-    "indent--")
-      _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} - 1 ))"
-    ## @
-
-        ;;
-    ## @command shellpen local
-    "local")
-      if [ $# -eq 1 ]
-      then
-        if [[ "$1" =~ ^[^=]+=[^=]+$ ]]
-        then
-          shellpen writeln "local ${1%%=*}=\"${1#*=}\""
-        else
-          shellpen writeln "local $*"
-        fi
-      elif [ $# -eq 2 ]
-      then
-        shellpen writeln "local $1=\"$2\""
-      fi
-    ## @
-
-        ;;
-    ## @command shellpen main
-    "main")
-      _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$1"
-    ## @
-
-        ;;
-    ## @command shellpen option
-    "option")
-      shellpen -- blocks options close
-      shellpen writeln "$1)"
-      shellpen -- blocks options open
-      shellpen indent++
-    ## @
-
-        ;;
-    ## @command shellpen pens
-    "pens")
+    "append")
+    ## @command shellpen append
       local __shellpen__mainCliCommandDepth="2"
       __shellpen__mainCliCommands+=("$1")
       local __shellpen__mainCliCommands_command2="$1"
       shift
       case "$__shellpen__mainCliCommands_command2" in
+        "case")
+        ## @command shellpen append case
+          shellpen append writeln "case \"$1\" in"
+          shellpen indent++
+          shellpen -- blocks cases open
+        ## @
+  
+            ;;
+        "code")
+        ## @command shellpen append code
+          shellpen result "$@"
+        ## @
+  
+            ;;
+        "comment")
+        ## @command shellpen append comment
+          ## $1 foo
+          ## $@ stuff
+          ##
+          ## Some stuff about the comment
+          ##
+          ## Here come some params:
+          ##
+          ##
+          ## Hello
+          ##
+          
+          shellpen append writeln "# $*"
+        ## @
+  
+            ;;
+        "echo")
+        ## @command shellpen append echo
+          shellpen append writeln "echo \"$*\""
+        ## @
+  
+            ;;
+        "else")
+        ## @command shellpen append else
+          shellpen indent--
+          shellpen append writeln "else"
+          shellpen indent++
+        ## @
+  
+            ;;
+        "error")
+        ## @command shellpen append error
+          if [ $# -eq 1 ]
+          then
+            shellpen append writeln echo \"$*\" '>&2'
+            shellpen return 1
+          else
+            shellpen append writeln printf $@ '>&2'
+            shellpen return 1
+          fi
+        ## @
+  
+            ;;
+        "esac")
+        ## @command shellpen append esac
+          shellpen -- blocks options close
+          _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+          # Close existing option, if open
+          shellpen indent--
+          shellpen append writeln "esac"
+        ## @
+  
+            ;;
+        "fi")
+        ## @command shellpen append fi
+          shellpen indent--
+          shellpen append writeln "fi"
+        ## @
+  
+            ;;
+        "fn")
+        ## @command shellpen append fn
+          shellpen function "$@"
+        ## @
+  
+            ;;
+        "function")
+        ## @command shellpen append function
+          shellpen append writeln
+          shellpen append writeln "${1%()}() {"
+          shellpen indent++
+          shellpen -- blocks functions open
+        ## @
+  
+            ;;
+        "if")
+        ## @command shellpen append if
+          shellpen append writeln "if $*"
+          shellpen append writeln "then"
+          shellpen indent++
+        ## @
+  
+            ;;
+        "indentation")
+        ## @command shellpen append indentation
+          local __shellpen__indentation=""
+          local __shellpen__indentationLevel=0
+          while [ $__shellpen__indentationLevel -lt "${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
+          do
+            __shellpen__indentation+="$SHELLPEN_INDENT"
+            : "$(( __shellpen__indentationLevel++ ))"
+          done
+          printf "$__shellpen__indentation"
+        ## @
+  
+            ;;
+        "indent++")
+        ## @command shellpen append indent++
+          _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
+        ## @
+  
+            ;;
+        "indent--")
+        ## @command shellpen append indent--
+          _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} - 1 ))"
+        ## @
+  
+            ;;
+        "local")
+        ## @command shellpen append local
+          if [ $# -eq 1 ]
+          then
+            if [[ "$1" =~ ^[^=]+=[^=]+$ ]]
+            then
+              shellpen append writeln "local ${1%%=*}=\"${1#*=}\""
+            else
+              shellpen append writeln "local $*"
+            fi
+          elif [ $# -eq 2 ]
+          then
+            shellpen append writeln "local $1=\"$2\""
+          fi
+        ## @
+  
+            ;;
+        "main")
+        ## @command shellpen append main
+          _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$1"
+        ## @
+  
+            ;;
+        "option")
+        ## @command shellpen append option
+          shellpen -- blocks options close
+          shellpen append writeln "$1)"
+          shellpen -- blocks options open
+          shellpen indent++
+        ## @
+  
+            ;;
+        "return")
+        ## @command shellpen append return
+          if [ $# -eq 1 ]
+          then
+            shellpen append writeln "return $1"
+          else
+            shellpen append writeln "return 1"
+          fi
+        ## @
+  
+            ;;
+        "save")
+        ## @command shellpen append save
+          shellpen result > "$1"
+          chmod +x "$1"
+        ## @
+  
+            ;;
+        "}")
+        ## @command shellpen append }
+          shellpen indent--
+          shellpen append writeln "}"
+          _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+        ## @
+  
+            ;;
+        "shebang")
+        ## @command shellpen append shebang
+          _SHELLPEN_SHEBANG[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$*"
+        ## @
+  
+            ;;
+        "shift")
+        ## @command shellpen append shift
+          shellpen append writeln shift
+        ## @
+  
+            ;;
+        "writeln")
+        ## @command shellpen append writeln
+          _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*\n"
+        ## @
+  
+            ;;
+        "write")
+        ## @command shellpen append write
+          _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*"
+        ## @
+  
+            ;;
+        *)
+          echo "Unknown 'shellpen append' command: $__shellpen__mainCliCommands_command2" >&2
+          return 1
+          ;;
+      esac
+    ## @
+
+        ;;
+    "pens")
+    ## @command shellpen pens
+      local __shellpen__mainCliCommandDepth="2"
+      __shellpen__mainCliCommands+=("$1")
+      local __shellpen__mainCliCommands_command2="$1"
+      shift
+      case "$__shellpen__mainCliCommands_command2" in
+        "new")
+        ## @command shellpen pens new
+          
+        ## @
+  
+            ;;
         *)
           echo "Unknown 'shellpen pens' command: $__shellpen__mainCliCommands_command2" >&2
           return 1
@@ -446,14 +563,20 @@ shellpen() {
     ## @
 
         ;;
-    ## @command shellpen preview
+    "pen")
+    ## @command shellpen pen
+      shellpen pens new "$@"
+    ## @
+
+        ;;
     "preview")
+    ## @command shellpen preview
       shellpen result "$@"
     ## @
 
         ;;
-    ## @command shellpen result
     "result")
+    ## @command shellpen result
       shellpen -- blocks closeAll
       shellpen -- writeMain
       shellpen -- writeShebang
@@ -467,71 +590,36 @@ shellpen() {
     ## @
 
         ;;
-    ## @command shellpen return
-    "return")
-      if [ $# -eq 1 ]
-      then
-        shellpen writeln "return $1"
-      else
-        shellpen writeln "return 1"
-      fi
-    ## @
-
-        ;;
-    ## @command shellpen save
-    "save")
-      shellpen result > "$1"
-      chmod +x "$1"
-    ## @
-
-        ;;
-    ## @command shellpen -
     "-")
-      shellpen -- alias -
+    ## @command shellpen -
+      shellpen pen -
     ## @
 
         ;;
-    ## @command shellpen :
     ":")
-      shellpen -- alias :
+    ## @command shellpen :
+      shellpen pen :
     ## @
 
         ;;
-    ## @command shellpen _
     "_")
-      shellpen -- alias _
+    ## @command shellpen _
+      shellpen pen _
     ## @
 
         ;;
-    ## @command shellpen }
-    "}")
-      shellpen indent--
-      shellpen writeln "}"
-      _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
-    ## @
-
-        ;;
-    ## @command shellpen shebang
-    "shebang")
-      _SHELLPEN_SHEBANG[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$*"
-    ## @
-
-        ;;
-    ## @command shellpen shift
-    "shift")
-      shellpen writeln shift
-    ## @
-
-        ;;
-    ## @command shellpen sources
     "sources")
+    ## @command shellpen sources
+    ## > Something about sources
+    ##
+    ## And more here too
       local __shellpen__mainCliCommandDepth="2"
       __shellpen__mainCliCommands+=("$1")
       local __shellpen__mainCliCommands_command2="$1"
       shift
       case "$__shellpen__mainCliCommands_command2" in
-        ## @command shellpen sources current
         "current")
+        ## @command shellpen sources current
           if [ -n "$1" ]
           then
             printf -v "$1" '%s' "${_SHELLPEN_SOURCES[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
@@ -541,44 +629,69 @@ shellpen() {
         ## @
   
             ;;
-        ## @command shellpen sources exists
         "exists")
-          local __shellpen__sources_exists_sourceIndex=''
-          for __shellpen__sources_exists_sourceIndex in "${!_SHELLPEN_SOURCES[@]}"
-          do
-            if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
-            then
-              if [ $# -eq 2 ]
-              then
-                printf -v "$2" "$__shellpen__sources_exists_sourceIndex" 
-              fi
-              return 0
-            fi
-          done
-          return 1
+        ## @command shellpen sources exists
+          shellpen -- getSourceIndex "$@" >/dev/null
         ## @
   
             ;;
-        ## @command shellpen sources getFilePath
         "getFilePath")
+        ## @command shellpen sources getFilePath
+          ## > Print or get the file path of the current or provided source
+          ##
+          ## ### Valid signatures:
+          ##
+          ## || Argument List | Description
+          ## -|-
+          ## `0` || Print the file path of the current source
+          ## `1` | `[name]` | Print the file path of the provided source
+          ## `2` | `[-] [varName]` | Get the file path of the current source
+          ## `3` | `[name] [-] [varName]` | Get the file path of the provided source
+          ##
+          ## @return 1 If source provided but source does not exist (fails silently)
+          ## @return 2 If source does not have a file path configured (fails silently)
           
+          local __shellpen__sources_getFilePath_sourceIndex=''
+          
+          if [ $# -eq 0 ]
+          then
+            shellpen -- getSourceIndex - __shellpen__sources_getFilePath_sourceIndex
+            local __shellpen__sources_getFilePath_sourceFilePath="${_SHELLPEN_SOURCES_FILE_PATHS["$__shellpen__sources_getFilePath_sourceIndex"]}"
+            [ -z "$__shellpen__sources_getFilePath_sourceFilePath" ] && return 2
+            printf '%s' "$__shellpen__sources_getFilePath_sourceFilePath"
+          elif [ $# -eq 1 ]
+          then
+            shellpen -- getSourceIndex "$1" - __shellpen__sources_getFilePath_sourceIndex || return 1
+            local __shellpen__sources_getFilePath_sourceFilePath="${_SHELLPEN_SOURCES_FILE_PATHS["$__shellpen__sources_getFilePath_sourceIndex"]}"
+            [ -z "$__shellpen__sources_getFilePath_sourceFilePath" ] && return 2
+            printf '%s' "$__shellpen__sources_getFilePath_sourceFilePath"
+          elif [ $# -eq 2 ]
+          then
+            if [ "$1" = '-' ]
+            then
+              shellpen -- getSourceIndex - __shellpen__sources_getFilePath_sourceIndex
+              local __shellpen__sources_getFilePath_sourceFilePath="${_SHELLPEN_SOURCES_FILE_PATHS["$__shellpen__sources_getFilePath_sourceIndex"]}"
+              [ -z "$__shellpen__sources_getFilePath_sourceFilePath" ] && return 2
+              printf -v "$2" '%s' "$__shellpen__sources_getFilePath_sourceFilePath"
+            else
+              shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            fi
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
         ## @
   
             ;;
-        ## @command shellpen sources getSource
-        "getSource")
-          
-        ## @
-  
-            ;;
-        ## @command shellpen sources hasFilePath
         "hasFilePath")
-          
+        ## @command shellpen sources hasFilePath
+          shellpen sources getFilePath "$@" >/dev/null
         ## @
   
             ;;
-        ## @command shellpen sources list
         "list")
+        ## @command shellpen sources list
           local __shellpen__sources_list_sourceName=''
           [ $# -eq 2 ] && [ "$1" = "-" ] && eval "$2=()"
           for __shellpen__sources_list_sourceName in "${_SHELLPEN_SOURCES[@]}"
@@ -593,8 +706,8 @@ shellpen() {
         ## @
   
             ;;
-        ## @command shellpen sources new
         "new")
+        ## @command shellpen sources new
           ## $ sources new
           ##
           ## $1 Optional source name (else randomly generated)
@@ -648,7 +761,7 @@ shellpen() {
               __shellpen__sources_new_shouldOutputName=true
               __shellpen__sources_new_outputVariableName="$1"
             else
-              shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+              shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
               return 1
             fi
           elif [ $# -eq 4 ]
@@ -660,11 +773,11 @@ shellpen() {
               __shellpen__sources_new_shouldOutputName=true
               __shellpen__sources_new_outputVariableName="$4"
             else
-              shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+              shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
               return 1
             fi
           else
-            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
             return 1
           fi
           
@@ -672,7 +785,7 @@ shellpen() {
           
           if shellpen sources exists "$__shellpen__sources_new_newSourceName"
           then
-            shellpen -- errors argumentError '%s\n%s' "Source '$__shellpen__sources_new_newSourceName' already exists" "Command: ${__shellpen__originalCliCommands[*]}"
+            shellpen -- errors argumentError '%s\n%s' "Source '$__shellpen__sources_new_newSourceName' already exists" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
             return 1
           fi
           
@@ -683,12 +796,8 @@ shellpen() {
             printf -v "$__shellpen__sources_new_outputVariableName" '%s' "$__shellpen__sources_new_newSourceName" 
           fi
           
-          if [ -z "$__shellpen__sources_new_sourceFilePath" ]
-          then
-            _SHELLPEN_SOURCES_FILE_PATHS+=("$__shellpen__sources_new_sourceFilePath")
-          fi
-          
           _SHELLPEN_SOURCES+=("$__shellpen__sources_new_newSourceName")
+          _SHELLPEN_SOURCES_FILE_PATHS+=("$__shellpen__sources_new_sourceFilePath")
           _SHELLPEN_SOURCECODE+=("")
           _SHELLPEN_INDENT_LEVELS+=(0)
           _SHELLPEN_OPTION_OPEN+=("")
@@ -698,20 +807,20 @@ shellpen() {
         ## @
   
             ;;
-        ## @command shellpen sources use
         "use")
+        ## @command shellpen sources use
           if [ $# -eq 1 ]
           then
             local __shellpen__sources_use_sourceIndex=''
-            if shellpen sources exists "$1" __shellpen__sources_use_sourceIndex
+            if shellpen -- getSourceIndex "$1" - __shellpen__sources_use_sourceIndex
             then
               _SHELLPEN_CURRENT_SOURCE_INDEX="$__shellpen__sources_use_sourceIndex"
             else
-              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: ${__shellpen__originalCliCommands[*]}"
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
               return 1
             fi
           else
-            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
             return 1
           fi
         ## @
@@ -725,15 +834,9 @@ shellpen() {
     ## @
 
         ;;
-    ## @command shellpen writeln
-    "writeln")
-      _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*\n"
-    ## @
-
-        ;;
-    ## @command shellpen write
-    "write")
-      _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*"
+    "source")
+    ## @command shellpen source
+      shellpen sources new "$@"
     ## @
 
         ;;

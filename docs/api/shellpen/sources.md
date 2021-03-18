@@ -41,6 +41,10 @@
 
 
 
+> Something about sources
+
+And more here too
+
 
 
 
@@ -106,7 +110,7 @@
     
     
 
-## [`shellpen sources getSource`](#shellpen-sources-getsource-1)
+## [`shellpen sources getSourceName`](#shellpen-sources-getsourcename-1)
 
                   
     
@@ -180,7 +184,22 @@
 {% endraw %}
 {% highlight sh %}
 "getFilePath")
-  
+
+local __shellpen__sources_getFilePath_sourceIndex=''
+
+if [ $# -eq 0 ]
+then
+  shellpen -- getSourceIndex - __shellpen__sources_getFilePath_sourceIndex
+elif [ $# -eq 1 ]
+then
+  :
+elif [ $# -eq 2 ]
+then
+  :
+else
+  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+  return 1
+fi
 {% endhighlight %}
 {% raw %}
 
@@ -190,6 +209,12 @@
 
 
 
+### Valid signatures:
+
+- [0] 
+- [1] name
+- [2] - varName
+- [2] name - varName
 
 
                     
@@ -310,19 +335,7 @@
 {% endraw %}
 {% highlight sh %}
 "exists")
-  local __shellpen__sources_exists_sourceIndex=''
-  for __shellpen__sources_exists_sourceIndex in "${!_SHELLPEN_SOURCES[@]}"
-  do
-    if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
-    then
-      if [ $# -eq 2 ]
-      then
-        printf -v "$2" "$__shellpen__sources_exists_sourceIndex" 
-      fi
-      return 0
-    fi
-  done
-  return 1
+  shellpen -- getSourceIndex "$@"
 {% endhighlight %}
 {% raw %}
 
@@ -341,7 +354,7 @@
     
     
 
-# [`shellpen sources getSource`](/api/shellpen/sources/getSource)
+# [`shellpen sources getSourceName`](/api/shellpen/sources/getSourceName)
 
 
 
@@ -350,7 +363,7 @@
 
 {% endraw %}
 {% highlight sh %}
-"getSource")
+"getSourceName")
   
 {% endhighlight %}
 {% raw %}

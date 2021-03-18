@@ -166,12 +166,12 @@ $(<"$fileFooterFilePath")
         local commandName="${commandFileOrSubcommandDirectory##*/}"
         commandName="${commandName%.sh}"
         [ "$commandName" = "*" ] && continue
+        echo "${indentation}  \"$commandName\")"
         echo "${indentation}  ## @command ${fullCommandName}"
         if [ -f "$commandFileOrSubcommandDirectory/.docs.sh" ]
         then
           caseEsacCompiler _loadSourceFile "$commandDepth" "$fullCommandName" "$commandFileOrSubcommandDirectory/.docs.sh"  | sed "s/^/$indentation  /"
         fi
-        echo "${indentation}  \"$commandName\")"
         if [ -d "$commandFileOrSubcommandDirectory" ]
         then
           caseEsacCompiler _caseEsacForDir "$(( $commandDepth + 1 ))" "$commandFileOrSubcommandDirectory" "$rootCommandsDirectoryPath" "$topLevelFunctionName" | sed "s/^/$indentation/"

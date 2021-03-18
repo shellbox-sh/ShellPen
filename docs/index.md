@@ -135,6 +135,22 @@ shellpen pens new :dog
 
 Pens are helpers for easily calling `shellpen` functions for any given source!
 
+```sh
+# This is a shortcut to get a pen named `:`
+# which writes to the currently selected source:
+shellpen :
+
+# If you want to write to a different source:
+shellpen : [source]
+
+# This is another shortcut for quickly
+# getting a pen for the currently selected source:
+shellpen pen [name]
+
+# Or get a pen for a particular source:
+shellpen pen [name] [source]
+```
+
 ---
 
 {% endraw %}

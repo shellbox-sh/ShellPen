@@ -24,24 +24,26 @@
   # Can switch to it
   expect { shellpen sources use } toFail "Argument"
   expect { shellpen sources use iDontExist } toFail "Argument"
+
   assert shellpen sources use foo
 
   expect { shellpen sources current } toEqual "foo"
 
   # Can add one with an associated filepath
-  shellpen sources new dog dogs.sh
+  shellpen sources new dog dog.sh
 
-  expect { shellpen sources getFilePath dog } toEqual dogs.sh
-  expect { shellpen sources getFilePath foo } toFail "foo"
-  expect { shellpen sources getFilePath } toFail "foo"
-  refute shellpen sources hasFilePath
-  refute shellpen sources hasFilePath foo
-  assert shellpen sources hasFilePath dog
+  assert shellpen sources getFilePath dog
+  refute shellpen sources getFilePath
+  expect { shellpen sources getFilePath dog } toEqual dog.sh
+  refute shellpen sources getFilePath
+  refute shellpen sources getFilePath foo
+  
   shellpen sources use dog
-  assert shellpen sources hasFilePath
-  expect { shellpen sources getFilePath } toEqual dog.sh
-  expect { shellpen sources files current } toEqual dog.sh
 
+  dumpShellPenVariables
+
+  assert shellpen sources getFilePath
+  expect { shellpen sources getFilePath } toEqual dog.sh
 }
 
 # shellpen sources new -

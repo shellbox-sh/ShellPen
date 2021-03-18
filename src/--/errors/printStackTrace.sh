@@ -19,10 +19,10 @@ then
     # Catches sed errors
     if [ $? -eq 0 ]
     then
-      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
+      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
       echo "  $__shellpen__errors_printStackTrace_line" >&2
     else
-      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
+      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
     fi
     echo >&2
     : "$(( __shellpen__stackIndex++ ))"

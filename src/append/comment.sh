@@ -9,4 +9,4 @@
 ## Hello
 ##
 
-FN writeln "# $*"
+FN append writeln "# $*"

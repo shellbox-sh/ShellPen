@@ -66,6 +66,9 @@ if [ $# -eq 0 ]
 then
   writeMarkdownFiles "@commands/shellpen"
 else
-  # accepts a command path relative to shellpen
-  writeMarkdownFiles "@commands/shellpen/$1"
+  for arg in "$@"
+  do
+    # accepts a command path relative to shellpen
+    writeMarkdownFiles "@commands/shellpen/$arg"
+  done
 fi

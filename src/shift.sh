@@ -1,1 +1,0 @@
-FN writeln shift

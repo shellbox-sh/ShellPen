@@ -21,3 +21,7 @@ runExample() {
 printSource() {
   echo "$( loadExample; shellpen result )"
 }
+
+dumpShellPenVariables() {
+  ( set -o posix; set ) | grep SHELLPEN
+}

@@ -52,88 +52,175 @@ shellpen() {
 
 ## [`shellpen write`](#shellpen-write-1)
 
-                  
-    
-    
-    
-    
-    
+                      
+        
+        
+        
+        
 
-## [`shellpen writeln`](#shellpen-writeln-1)
+- [`shellpen write write`](#shellpen-write-write)
+          
+        
+        
+        
+        
 
-                  
-    
-    
-    
-    
-    
+- [`shellpen write writeln`](#shellpen-write-writeln)
+          
+        
+        
+        
+        
 
-## [`shellpen main`](#shellpen-main-1)
+- [`shellpen write main`](#shellpen-write-main)
+          
+        
+        
+        
+        
 
-                  
-    
-    
-    
-    
-    
+- [`shellpen write comment`](#shellpen-write-comment)
+          
+        
+        
+        
+        
 
-## [`shellpen comment`](#shellpen-comment-1)
+- [`shellpen write }`](#shellpen-write-}--1)
+          
+        
+        
+        
+        
 
-                  
-    
-    
-    
-    
-    
+- [`shellpen write function`](#shellpen-write-function)
+          
+        
+        
+        
+        
 
-## [`shellpen }`](#shellpen--1)
+- [`shellpen write indent--`](#shellpen-write-indent--)
+          
+        
+        
+        
+        
 
-                  
-    
-    
-    
-    
-    
+- [`shellpen write shebang`](#shellpen-write-shebang)
+          
+        
+        
+        
+        
 
-## [`shellpen function`](#shellpen-function-1)
+- [`shellpen write return`](#shellpen-write-return)
+          
+        
+        
+        
+        
 
-                  
-    
-    
-    
-    
-    
+- [`shellpen write fi`](#shellpen-write-fi)
+          
+        
+        
+        
+        
 
-## [`shellpen indent--`](#shellpen-indent---1)
+- [`shellpen write option`](#shellpen-write-option)
+          
+        
+        
+        
+        
 
-                  
-    
-    
-    
-    
-    
+- [`shellpen write if`](#shellpen-write-if)
+          
+        
+        
+        
+        
 
-## [`shellpen shebang`](#shellpen-shebang-1)
+- [`shellpen write shift`](#shellpen-write-shift)
+          
+        
+        
+        
+        
 
-                  
-    
-    
-    
-    
-    
+- [`shellpen write indentation`](#shellpen-write-indentation)
+          
+        
+        
+        
+        
 
-## [`shellpen return`](#shellpen-return-1)
+- [`shellpen write fn`](#shellpen-write-fn)
+          
+        
+        
+        
+        
 
-                  
-    
-    
-    
-    
-    
+- [`shellpen write local`](#shellpen-write-local)
+          
+        
+        
+        
+        
 
-## [`shellpen fi`](#shellpen-fi-1)
+- [`shellpen write case`](#shellpen-write-case)
+          
+        
+        
+        
+        
 
-                  
+- [`shellpen write save`](#shellpen-write-save)
+          
+        
+        
+        
+        
+
+- [`shellpen write indent++`](#shellpen-write-indent++)
+          
+        
+        
+        
+        
+
+- [`shellpen write code`](#shellpen-write-code)
+          
+        
+        
+        
+        
+
+- [`shellpen write esac`](#shellpen-write-esac)
+          
+        
+        
+        
+        
+
+- [`shellpen write echo`](#shellpen-write-echo)
+          
+        
+        
+        
+        
+
+- [`shellpen write else`](#shellpen-write-else)
+          
+        
+        
+        
+        
+
+- [`shellpen write error`](#shellpen-write-error)
+      
     
     
     
@@ -141,33 +228,6 @@ shellpen() {
     
 
 ## [`shellpen preview`](#shellpen-preview-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen option`](#shellpen-option-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen if`](#shellpen-if-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen shift`](#shellpen-shift-1)
 
                   
     
@@ -241,60 +301,6 @@ shellpen() {
     
     
 
-## [`shellpen indentation`](#shellpen-indentation-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen fn`](#shellpen-fn-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen local`](#shellpen-local-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen case`](#shellpen-case-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen save`](#shellpen-save-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen indent++`](#shellpen-indent++-1)
-
-                  
-    
-    
-    
-    
-    
-
 ## [`shellpen :`](#shellpen--2)
 
                   
@@ -304,25 +310,7 @@ shellpen() {
     
     
 
-## [`shellpen code`](#shellpen-code-1)
-
-                  
-    
-    
-    
-    
-    
-
 ## [`shellpen -`](#shellpen---1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen esac`](#shellpen-esac-1)
 
                   
     
@@ -403,33 +391,6 @@ shellpen() {
 ## [`shellpen _`](#shellpen-_-1)
 
                   
-    
-    
-    
-    
-    
-
-## [`shellpen echo`](#shellpen-echo-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen else`](#shellpen-else-1)
-
-                  
-    
-    
-    
-    
-    
-
-## [`shellpen error`](#shellpen-error-1)
-
-                  
 
 
 # 📓 Command Reference
@@ -441,6 +402,37 @@ shellpen() {
     
 
 # [`shellpen write`](/api/shellpen/write)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"write")
+  local __shellpen__mainCliCommandDepth="2"
+  __shellpen__mainCliCommands+=("$1")
+  local __shellpen__mainCliCommands_command2="$1"
+  shift
+  case "$__shellpen__mainCliCommands_command2" in
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+                      
+        
+        
+        
+
+## [`shellpen write write`](/api/shellpen/write/write)
 
 
 
@@ -462,14 +454,16 @@ shellpen() {
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen writeln`](/api/shellpen/writeln)
+        
+                
+        
+        
+        
+
+## [`shellpen write writeln`](/api/shellpen/write/writeln)
 
 
 
@@ -491,14 +485,16 @@ shellpen() {
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen main`](/api/shellpen/main)
+        
+                
+        
+        
+        
+
+## [`shellpen write main`](/api/shellpen/write/main)
 
 
 
@@ -520,14 +516,16 @@ shellpen() {
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen comment`](/api/shellpen/comment)
+        
+                
+        
+        
+        
+
+## [`shellpen write comment`](/api/shellpen/write/comment)
 
 
 
@@ -562,14 +560,16 @@ Here come some params:
 Hello
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen }`](/api/shellpen/})
+        
+                
+        
+        
+        
+
+## [`shellpen write }`](/api/shellpen/write/})
 
 
 
@@ -593,14 +593,16 @@ Hello
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen function`](/api/shellpen/function)
+        
+                
+        
+        
+        
+
+## [`shellpen write function`](/api/shellpen/write/function)
 
 
 
@@ -625,14 +627,16 @@ Hello
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen indent--`](/api/shellpen/indent--)
+        
+                
+        
+        
+        
+
+## [`shellpen write indent--`](/api/shellpen/write/indent--)
 
 
 
@@ -654,14 +658,16 @@ Hello
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen shebang`](/api/shellpen/shebang)
+        
+                
+        
+        
+        
+
+## [`shellpen write shebang`](/api/shellpen/write/shebang)
 
 
 
@@ -683,14 +689,16 @@ Hello
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen return`](/api/shellpen/return)
+        
+                
+        
+        
+        
+
+## [`shellpen write return`](/api/shellpen/write/return)
 
 
 
@@ -717,14 +725,16 @@ Hello
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen fi`](/api/shellpen/fi)
+        
+                
+        
+        
+        
+
+## [`shellpen write fi`](/api/shellpen/write/fi)
 
 
 
@@ -747,43 +757,16 @@ Hello
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen preview`](/api/shellpen/preview)
+        
+                
+        
+        
+        
 
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"preview")
-  shellpen result "$@"
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen option`](/api/shellpen/option)
+## [`shellpen write option`](/api/shellpen/write/option)
 
 
 
@@ -808,14 +791,16 @@ Hello
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen if`](/api/shellpen/if)
+        
+                
+        
+        
+        
+
+## [`shellpen write if`](/api/shellpen/write/if)
 
 
 
@@ -839,14 +824,16 @@ Hello
 
 
 
-                    
-  
-    
-
     
     
 
-# [`shellpen shift`](/api/shellpen/shift)
+        
+                
+        
+        
+        
+
+## [`shellpen write shift`](/api/shellpen/write/shift)
 
 
 
@@ -857,6 +844,414 @@ Hello
 {% highlight sh %}
 "shift")
   shellpen writeln shift
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write indentation`](/api/shellpen/write/indentation)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"indentation")
+  local __shellpen__indentation=""
+  local __shellpen__indentationLevel=0
+  while [ $__shellpen__indentationLevel -lt "${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
+  do
+    __shellpen__indentation+="$SHELLPEN_INDENT"
+    : "$(( __shellpen__indentationLevel++ ))"
+  done
+  printf "$__shellpen__indentation"
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write fn`](/api/shellpen/write/fn)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"fn")
+  shellpen function "$@"
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write local`](/api/shellpen/write/local)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"local")
+  if [ $# -eq 1 ]
+  then
+    if [[ "$1" =~ ^[^=]+=[^=]+$ ]]
+    then
+      shellpen writeln "local ${1%%=*}=\"${1#*=}\""
+    else
+      shellpen writeln "local $*"
+    fi
+  elif [ $# -eq 2 ]
+  then
+    shellpen writeln "local $1=\"$2\""
+  fi
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write case`](/api/shellpen/write/case)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"case")
+  shellpen writeln "case \"$1\" in"
+  shellpen indent++
+  shellpen -- blocks cases open
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write save`](/api/shellpen/write/save)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"save")
+  shellpen result > "$1"
+  chmod +x "$1"
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write indent++`](/api/shellpen/write/indent++)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"indent++")
+  _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write code`](/api/shellpen/write/code)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"code")
+  shellpen result "$@"
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write esac`](/api/shellpen/write/esac)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"esac")
+  shellpen -- blocks options close
+  _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+  # Close existing option, if open
+  shellpen indent--
+  shellpen writeln "esac"
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write echo`](/api/shellpen/write/echo)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"echo")
+  shellpen writeln "echo \"$*\""
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write else`](/api/shellpen/write/else)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"else")
+  shellpen indent--
+  shellpen writeln "else"
+  shellpen indent++
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+                
+        
+        
+        
+
+## [`shellpen write error`](/api/shellpen/write/error)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"error")
+  if [ $# -eq 1 ]
+  then
+    shellpen writeln echo \"$*\" '>&2'
+    shellpen return 1
+  else
+    shellpen writeln printf $@ '>&2'
+    shellpen return 1
+  fi
+{% endhighlight %}
+{% raw %}
+
+</details>
+
+
+
+
+
+
+
+    
+    
+
+        
+              
+  
+    
+
+    
+    
+
+# [`shellpen preview`](/api/shellpen/preview)
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% endraw %}
+{% highlight sh %}
+"preview")
+  shellpen result "$@"
 {% endhighlight %}
 {% raw %}
 
@@ -1195,201 +1590,6 @@ Hello
     
     
 
-# [`shellpen indentation`](/api/shellpen/indentation)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"indentation")
-  local __shellpen__indentation=""
-  local __shellpen__indentationLevel=0
-  while [ $__shellpen__indentationLevel -lt "${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
-  do
-    __shellpen__indentation+="$SHELLPEN_INDENT"
-    : "$(( __shellpen__indentationLevel++ ))"
-  done
-  printf "$__shellpen__indentation"
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen fn`](/api/shellpen/fn)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"fn")
-  shellpen function "$@"
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen local`](/api/shellpen/local)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"local")
-  if [ $# -eq 1 ]
-  then
-    if [[ "$1" =~ ^[^=]+=[^=]+$ ]]
-    then
-      shellpen writeln "local ${1%%=*}=\"${1#*=}\""
-    else
-      shellpen writeln "local $*"
-    fi
-  elif [ $# -eq 2 ]
-  then
-    shellpen writeln "local $1=\"$2\""
-  fi
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen case`](/api/shellpen/case)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"case")
-  shellpen writeln "case \"$1\" in"
-  shellpen indent++
-  shellpen -- blocks cases open
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen save`](/api/shellpen/save)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"save")
-  shellpen result > "$1"
-  chmod +x "$1"
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen indent++`](/api/shellpen/indent++)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"indent++")
-  _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
 # [`shellpen :`](/api/shellpen/colon)
 
 
@@ -1419,35 +1619,6 @@ Hello
     
     
 
-# [`shellpen code`](/api/shellpen/code)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"code")
-  shellpen result "$@"
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
 # [`shellpen -`](/api/shellpen/-)
 
 
@@ -1459,39 +1630,6 @@ Hello
 {% highlight sh %}
 "-")
   shellpen -- alias -
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen esac`](/api/shellpen/esac)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"esac")
-  shellpen -- blocks options close
-  _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
-  # Close existing option, if open
-  shellpen indent--
-  shellpen writeln "esac"
 {% endhighlight %}
 {% raw %}
 
@@ -1863,102 +2001,6 @@ Hello
 {% highlight sh %}
 "_")
   shellpen -- alias _
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen echo`](/api/shellpen/echo)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"echo")
-  shellpen writeln "echo \"$*\""
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen else`](/api/shellpen/else)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"else")
-  shellpen indent--
-  shellpen writeln "else"
-  shellpen indent++
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen error`](/api/shellpen/error)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"error")
-  if [ $# -eq 1 ]
-  then
-    shellpen writeln echo \"$*\" '>&2'
-    shellpen return 1
-  else
-    shellpen writeln printf $@ '>&2'
-    shellpen return 1
-  fi
 {% endhighlight %}
 {% raw %}
 

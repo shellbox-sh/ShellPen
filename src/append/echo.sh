@@ -1,0 +1,1 @@
+FN append writeln "echo \"$*\""

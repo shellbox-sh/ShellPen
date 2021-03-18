@@ -51,7 +51,7 @@ then
     __shellpen__sources_new_shouldOutputName=true
     __shellpen__sources_new_outputVariableName="$1"
   else
-    FN -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__FN__originalCliCommands[*]}"
+    FN -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: FN ${__FN__originalCliCommands[*]}"
     return 1
   fi
 elif [ $# -eq 4 ]
@@ -63,11 +63,11 @@ then
     __shellpen__sources_new_shouldOutputName=true
     __shellpen__sources_new_outputVariableName="$4"
   else
-    FN -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__FN__originalCliCommands[*]}"
+    FN -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: FN ${__FN__originalCliCommands[*]}"
     return 1
   fi
 else
-  FN -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__FN__originalCliCommands[*]}"
+  FN -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: FN ${__FN__originalCliCommands[*]}"
   return 1
 fi
 
@@ -75,7 +75,7 @@ fi
 
 if FN sources exists "$__shellpen__sources_new_newSourceName"
 then
-  FN -- errors argumentError '%s\n%s' "Source '$__shellpen__sources_new_newSourceName' already exists" "Command: ${__FN__originalCliCommands[*]}"
+  FN -- errors argumentError '%s\n%s' "Source '$__shellpen__sources_new_newSourceName' already exists" "Command: FN ${__FN__originalCliCommands[*]}"
   return 1
 fi
 
@@ -86,12 +86,8 @@ then
   printf -v "$__shellpen__sources_new_outputVariableName" '%s' "$__shellpen__sources_new_newSourceName" 
 fi
 
-if [ -z "$__shellpen__sources_new_sourceFilePath" ]
-then
-  _SHELLPEN_SOURCES_FILE_PATHS+=("$__shellpen__sources_new_sourceFilePath")
-fi
-
 _SHELLPEN_SOURCES+=("$__shellpen__sources_new_newSourceName")
+_SHELLPEN_SOURCES_FILE_PATHS+=("$__shellpen__sources_new_sourceFilePath")
 _SHELLPEN_SOURCECODE+=("")
 _SHELLPEN_INDENT_LEVELS+=(0)
 _SHELLPEN_OPTION_OPEN+=("")

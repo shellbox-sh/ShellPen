@@ -2,7 +2,7 @@
 
 source shellpen.sh
 
-shellpen -- alias :
+shellpen :
 
 : function myFunction {
   : if [ '$#' -eq 0 ]
