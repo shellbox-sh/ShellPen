@@ -83,8 +83,8 @@ Sources allow you to manage multiple pieces of source code.
 ```sh
 shellpen :
 
-shellpen sources new cats.sh
-shellpen sources new dogs.sh
+shellpen source cats.sh
+shellpen source dogs.sh
 
 shellpen sources use cats.sh
 : function meow
@@ -110,8 +110,8 @@ In `shellpen`, a "pen" is associated with a particular source.
 You can have many pens, each associated with a separate source 🖊️ 🖋️ 🖌️
 
 ```sh
-shellpen pens new :cat
-shellpen pens new :dog
+shellpen pen :cat
+shellpen pen :dog
 
 :cat writeTo cat.sh
 :dog writeTo dog.sh

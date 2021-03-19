@@ -407,6 +407,23 @@ shellpen() {
         ## @
   
             ;;
+        "array")
+        ## @command shellpen append array
+          if [ $# -eq 1 ]
+          then
+            if [[ "$1" =~ ^[^=]+=[^=]+$ ]]
+            then
+              shellpen append writeln "declare -a ${1%%=*}=(\"${1#*=}\")"
+            else
+              shellpen append writeln "declare -a $*"
+            fi
+          elif [ $# -eq 2 ]
+          then
+            shellpen append writeln "declare -a $1=(\"$2\")"
+          fi
+        ## @
+  
+            ;;
         "case")
         ## @command shellpen append case
           shellpen append writeln "case \"$1\" in"
@@ -492,6 +509,23 @@ shellpen() {
           shellpen append writeln "${1%()}() {"
           shellpen append indent++
           shellpen -- blocks functions open
+        ## @
+  
+            ;;
+        "hash")
+        ## @command shellpen append hash
+          if [ $# -eq 1 ]
+          then
+            if [[ "$1" =~ ^[^=]+=[^=]+$ ]]
+            then
+              shellpen append writeln "declare -A ${1%%=*}=(\"${1#*=}\")"
+            else
+              shellpen append writeln "declare -A $*"
+            fi
+          elif [ $# -eq 2 ]
+          then
+            shellpen append writeln "declare -A $1=(\"$2\")"
+          fi
         ## @
   
             ;;
@@ -602,6 +636,12 @@ shellpen() {
           else
             _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$1"
           fi
+        ## @
+  
+            ;;
+        "map")
+        ## @command shellpen append map
+          shellpen append hash "$@"
         ## @
   
             ;;
