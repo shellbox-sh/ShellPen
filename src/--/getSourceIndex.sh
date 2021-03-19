@@ -9,6 +9,8 @@
 ## `2` | `[-] [varName]` | Get the index of the current source
 ## `3` | `[source] [-] [varName]` | Get the index of the provided source
 ##
+## @return 1 If no source with the given name exists (fails silently)
+##
 if [ $# -eq 0 ]
 then
   printf '%s' "$_SHELLPEN_CURRENT_SOURCE_INDEX"
@@ -19,10 +21,7 @@ then
   do
     if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
     then
-      if [ $# -eq 2 ]
-      then
-        printf '%s' "$__shellpen__sources_exists_sourceIndex" 
-      fi
+      printf '%s' "$__shellpen__sources_exists_sourceIndex" 
       return 0
     fi
   done

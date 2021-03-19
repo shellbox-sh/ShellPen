@@ -1,4 +1,5 @@
 ---
+title: "shellpen sources getFilePath - 🖋️ Shell Pen API"
 ---
 
 {% raw %}
@@ -52,11 +53,11 @@ then
     [ -z "$__shellpen__sources_getFilePath_sourceFilePath" ] && return 2
     printf -v "$2" '%s' "$__shellpen__sources_getFilePath_sourceFilePath"
   else
-    shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+    shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
     return 1
   fi
 else
-  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
   return 1
 fi
 {% endhighlight %}

@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- errors argumentError"
 ---
 
 {% raw %}
@@ -28,19 +29,20 @@
 
 {% endraw %}
 {% highlight sh %}
-"argumentError")
-  if [ $# -gt 0 ]
-  then
-    printf '`shellpen` [Argument Error] ' >&2
-    printf "$@" >&2
-  else
-    printf '`shellpen` [Argument Error]' >&2
-  fi
-  shellpen -- errors printStackTrace
+if [ $# -gt 0 ]
+then
+  printf '`shellpen` [Argument Error] ' >&2
+  printf "$@" >&2
+else
+  printf '`shellpen` [Argument Error]' >&2
+fi
+shellpen -- errors printStackTrace
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

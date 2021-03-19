@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- errors printStackTrace"
 ---
 
 {% raw %}
@@ -28,7 +29,6 @@
 
 {% endraw %}
 {% highlight sh %}
-"printStackTrace")
 
 local __shellpen__x_errors_printStackTrace_levelsToSkip="${1-3}"
 local __shellpen__x_errors_printStackTrace_levelsToShow="${2-100}"
@@ -48,10 +48,10 @@ then
     # Catches sed errors
     if [ $? -eq 0 ]
     then
-      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
+      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
       echo "  $__shellpen__errors_printStackTrace_line" >&2
     else
-      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
+      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
     fi
     echo >&2
     : "$(( __shellpen__stackIndex++ ))"
@@ -66,10 +66,14 @@ fi
 
 
 
+#### Parameters
+
 | | Description |
 |-|-------------|
 | `$1` | (_Optional_) How many levels to skip (default: `2`) |
 | `$2` | (_Optional_) How many levels deep to show (default: `100`) |
+
+
 
 
 

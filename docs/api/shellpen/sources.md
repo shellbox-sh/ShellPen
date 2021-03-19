@@ -1,4 +1,5 @@
 ---
+title: "shellpen sources - 🖋️ Shell Pen API"
 ---
 
 {% raw %}
@@ -28,12 +29,12 @@
 
 {% endraw %}
 {% highlight sh %}
-"sources")
-  local __shellpen__mainCliCommandDepth="2"
-  __shellpen__mainCliCommands+=("$1")
-  local __shellpen__mainCliCommands_command2="$1"
-  shift
-  case "$__shellpen__mainCliCommands_command2" in
+local __shellpen__mainCliCommandDepth="2"
+__shellpen__mainCliCommands+=("$1")
+local __shellpen__mainCliCommands_command2="$1"
+shift
+case "$__shellpen__mainCliCommands_command2" in
+  "current")
 {% endhighlight %}
 {% raw %}
 
@@ -44,6 +45,8 @@
 > Something about sources
 
 And more here too
+
+
 
 
 
@@ -110,15 +113,6 @@ And more here too
     
     
 
-## [`shellpen sources getSourceName`](#shellpen-sources-getsourcename-1)
-
-                  
-    
-    
-    
-    
-    
-
 ## [`shellpen sources hasFilePath`](#shellpen-sources-hasfilepath-1)
 
                   
@@ -141,21 +135,20 @@ And more here too
 
 {% endraw %}
 {% highlight sh %}
-"use")
-  if [ $# -eq 1 ]
+if [ $# -eq 1 ]
+then
+  local __shellpen__sources_use_sourceIndex=''
+  if shellpen -- getSourceIndex "$1" - __shellpen__sources_use_sourceIndex
   then
-    local __shellpen__sources_use_sourceIndex=''
-    if shellpen sources exists "$1" __shellpen__sources_use_sourceIndex
-    then
-      _SHELLPEN_CURRENT_SOURCE_INDEX="$__shellpen__sources_use_sourceIndex"
-    else
-      shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: ${__shellpen__originalCliCommands[*]}"
-      return 1
-    fi
+    _SHELLPEN_CURRENT_SOURCE_INDEX="$__shellpen__sources_use_sourceIndex"
   else
-    shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+    shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
     return 1
   fi
+else
+  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+  return 1
+fi
 {% endhighlight %}
 {% raw %}
 
@@ -183,21 +176,35 @@ And more here too
 
 {% endraw %}
 {% highlight sh %}
-"getFilePath")
 
 local __shellpen__sources_getFilePath_sourceIndex=''
 
 if [ $# -eq 0 ]
 then
   shellpen -- getSourceIndex - __shellpen__sources_getFilePath_sourceIndex
+  local __shellpen__sources_getFilePath_sourceFilePath="${_SHELLPEN_SOURCES_FILE_PATHS["$__shellpen__sources_getFilePath_sourceIndex"]}"
+  [ -z "$__shellpen__sources_getFilePath_sourceFilePath" ] && return 2
+  printf '%s' "$__shellpen__sources_getFilePath_sourceFilePath"
 elif [ $# -eq 1 ]
 then
-  :
+  shellpen -- getSourceIndex "$1" - __shellpen__sources_getFilePath_sourceIndex || return 1
+  local __shellpen__sources_getFilePath_sourceFilePath="${_SHELLPEN_SOURCES_FILE_PATHS["$__shellpen__sources_getFilePath_sourceIndex"]}"
+  [ -z "$__shellpen__sources_getFilePath_sourceFilePath" ] && return 2
+  printf '%s' "$__shellpen__sources_getFilePath_sourceFilePath"
 elif [ $# -eq 2 ]
 then
-  :
+  if [ "$1" = '-' ]
+  then
+    shellpen -- getSourceIndex - __shellpen__sources_getFilePath_sourceIndex
+    local __shellpen__sources_getFilePath_sourceFilePath="${_SHELLPEN_SOURCES_FILE_PATHS["$__shellpen__sources_getFilePath_sourceIndex"]}"
+    [ -z "$__shellpen__sources_getFilePath_sourceFilePath" ] && return 2
+    printf -v "$2" '%s' "$__shellpen__sources_getFilePath_sourceFilePath"
+  else
+    shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+    return 1
+  fi
 else
-  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
   return 1
 fi
 {% endhighlight %}
@@ -209,12 +216,16 @@ fi
 
 
 
+> Print or get the file path of the current or provided source
+
 ### Valid signatures:
 
-- [0] 
-- [1] name
-- [2] - varName
-- [2] name - varName
+|| Argument List | Description
+-|-
+`0` || Print the file path of the current source
+`1` | `[name]` | Print the file path of the provided source
+`2` | `[-] [varName]` | Get the file path of the current source
+`3` | `[name] [-] [varName]` | Get the file path of the provided source
 
 
                     
@@ -233,13 +244,12 @@ fi
 
 {% endraw %}
 {% highlight sh %}
-"current")
-  if [ -n "$1" ]
-  then
-    printf -v "$1" '%s' "${_SHELLPEN_SOURCES[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
-  else
-    printf '%s' "${_SHELLPEN_SOURCES[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
-  fi
+if [ -n "$1" ]
+then
+  printf -v "$1" '%s' "${_SHELLPEN_SOURCES[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
+else
+  printf '%s' "${_SHELLPEN_SOURCES[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
+fi
 {% endhighlight %}
 {% raw %}
 
@@ -260,18 +270,6 @@ fi
 
 # [`shellpen sources new`](/api/shellpen/sources/new)
 
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"new")
-{% endhighlight %}
-{% raw %}
-
-</details>
 
 
 
@@ -295,18 +293,17 @@ fi
 
 {% endraw %}
 {% highlight sh %}
-"list")
-  local __shellpen__sources_list_sourceName=''
-  [ $# -eq 2 ] && [ "$1" = "-" ] && eval "$2=()"
-  for __shellpen__sources_list_sourceName in "${_SHELLPEN_SOURCES[@]}"
-  do
-    if [ $# -eq 2 ] && [ "$1" = "-" ]
-    then
-      eval "$2+=(\"\$__shellpen__sources_list_sourceName\")"
-    else
-      echo "$__shellpen__sources_list_sourceName"
-    fi
-  done
+local __shellpen__sources_list_sourceName=''
+[ $# -eq 2 ] && [ "$1" = "-" ] && eval "$2=()"
+for __shellpen__sources_list_sourceName in "${_SHELLPEN_SOURCES[@]}"
+do
+  if [ $# -eq 2 ] && [ "$1" = "-" ]
+  then
+    eval "$2+=(\"\$__shellpen__sources_list_sourceName\")"
+  else
+    echo "$__shellpen__sources_list_sourceName"
+  fi
+done
 {% endhighlight %}
 {% raw %}
 
@@ -334,37 +331,7 @@ fi
 
 {% endraw %}
 {% highlight sh %}
-"exists")
-  shellpen -- getSourceIndex "$@"
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen sources getSourceName`](/api/shellpen/sources/getSourceName)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"getSourceName")
-  
+shellpen -- getSourceIndex "$@" >/dev/null
 {% endhighlight %}
 {% raw %}
 
@@ -392,8 +359,7 @@ fi
 
 {% endraw %}
 {% highlight sh %}
-"hasFilePath")
-  
+shellpen sources getFilePath "$@" >/dev/null
 {% endhighlight %}
 {% raw %}
 

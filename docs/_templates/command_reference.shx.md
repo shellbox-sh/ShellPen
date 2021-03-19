@@ -1,4 +1,5 @@
 ---
+title: "<%= $(command getName) %>"
 ---
 
 {% raw %}

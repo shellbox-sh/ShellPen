@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- blocks functions close"
 ---
 
 {% raw %}
@@ -28,16 +29,17 @@
 
 {% endraw %}
 {% highlight sh %}
-"close")
-  if [ "${_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
-  then
-    shellpen }
-  fi
-  _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+if [ "${_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
+then
+  shellpen }
+fi
+_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

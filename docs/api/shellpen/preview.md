@@ -1,4 +1,5 @@
 ---
+title: "shellpen preview - 🖋️ Shell Pen API"
 ---
 
 {% raw %}
@@ -28,12 +29,13 @@
 
 {% endraw %}
 {% highlight sh %}
-"preview")
-  shellpen result "$@"
+shellpen result "$@"
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

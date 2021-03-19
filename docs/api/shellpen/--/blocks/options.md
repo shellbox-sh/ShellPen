@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- blocks options"
 ---
 
 {% raw %}
@@ -28,16 +29,18 @@
 
 {% endraw %}
 {% highlight sh %}
-"options")
-      local __shellpen__mainCliCommandDepth="4"
-      __shellpen__mainCliCommands+=("$1")
-      local __shellpen__mainCliCommands_command4="$1"
-      shift
-      case "$__shellpen__mainCliCommands_command4" in
+local __shellpen__mainCliCommandDepth="4"
+__shellpen__mainCliCommands+=("$1")
+local __shellpen__mainCliCommands_command4="$1"
+shift
+case "$__shellpen__mainCliCommands_command4" in
+  "close")
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 
@@ -83,8 +86,7 @@
 
 {% endraw %}
 {% highlight sh %}
-"open")
-  _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
 {% endhighlight %}
 {% raw %}
 
@@ -112,14 +114,13 @@
 
 {% endraw %}
 {% highlight sh %}
-"close")
-  # Close existing option, if open
-  if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
-  then
-    shellpen writeln ";;"
-    shellpen indent--
-  fi
-  _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+# Close existing option, if open
+if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
+then
+  shellpen append writeln ";;"
+  shellpen indent--
+fi
+_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 {% endhighlight %}
 {% raw %}
 

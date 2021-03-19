@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- getSourceIndex"
 ---
 
 {% raw %}
@@ -28,38 +29,38 @@
 
 {% endraw %}
 {% highlight sh %}
-if [ $# -eq 1 ]
+if [ $# -eq 0 ]
+then
+  printf '%s' "$_SHELLPEN_CURRENT_SOURCE_INDEX"
+elif [ $# -eq 1 ]
 then
   local __shellpen__sources_exists_sourceIndex=''
   for __shellpen__sources_exists_sourceIndex in "${!_SHELLPEN_SOURCES[@]}"
   do
     if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
     then
-      if [ $# -eq 2 ]
-      then
-        printf "$__shellpen__sources_exists_sourceIndex" 
-      fi
+      printf '%s' "$__shellpen__sources_exists_sourceIndex" 
       return 0
     fi
   done
   return 1
-elif [ $# -eq 2 ]
+elif [ $# -eq 2 ] && [ "$1" = '-' ]
+then
+  printf -v "$2" '%s' "$_SHELLPEN_CURRENT_SOURCE_INDEX" 
+elif [ $# -eq 3 ] && [ "$2" = '-' ]
 then
   local __shellpen__sources_exists_sourceIndex=''
   for __shellpen__sources_exists_sourceIndex in "${!_SHELLPEN_SOURCES[@]}"
   do
     if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
     then
-      if [ $# -eq 2 ]
-      then
-        printf -v "$2" "$__shellpen__sources_exists_sourceIndex" 
-      fi
+      printf -v "$3" '%s' "$__shellpen__sources_exists_sourceIndex" 
       return 0
     fi
   done
   return 1
 else
-  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
   return 1
 fi
 {% endhighlight %}
@@ -82,6 +83,13 @@ fi
 
 
 
+
+
+#### Return Values
+
+| | Description |
+|-|-------------|
+| `1` | If no source with the given name exists (fails silently) |
 
 
 

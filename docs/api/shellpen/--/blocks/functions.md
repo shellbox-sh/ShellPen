@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- blocks functions"
 ---
 
 {% raw %}
@@ -28,16 +29,18 @@
 
 {% endraw %}
 {% highlight sh %}
-"functions")
-      local __shellpen__mainCliCommandDepth="4"
-      __shellpen__mainCliCommands+=("$1")
-      local __shellpen__mainCliCommands_command4="$1"
-      shift
-      case "$__shellpen__mainCliCommands_command4" in
+local __shellpen__mainCliCommandDepth="4"
+__shellpen__mainCliCommands+=("$1")
+local __shellpen__mainCliCommands_command4="$1"
+shift
+case "$__shellpen__mainCliCommands_command4" in
+  "close")
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 
@@ -83,8 +86,7 @@
 
 {% endraw %}
 {% highlight sh %}
-"open")
-  _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
 {% endhighlight %}
 {% raw %}
 
@@ -112,12 +114,11 @@
 
 {% endraw %}
 {% highlight sh %}
-"close")
-  if [ "${_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
-  then
-    shellpen }
-  fi
-  _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+if [ "${_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
+then
+  shellpen }
+fi
+_SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 {% endhighlight %}
 {% raw %}
 

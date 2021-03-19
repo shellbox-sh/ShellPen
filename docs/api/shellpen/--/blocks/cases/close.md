@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- blocks cases close"
 ---
 
 {% raw %}
@@ -28,16 +29,17 @@
 
 {% endraw %}
 {% highlight sh %}
-"close")
-  if [ "${_SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
-  then
-    shellpen esac
-  fi
-  _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+if [ "${_SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ];
+then
+  shellpen esac
+fi
+_SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

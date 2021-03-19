@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- blocks options close"
 ---
 
 {% raw %}
@@ -28,18 +29,19 @@
 
 {% endraw %}
 {% highlight sh %}
-"close")
-  # Close existing option, if open
-  if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
-  then
-    shellpen writeln ";;"
-    shellpen indent--
-  fi
-  _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
+# Close existing option, if open
+if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
+then
+  shellpen append writeln ";;"
+  shellpen indent--
+fi
+_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

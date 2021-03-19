@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- errors getFileLine"
 ---
 
 {% raw %}
@@ -28,7 +29,6 @@
 
 {% endraw %}
 {% highlight sh %}
-"getFileLine")
 if [ "$2" = "0" ]
 then
   sed "1q;d" "$1" | sed 's/^ *//g'
@@ -45,10 +45,14 @@ fi
 
 
 
+#### Parameters
+
 | | Description |
 |-|-------------|
 | `$1` | Path to the file |
 | `$2` | Line to print |
+
+
 
 
 

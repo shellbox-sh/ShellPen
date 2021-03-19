@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- dump"
 ---
 
 {% raw %}
@@ -28,12 +29,13 @@
 
 {% endraw %}
 {% highlight sh %}
-"dump")
-  ( set -o posix; set ) | grep SHELLPEN
+( set -o posix; set ) | grep SHELLPEN
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

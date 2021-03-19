@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- errors"
 ---
 
 {% raw %}
@@ -28,16 +29,18 @@
 
 {% endraw %}
 {% highlight sh %}
-"errors")
-    local __shellpen__mainCliCommandDepth="3"
-    __shellpen__mainCliCommands+=("$1")
-    local __shellpen__mainCliCommands_command3="$1"
-    shift
-    case "$__shellpen__mainCliCommands_command3" in
+local __shellpen__mainCliCommandDepth="3"
+__shellpen__mainCliCommands+=("$1")
+local __shellpen__mainCliCommands_command3="$1"
+shift
+case "$__shellpen__mainCliCommands_command3" in
+  "argumentError")
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 
@@ -92,15 +95,14 @@
 
 {% endraw %}
 {% highlight sh %}
-"argumentError")
-  if [ $# -gt 0 ]
-  then
-    printf '`shellpen` [Argument Error] ' >&2
-    printf "$@" >&2
-  else
-    printf '`shellpen` [Argument Error]' >&2
-  fi
-  shellpen -- errors printStackTrace
+if [ $# -gt 0 ]
+then
+  printf '`shellpen` [Argument Error] ' >&2
+  printf "$@" >&2
+else
+  printf '`shellpen` [Argument Error]' >&2
+fi
+shellpen -- errors printStackTrace
 {% endhighlight %}
 {% raw %}
 
@@ -128,7 +130,6 @@
 
 {% endraw %}
 {% highlight sh %}
-"printStackTrace")
 
 local __shellpen__x_errors_printStackTrace_levelsToSkip="${1-3}"
 local __shellpen__x_errors_printStackTrace_levelsToShow="${2-100}"
@@ -148,10 +149,10 @@ then
     # Catches sed errors
     if [ $? -eq 0 ]
     then
-      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
+      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]} ${FUNCNAME[$__shellpen__stackIndex]}():" >&2
       echo "  $__shellpen__errors_printStackTrace_line" >&2
     else
-      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$__shellpen__stackIndex]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
+      echo "${BASH_SOURCE[$__shellpen__stackIndex]}:${BASH_LINENO[$(( __shellpen__stackIndex - 1 ))]} ${FUNCNAME[$__shellpen__stackIndex]}()" >&2
     fi
     echo >&2
     : "$(( __shellpen__stackIndex++ ))"
@@ -190,7 +191,6 @@ fi
 
 {% endraw %}
 {% highlight sh %}
-"getFileLine")
 if [ "$2" = "0" ]
 then
   sed "1q;d" "$1" | sed 's/^ *//g'

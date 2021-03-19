@@ -1,4 +1,5 @@
 ---
+title: "shellpen sources hasFilePath"
 ---
 
 {% raw %}
@@ -28,12 +29,13 @@
 
 {% endraw %}
 {% highlight sh %}
-"hasFilePath")
-  
+shellpen sources getFilePath "$@" >/dev/null
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

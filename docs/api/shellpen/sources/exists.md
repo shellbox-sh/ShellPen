@@ -1,4 +1,5 @@
 ---
+title: "shellpen sources exists - 🖋️ Shell Pen API"
 ---
 
 {% raw %}
@@ -28,12 +29,13 @@
 
 {% endraw %}
 {% highlight sh %}
-"exists")
-  shellpen -- getSourceIndex "$@"
+shellpen -- getSourceIndex "$@" >/dev/null
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

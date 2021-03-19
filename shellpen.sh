@@ -3,6 +3,7 @@
 _SHELLPEN_SHEBANG=("#! /usr/bin/env bash")
 
 _SHELLPEN_PENS=("default")
+_SHELLPEN_PEN_SOURCES=("default")
 _SHELLPEN_CURRENT_PEN_NAME="default"
 _SHELLPEN_CURRENT_PEN_INDEX=0
 
@@ -24,6 +25,8 @@ _SHELLPEN_MAIN_FUNCTION=("")
 shellpen() {
   declare -a __shellpen__mainCliCommands=("shellpen")
   declare -a __shellpen__originalCliCommands=("$@")
+
+## > 🖋️ Generate Shell Script Source Code using a familiar DSL!
 
   local __shellpen__mainCliCommandDepth="1"
   __shellpen__mainCliCommands+=("$1")
@@ -239,6 +242,51 @@ shellpen() {
         ## @
   
             ;;
+        "getPenIndex")
+        ## @command shellpen -- getPenIndex
+          ## > Get the internal `shellpen` index of the provided pen
+          ##
+          ## ### Valid signatures:
+          ##
+          ## || Argument List | Description
+          ## -|-
+          ## `1` | `[pen]` | Print the index of the provided pen
+          ## `3` | `[pen] [-] [varName]` | Get the index of the provided pen
+          ##
+          ## @return 1 If no pen with the given name exists (fails silently)
+          ##
+          
+          if [ $# -eq 1 ]
+          then
+            local __shellpen__pens_exists_penIndex=''
+            for __shellpen__pens_exists_penIndex in "${!_SHELLPEN_PENS[@]}"
+            do
+              if [ "$1" = "${_SHELLPEN_PENS[$__shellpen__pens_exists_penIndex]}" ]
+              then
+                printf '%s' "$__shellpen__pens_exists_penIndex" 
+                return 0
+              fi
+            done
+            return 1
+          elif [ $# -eq 3 ] && [ "$2" = '-' ]
+          then
+            local __shellpen__pens_exists_penIndex=''
+            for __shellpen__pens_exists_penIndex in "${!_SHELLPEN_PENS[@]}"
+            do
+              if [ "$1" = "${_SHELLPEN_PENS[$__shellpen__pens_exists_penIndex]}" ]
+              then
+                printf -v "$3" '%s' "$__shellpen__pens_exists_penIndex" 
+                return 0
+              fi
+            done
+            return 1
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+        ## @
+  
+            ;;
         "getSourceIndex")
         ## @command shellpen -- getSourceIndex
           ## > Get the internal `shellpen` index of the current or provided source
@@ -252,6 +300,8 @@ shellpen() {
           ## `2` | `[-] [varName]` | Get the index of the current source
           ## `3` | `[source] [-] [varName]` | Get the index of the provided source
           ##
+          ## @return 1 If no source with the given name exists (fails silently)
+          ##
           if [ $# -eq 0 ]
           then
             printf '%s' "$_SHELLPEN_CURRENT_SOURCE_INDEX"
@@ -262,10 +312,7 @@ shellpen() {
             do
               if [ "$1" = "${_SHELLPEN_SOURCES[$__shellpen__sources_exists_sourceIndex]}" ]
               then
-                if [ $# -eq 2 ]
-                then
-                  printf '%s' "$__shellpen__sources_exists_sourceIndex" 
-                fi
+                printf '%s' "$__shellpen__sources_exists_sourceIndex" 
                 return 0
               fi
             done
@@ -427,19 +474,6 @@ shellpen() {
         ## @
   
             ;;
-        "indentation")
-        ## @command shellpen append indentation
-          local __shellpen__indentation=""
-          local __shellpen__indentationLevel=0
-          while [ $__shellpen__indentationLevel -lt "${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
-          do
-            __shellpen__indentation+="$SHELLPEN_INDENT"
-            : "$(( __shellpen__indentationLevel++ ))"
-          done
-          printf "$__shellpen__indentation"
-        ## @
-  
-            ;;
         "indent++")
         ## @command shellpen append indent++
           _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
@@ -522,15 +556,72 @@ shellpen() {
         ## @
   
             ;;
+        "switchTo")
+        ## @command shellpen append switchTo
+          ## > Switch pen to write to a different source
+          ##
+          ## $1 Name of the source to switch to
+          ##
+          ## @return 1 If the provided source does not exist
+          ##
+          
+          if [ $# -eq 1 ]
+          then
+            if [ -z "$SHELLPEN_PEN" ]
+            then
+              shellpen -- errors argumentError '%s\n%s' "Please do not call 'append switchTo' directly, call it via a pen function (this function requires setting \$SHELLPEN_PEN=\"[pen name]\" which is done automatically when using a pen function)" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            fi
+            if shellpen sources exists "$1"
+            then
+              local __shellpen__append_switchTo_penIndex=''
+              shellpen -- getPenIndex "$SHELLPEN_PEN" - __shellpen__append_switchTo_penIndex
+              _SHELLPEN_PEN_SOURCES["$__shellpen__append_switchTo_penIndex"]="$1"
+            else
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            fi
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+        ## @
+  
+            ;;
         "writeln")
         ## @command shellpen append writeln
-          _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*\n"
+          local __shellpen__append_writeln_newLine=$'\n'
+          if [ -n "$SHELLPEN_SOURCE" ]
+          then
+            local __shellpen__append_writeln_sourceIndex=''
+            if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_writeln_sourceIndex
+            then
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            else
+              _SHELLPEN_SOURCECODE[$__shellpen__append_writeln_sourceIndex]+="$( shellpen indentation )$*${__shellpen__append_writeln_newLine}"
+            fi
+          else
+            _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*${__shellpen__append_writeln_newLine}"
+          fi
         ## @
   
             ;;
         "write")
         ## @command shellpen append write
-          _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*"
+          if [ -n "$SHELLPEN_SOURCE" ]
+          then
+            local __shellpen__append_write_sourceIndex=''
+            if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_write_sourceIndex
+            then
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            else
+              _SHELLPEN_SOURCECODE[$__shellpen__append_write_sourceIndex]+="$( shellpen indentation )$*"
+            fi
+          else
+            _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*"
+          fi
         ## @
   
             ;;
@@ -542,6 +633,19 @@ shellpen() {
     ## @
 
         ;;
+    "indentation")
+    ## @command shellpen indentation
+      local __shellpen__indentation=""
+      local __shellpen__indentationLevel=0
+      while [ $__shellpen__indentationLevel -lt "${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
+      do
+        __shellpen__indentation+="$SHELLPEN_INDENT"
+        : "$(( __shellpen__indentationLevel++ ))"
+      done
+      printf "$__shellpen__indentation"
+    ## @
+
+        ;;
     "pens")
     ## @command shellpen pens
       local __shellpen__mainCliCommandDepth="2"
@@ -549,9 +653,221 @@ shellpen() {
       local __shellpen__mainCliCommands_command2="$1"
       shift
       case "$__shellpen__mainCliCommands_command2" in
+        "exists")
+        ## @command shellpen pens exists
+          shellpen -- getPenIndex "$@" >/dev/null
+        ## @
+  
+            ;;
+        "getSource")
+        ## @command shellpen pens getSource
+          ## > Print or get the source associated with the given pen name
+          ##
+          ## ### Valid signatures:
+          ##
+          ## || Argument List | Description
+          ## -|-
+          ## `1` | `[name]` | Print the source name associated with the provided pen name
+          ## `3` | `[name] [-] [varName]` | Get the source name associated with the provided pen name
+          ##
+          ## @return 1 If no pen with the given name exists
+          
+          if [ $# -gt 0 ] && ! shellpen pens exists "$1"
+          then
+            shellpen -- errors argumentError '%s\n%s' "Pen not found: '$1'" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+          
+          if [ $# -eq 1 ]
+          then
+            local __shellpen__pens_getSource_penIndex=''
+            shellpen -- getPenIndex "$1" - __shellpen__pens_getSource_penIndex
+            printf '%s' "${_SHELLPEN_PEN_SOURCES["$__shellpen__pens_getSource_penIndex"]}"
+          elif [ $# -eq 3 ] && [ "$2" = '-' ]
+          then
+            local __shellpen__pens_getSource_penIndex=''
+            shellpen -- getPenIndex "$1" - __shellpen__pens_getSource_penIndex
+            printf -v "$3" '%s' "${_SHELLPEN_PEN_SOURCES["$__shellpen__pens_getSource_penIndex"]}"
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+        ## @
+  
+            ;;
+        "list")
+        ## @command shellpen pens list
+          local __shellpen__pens_list_sourceName=''
+          [ $# -eq 2 ] && [ "$1" = "-" ] && eval "$2=()"
+          for __shellpen__pens_list_sourceName in "${_SHELLPEN_PENS[@]}"
+          do
+            if [ $# -eq 2 ] && [ "$1" = "-" ]
+            then
+              eval "$2+=(\"\$__shellpen__pens_list_sourceName\")"
+            else
+              echo "$__shellpen__pens_list_sourceName"
+            fi
+          done
+        ## @
+  
+            ;;
         "new")
         ## @command shellpen pens new
+          ## > Create a new pen (optionally associated with a new or existing source)
+          ##
+          ## ### Valid signatures:
+          ##
+          ## || Argument List | Description
+          ## -|-
+          ## `1` | `[name]` | Create a new pen for the current source with the provided name
+          ## `2` | `[name] [source]` | Create a new pen for the provided source (will be created if it does not already exist)
+          ## `2` | `[name] [-]` | Create a new pen for the current source _but do not create a writer alias function_
+          ## `3` | `[name] [-] [alias]` | Create a new pen for the current source _and create an alias function with the provided name_
+          ## `3` | `[name] [source] [-]` | Create a new pen for the provided source (will be created if it does not already exist) _but do not create a writer alias function_
+          ## `4` | `[name] [source] [-] [alias]` | Create a new pen for the provided source (will be created if it does not already exist) _and create an alias function with the provided name_
+          ##
+          ## @return 1 Pen with the existing name already exists
+          ##
+          ## #### Aliases
+          ##
+          ## Regardless of the alias you provide, `shellpen` will create a BASH function with the provided name.
+          ##
+          ## It is up to you to provide a valid function name! If the function name is invalid, this will fail.
+          ##
+          ## This also allows you to accidentally create pens with names which override built-in BASH functions
+          ## such as 'unset' or 'declare' which will essentially completely blow up the world 💥
           
+          local __shellpen__pens_new_penName=''
+          local __shellpen__pens_new_sourceName=''
+          local __shellpen__pens_new_createAlias=true
+          local __shellpen__pens_new_aliasName=''
+          
+          if [ $# -eq 1 ]
+          then
+            __shellpen__pens_new_penName="$1"
+          elif [ $# -eq 2 ] && [ "$2" = '-' ]
+          then
+            __shellpen__pens_new_penName="$1"
+            __shellpen__pens_new_createalias=false
+          elif [ $# -eq 2 ]
+          then
+            __shellpen__pens_new_penName="$1"
+            __shellpen__pens_new_sourceName="$2"
+          elif [ $# -eq 3 ] && [ "$2" = '-' ]
+          then
+            __shellpen__pens_new_penName="$1"
+            __shellpen__pens_new_aliasName="$3"
+          elif [ $# -eq 3 ] && [ "$3" = '-' ]
+          then
+            __shellpen__pens_new_penName="$1"
+            __shellpen__pens_new_sourceName="$2"
+            __shellpen__pens_new_createalias=false
+          elif [ $# -eq 4 ] && [ "$3" = '-' ]
+          then
+            __shellpen__pens_new_penName="$1"
+            __shellpen__pens_new_sourceName="$2"
+            __shellpen__pens_new_aliasName="$4"
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+          
+          if shellpen pens exists "$__shellpen__pens_new_penName"
+          then
+            shellpen -- errors argumentError '%s\n%s' "Pen '$__shellpen__pens_new_penName' already exists" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+          
+          if [ -n "$__shellpen__pens_new_sourceName" ] && ! shellpen sources exists "$__shellpen__pens_new_sourceName"
+          then
+            shellpen sources new "$__shellpen__pens_new_sourceName"
+          fi
+          
+          [ -z "$__shellpen__pens_new_sourceName" ] && shellpen sources current __shellpen__pens_new_sourceName
+          
+          if [ "$__shellpen__pens_new_createAlias" = true ]
+          then
+            [ -z "$__shellpen__pens_new_aliasName" ] && __shellpen__pens_new_aliasName="$__shellpen__pens_new_penName"
+            local __shellpen__pens_new_aliasFunctionCode="
+          $__shellpen__pens_new_aliasName() {
+            # Get the source name for this pen
+            local __shellpen__penAlias_sourceName=''
+            shellpen pens getSource \"$__shellpen__pens_new_penName\" - __shellpen__penAlias_sourceName
+          
+            # Call an 'append' shellpen DSL function
+            # Sets the SHELLPEN_SOURCE environment variable which 'append' functions respect
+            # to the *current* source for this pen (allowing the source to be changed later)
+            # Also provides the pen name for debugging.
+            SHELLPEN_SOURCE=\"\$__shellpen__penAlias_sourceName\" SHELLPEN_PEN=\"$__shellpen__pens_new_penName\" shellpen append \"\$@\"
+          }
+          "
+            # Try it in a subshell first
+            local __shellpen__pens_new_aliasFunctionEvalOutput=''
+            __shellpen__pens_new_aliasFunctionEvalOutput="$( eval "$__shellpen__pens_new_aliasFunctionCode" 2>&1 )"
+            if [ $? -ne 0 ]
+            then
+              shellpen -- errors argumentError '%s\n%s\n%s' "Alias name '$__shellpen__pens_new_aliasName' is not valid, please choose something that works as as valid BASH function name. Pen creation failed." "Command: shellpen ${__shellpen__originalCliCommands[*]}" "Function creation error: '$__shellpen__pens_new_aliasFunctionEvalOutput'"
+              return 2
+            else
+              eval "$__shellpen__pens_new_aliasFunctionCode"
+              shellpen result
+            fi
+          fi
+          
+          _SHELLPEN_PENS+=("$__shellpen__pens_new_penName")
+          _SHELLPEN_PEN_SOURCES+=("$__shellpen__pens_new_sourceName")
+        ## @
+  
+            ;;
+        "switchSource")
+        ## @command shellpen pens switchSource
+          ## > Switch the current or provided pen to use a different, provided source
+          ##
+          ## ### Valid signatures:
+          ##
+          ## || Argument List | Description
+          ## -|-
+          ## `1` | `[source]` | Set the default pen's source to use the provided source
+          ## `2` | `[pen] [source]` | Set the provided pen to use the provided source
+          ##
+          ## @return 1 If the provided pen name does not exist
+          ## @return 2 If the provided source name does not exist
+          ##
+          
+          if [ $# -eq 1 ]
+          then
+            # "default" should be '0' but it could be deleted (once we provide that functionality)
+            local __shellpen__pens_switchSource_penIndex=''
+            if ! shellpen -- getPenIndex "default" - __shellpen__pens_switchSource_penIndex
+            then
+              shellpen -- errors argumentError '%s\n%s' "Pen not found: 'default'" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            else
+              if shellpen sources exists "$1"
+              then
+                _SHELLPEN_PEN_SOURCES["$__shellpen__pens_switchSource_penIndex"]="$1"
+              else
+                shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+                return 2
+              fi
+            fi
+          elif [ $# -eq 2 ]
+          then
+            local __shellpen__pens_switchSource_penIndex=''
+            if ! shellpen -- getPenIndex "$1" - __shellpen__pens_switchSource_penIndex
+            then
+              shellpen -- errors argumentError '%s\n%s' "Pen not found: '$1'" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            else
+              if shellpen sources exists "$2"
+              then
+                _SHELLPEN_PEN_SOURCES["$__shellpen__pens_switchSource_penIndex"]="$2"
+              else
+                shellpen -- errors argumentError '%s\n%s' "Source '$2' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+                return 2
+              fi
+            fi
+          fi
         ## @
   
             ;;

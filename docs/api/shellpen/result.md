@@ -1,4 +1,5 @@
 ---
+title: "shellpen result"
 ---
 
 {% raw %}
@@ -28,21 +29,22 @@
 
 {% endraw %}
 {% highlight sh %}
-"result")
-  shellpen -- blocks closeAll
-  shellpen -- writeMain
-  shellpen -- writeShebang
-  
-  if [ "$1" = "-n" ]
-  then
-    echo -e "${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" | cat -n
-  else
-    echo -e "${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
-  fi
+shellpen -- blocks closeAll
+shellpen -- writeMain
+shellpen -- writeShebang
+
+if [ "$1" = "-n" ]
+then
+  echo -e "${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" | cat -n
+else
+  echo -e "${_SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]}"
+fi
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

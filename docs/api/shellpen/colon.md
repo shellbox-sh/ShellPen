@@ -1,4 +1,5 @@
 ---
+title: "shellpen :"
 ---
 
 {% raw %}
@@ -28,12 +29,13 @@
 
 {% endraw %}
 {% highlight sh %}
-":")
-  shellpen -- alias :
+shellpen pen :
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

@@ -1,4 +1,5 @@
 ---
+title: "shellpen sources use - 🖋️ Shell Pen API"
 ---
 
 {% raw %}
@@ -28,25 +29,26 @@
 
 {% endraw %}
 {% highlight sh %}
-"use")
-  if [ $# -eq 1 ]
+if [ $# -eq 1 ]
+then
+  local __shellpen__sources_use_sourceIndex=''
+  if shellpen -- getSourceIndex "$1" - __shellpen__sources_use_sourceIndex
   then
-    local __shellpen__sources_use_sourceIndex=''
-    if shellpen sources exists "$1" __shellpen__sources_use_sourceIndex
-    then
-      _SHELLPEN_CURRENT_SOURCE_INDEX="$__shellpen__sources_use_sourceIndex"
-    else
-      shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: ${__shellpen__originalCliCommands[*]}"
-      return 1
-    fi
+    _SHELLPEN_CURRENT_SOURCE_INDEX="$__shellpen__sources_use_sourceIndex"
   else
-    shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: ${__shellpen__originalCliCommands[*]}"
+    shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
     return 1
   fi
+else
+  shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+  return 1
+fi
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

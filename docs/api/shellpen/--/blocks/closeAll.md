@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- blocks closeAll"
 ---
 
 {% raw %}
@@ -28,14 +29,15 @@
 
 {% endraw %}
 {% highlight sh %}
-"closeAll")
-  shellpen -- blocks options close
-  shellpen -- blocks cases close
-  shellpen -- blocks functions close
+shellpen -- blocks options close
+shellpen -- blocks cases close
+shellpen -- blocks functions close
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

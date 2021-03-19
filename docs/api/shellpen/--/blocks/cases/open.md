@@ -1,4 +1,5 @@
 ---
+title: "shellpen -- blocks cases open"
 ---
 
 {% raw %}
@@ -28,12 +29,13 @@
 
 {% endraw %}
 {% highlight sh %}
-"open")
-  _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+_SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
 {% endhighlight %}
 {% raw %}
 
 </details>
+
+
 
 
 

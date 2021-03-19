@@ -1,4 +1,5 @@
 ---
+title: "shellpen sources new - 🖋️ Shell Pen API"
 ---
 
 {% raw %}
@@ -23,16 +24,6 @@
 
 
 
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-"new")
-{% endhighlight %}
-{% raw %}
-
-</details>
 
 
 

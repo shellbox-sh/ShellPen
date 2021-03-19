@@ -1,6 +1,7 @@
 _SHELLPEN_SHEBANG=("#! /usr/bin/env bash")
 
 _SHELLPEN_PENS=("default")
+_SHELLPEN_PEN_SOURCES=("default")
 _SHELLPEN_CURRENT_PEN_NAME="default"
 _SHELLPEN_CURRENT_PEN_INDEX=0
 
