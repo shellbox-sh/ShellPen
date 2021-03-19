@@ -1,5 +1,5 @@
 ---
-title: "shellpen sources getFilePath - 🖋️ Shell Pen API"
+title: "shellpen sources getFilePath"
 ---
 
 {% raw %}

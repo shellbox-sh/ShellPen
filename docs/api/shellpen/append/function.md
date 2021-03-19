@@ -31,7 +31,7 @@ title: "shellpen append function"
 {% highlight sh %}
 shellpen append writeln
 shellpen append writeln "${1%()}() {"
-shellpen indent++
+shellpen append indent++
 shellpen -- blocks functions open
 {% endhighlight %}
 {% raw %}

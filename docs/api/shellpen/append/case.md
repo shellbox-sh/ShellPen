@@ -30,7 +30,7 @@ title: "shellpen append case"
 {% endraw %}
 {% highlight sh %}
 shellpen append writeln "case \"$1\" in"
-shellpen indent++
+shellpen append indent++
 shellpen -- blocks cases open
 {% endhighlight %}
 {% raw %}

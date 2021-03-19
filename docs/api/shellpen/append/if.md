@@ -31,7 +31,7 @@ title: "shellpen append if"
 {% highlight sh %}
 shellpen append writeln "if $*"
 shellpen append writeln "then"
-shellpen indent++
+shellpen append indent++
 {% endhighlight %}
 {% raw %}
 

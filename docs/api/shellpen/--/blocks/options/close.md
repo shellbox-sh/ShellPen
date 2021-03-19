@@ -33,7 +33,7 @@ title: "shellpen -- blocks options close"
 if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
 then
   shellpen append writeln ";;"
-  shellpen indent--
+  shellpen append indent--
 fi
 _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 {% endhighlight %}

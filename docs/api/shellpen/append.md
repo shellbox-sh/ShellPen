@@ -217,15 +217,6 @@ case "$__shellpen__mainCliCommands_command2" in
     
     
 
-## [`shellpen append code`](#shellpen-append-code-1)
-
-                  
-    
-    
-    
-    
-    
-
 ## [`shellpen append esac`](#shellpen-append-esac-1)
 
                   
@@ -365,7 +356,19 @@ fi
 
 {% endraw %}
 {% highlight sh %}
-_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$1"
+if [ -n "$SHELLPEN_SOURCE" ]
+then
+  local __shellpen__append_main_sourceIndex=''
+  if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_main_sourceIndex
+  then
+    shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+    return 1
+  else
+    _SHELLPEN_MAIN_FUNCTION[$__shellpen__append_main_sourceIndex]="$1"
+  fi
+else
+  _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$1"
+fi
 {% endhighlight %}
 {% raw %}
 
@@ -434,7 +437,7 @@ Hello
 
 {% endraw %}
 {% highlight sh %}
-shellpen indent--
+shellpen append indent--
 shellpen append writeln "}"
 _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 {% endhighlight %}
@@ -466,7 +469,7 @@ _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 {% highlight sh %}
 shellpen append writeln
 shellpen append writeln "${1%()}() {"
-shellpen indent++
+shellpen append indent++
 shellpen -- blocks functions open
 {% endhighlight %}
 {% raw %}
@@ -495,7 +498,19 @@ shellpen -- blocks functions open
 
 {% endraw %}
 {% highlight sh %}
-_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} - 1 ))"
+if [ -n "$SHELLPEN_SOURCE" ]
+then
+  local __shellpen__append_indentMinus_sourceIndex=''
+  if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_indentMinus_sourceIndex
+  then
+    shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+    return 1
+  else
+    _SHELLPEN_INDENT_LEVELS[$__shellpen__append_indentMinus_sourceIndex]="$(( ${_SHELLPEN_INDENT_LEVELS[$__shellpen__append_indentMinus_sourceIndex]} - 1 ))"
+  fi
+else
+  _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} - 1 ))"
+fi
 {% endhighlight %}
 {% raw %}
 
@@ -584,7 +599,7 @@ fi
 
 {% endraw %}
 {% highlight sh %}
-shellpen indent--
+shellpen append indent--
 shellpen append writeln "fi"
 {% endhighlight %}
 {% raw %}
@@ -616,7 +631,7 @@ shellpen append writeln "fi"
 shellpen -- blocks options close
 shellpen append writeln "$1)"
 shellpen -- blocks options open
-shellpen indent++
+shellpen append indent++
 {% endhighlight %}
 {% raw %}
 
@@ -646,7 +661,7 @@ shellpen indent++
 {% highlight sh %}
 shellpen append writeln "if $*"
 shellpen append writeln "then"
-shellpen indent++
+shellpen append indent++
 {% endhighlight %}
 {% raw %}
 
@@ -770,7 +785,7 @@ fi
 {% endraw %}
 {% highlight sh %}
 shellpen append writeln "case \"$1\" in"
-shellpen indent++
+shellpen append indent++
 shellpen -- blocks cases open
 {% endhighlight %}
 {% raw %}
@@ -828,35 +843,19 @@ chmod +x "$1"
 
 {% endraw %}
 {% highlight sh %}
-_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
-{% endhighlight %}
-{% raw %}
-
-</details>
-
-
-
-
-
-
-
-                    
-  
-    
-
-    
-    
-
-# [`shellpen append code`](/api/shellpen/append/code)
-
-
-
-<details>
-  <summary>View Source</summary>
-
-{% endraw %}
-{% highlight sh %}
-shellpen result "$@"
+if [ -n "$SHELLPEN_SOURCE" ]
+then
+  local __shellpen__append_indentPlus_sourceIndex=''
+  if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_indentPlus_sourceIndex
+  then
+    shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+    return 1
+  else
+    _SHELLPEN_INDENT_LEVELS[$__shellpen__append_indentPlus_sourceIndex]="$(( ${_SHELLPEN_INDENT_LEVELS[$__shellpen__append_indentPlus_sourceIndex]} + 1 ))"
+  fi
+else
+  _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
+fi
 {% endhighlight %}
 {% raw %}
 
@@ -887,7 +886,7 @@ shellpen result "$@"
 shellpen -- blocks options close
 _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 # Close existing option, if open
-shellpen indent--
+shellpen append indent--
 shellpen append writeln "esac"
 {% endhighlight %}
 {% raw %}
@@ -995,9 +994,9 @@ $1 Name of the source to switch to
 
 {% endraw %}
 {% highlight sh %}
-shellpen indent--
+shellpen append indent--
 shellpen append writeln "else"
-shellpen indent++
+shellpen append indent++
 {% endhighlight %}
 {% raw %}
 
@@ -1028,10 +1027,10 @@ shellpen indent++
 if [ $# -eq 1 ]
 then
   shellpen append writeln echo \"$*\" '>&2'
-  shellpen return 1
+  shellpen append return 1
 else
   shellpen append writeln printf $@ '>&2'
-  shellpen return 1
+  shellpen append return 1
 fi
 {% endhighlight %}
 {% raw %}

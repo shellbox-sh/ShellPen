@@ -32,7 +32,7 @@ title: "shellpen append esac"
 shellpen -- blocks options close
 _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
 # Close existing option, if open
-shellpen indent--
+shellpen append indent--
 shellpen append writeln "esac"
 {% endhighlight %}
 {% raw %}

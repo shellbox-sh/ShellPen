@@ -29,7 +29,7 @@ title: "shellpen append fi"
 
 {% endraw %}
 {% highlight sh %}
-shellpen indent--
+shellpen append indent--
 shellpen append writeln "fi"
 {% endhighlight %}
 {% raw %}

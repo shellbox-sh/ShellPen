@@ -32,10 +32,10 @@ title: "shellpen append error"
 if [ $# -eq 1 ]
 then
   shellpen append writeln echo \"$*\" '>&2'
-  shellpen return 1
+  shellpen append return 1
 else
   shellpen append writeln printf $@ '>&2'
-  shellpen return 1
+  shellpen append return 1
 fi
 {% endhighlight %}
 {% raw %}

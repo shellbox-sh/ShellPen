@@ -1,5 +1,5 @@
 ---
-title: "shellpen sources exists - 🖋️ Shell Pen API"
+title: "shellpen sources exists"
 ---
 
 {% raw %}

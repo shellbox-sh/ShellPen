@@ -29,9 +29,9 @@ title: "shellpen append else"
 
 {% endraw %}
 {% highlight sh %}
-shellpen indent--
+shellpen append indent--
 shellpen append writeln "else"
-shellpen indent++
+shellpen append indent++
 {% endhighlight %}
 {% raw %}
 

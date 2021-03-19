@@ -1,6 +1,4 @@
 FN -- blocks closeAll
-FN -- writeMain
-FN -- writeShebang
 
 if [ "$1" = "-n" ]
 then

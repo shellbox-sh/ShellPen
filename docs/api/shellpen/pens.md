@@ -187,7 +187,6 @@ $__shellpen__pens_new_aliasName() {
     return 2
   else
     eval "$__shellpen__pens_new_aliasFunctionCode"
-    shellpen result
   fi
 fi
 

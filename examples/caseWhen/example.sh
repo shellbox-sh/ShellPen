@@ -12,10 +12,13 @@ shellpen -
     - case '$command'
       - option hello
         - echo "Hello, world!"
+        - ::
       - option goodnight
         - echo "Goodnight, moon"
+        - ::
       - option '*'
         - error 'myFunction: unknown command $command'
+        - ::
     - esac
   - fi
 - }

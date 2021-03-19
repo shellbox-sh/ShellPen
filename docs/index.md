@@ -23,18 +23,18 @@ source shellpen.sh
 🖋️ Use the DSL to define variables, functions, conditionals, etc!
 
 ```sh
-shellpen :
+shellpen -
 
-: function sayHello
-  : local command="\$1"
-  : shift
-  : case "\$command"
-    : option hello
-      : echo "Hello \$*!"
-    : option goodbye
-      : echo "Goodbye \$*!"
+- function sayHello
+  - local command="\$1"
+  - shift
+  - case "\$command"
+    - option hello
+      - echo "Hello \$*!"
+    - option goodbye
+      - echo "Goodbye \$*!"
 
-: main sayHello
+- main sayHello
 ```
 
 🔍 Preview the current source code content

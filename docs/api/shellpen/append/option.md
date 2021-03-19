@@ -32,7 +32,7 @@ title: "shellpen append option"
 shellpen -- blocks options close
 shellpen append writeln "$1)"
 shellpen -- blocks options open
-shellpen indent++
+shellpen append indent++
 {% endhighlight %}
 {% raw %}
 
