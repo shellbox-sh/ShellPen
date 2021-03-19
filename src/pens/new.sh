@@ -63,6 +63,13 @@ then
   return 1
 fi
 
+# DO NOT ADD EXTRA DEFAULTS - BAIL
+if [ "$__shellpen__pens_new_penName" = default ]
+then
+  FN -- errors argumentError '%s\n%s' "Pen 'default' already exists" "Command: FN ${__FN__originalCliCommands[*]}"
+  return 1
+fi
+
 if [ -n "$__shellpen__pens_new_sourceName" ] && ! FN sources exists "$__shellpen__pens_new_sourceName"
 then
   FN sources new "$__shellpen__pens_new_sourceName"
@@ -97,6 +104,7 @@ $__shellpen__pens_new_aliasName() {
     eval "$__shellpen__pens_new_aliasFunctionCode"
   fi
 fi
+
 
 _SHELLPEN_PENS+=("$__shellpen__pens_new_penName")
 _SHELLPEN_PEN_SOURCES+=("$__shellpen__pens_new_sourceName")

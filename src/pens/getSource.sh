@@ -1,4 +1,4 @@
-## > Print or get the source associated with the given pen name
+## > Print or get the name of the source associated with the given pen name
 ##
 ## ### Valid signatures:
 ##

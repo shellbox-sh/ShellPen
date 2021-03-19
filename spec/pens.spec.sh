@@ -98,6 +98,38 @@
   :
 }
 
-@pending.can_delete_a_pen() {
-  : # putAway
+@spec.can_delete_a_pen() {
+  shellpen pen :pen penSource
+
+  expect { shellpen pens list } toEqual "default\n:pen"
+  expect { shellpen sources list } toEqual "default\npenSource"
+
+  :pen putAway
+
+  expect { shellpen pens list } toEqual "default"
+  expect { shellpen sources list } toEqual "default\npenSource"
+}
+
+@spec.can_delete_a_pen_another_way_too() {
+  shellpen pen :pen penSource
+
+  expect { shellpen pens list } toEqual "default\n:pen"
+  expect { shellpen sources list } toEqual "default\npenSource"
+
+  shellpen pens putAway :pen
+
+  expect { shellpen pens list } toEqual "default"
+  expect { shellpen sources list } toEqual "default\npenSource"
+}
+
+@spec.can_delete_a_pen_with_its_source() {
+  shellpen pen :pen penSource
+
+  expect { shellpen pens list } toEqual "default\n:pen"
+  expect { shellpen sources list } toEqual "default\npenSource"
+
+  :pen putAway withSource
+
+  expect { shellpen pens list } toEqual "default"
+  expect { shellpen sources list } toEqual "default"
 }

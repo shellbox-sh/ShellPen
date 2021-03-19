@@ -658,6 +658,20 @@ shellpen() {
         ## @
   
             ;;
+        "putAway")
+        ## @command shellpen append putAway
+          # local __shellpen__append_appendln_newLine=$'\n'
+          
+          if [ -n "$SHELLPEN_PEN" ]
+          then
+            shellpen pens putAway "$SHELLPEN_PEN" "$@"
+          else
+            shellpen -- errors argumentError '%s\n%s' "\`append putAway\` can only be called by a Pen, try \`shellpen pens putAway [name]\` instead" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+        ## @
+  
+            ;;
         "result")
         ## @command shellpen append result
           shellpen -- blocks closeAll
@@ -820,10 +834,10 @@ shellpen() {
               shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
               return 1
             else
-              _SHELLPEN_SOURCECODE[$__shellpen__append_writeln_sourceIndex]+="$( shellpen indentation )$*${__shellpen__append_writeln_newLine}"
+              _SHELLPEN_SOURCECODE[$__shellpen__append_writeln_sourceIndex]+="$( shellpen append indentation )$*${__shellpen__append_writeln_newLine}"
             fi
           else
-            _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen indentation )$*${__shellpen__append_writeln_newLine}"
+            _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( shellpen append indentation )$*${__shellpen__append_writeln_newLine}"
           fi
         ## @
   
@@ -888,7 +902,7 @@ shellpen() {
             ;;
         "getSource")
         ## @command shellpen pens getSource
-          ## > Print or get the source associated with the given pen name
+          ## > Print or get the name of the source associated with the given pen name
           ##
           ## ### Valid signatures:
           ##
@@ -1005,6 +1019,13 @@ shellpen() {
             return 1
           fi
           
+          # DO NOT ADD EXTRA DEFAULTS - BAIL
+          if [ "$__shellpen__pens_new_penName" = default ]
+          then
+            shellpen -- errors argumentError '%s\n%s' "Pen 'default' already exists" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
+          
           if [ -n "$__shellpen__pens_new_sourceName" ] && ! shellpen sources exists "$__shellpen__pens_new_sourceName"
           then
             shellpen sources new "$__shellpen__pens_new_sourceName"
@@ -1040,8 +1061,64 @@ shellpen() {
             fi
           fi
           
+          
           _SHELLPEN_PENS+=("$__shellpen__pens_new_penName")
           _SHELLPEN_PEN_SOURCES+=("$__shellpen__pens_new_sourceName")
+        ## @
+  
+            ;;
+        "putAway")
+        ## @command shellpen pens putAway
+          ## > Put away this pen (delete it) and optionally the source too (if `withSource` provided)
+          ##
+          ## ### Valid signatures:
+          ##
+          ## || Argument List | Description
+          ## -|-
+          ## `1` | `[pen]` | Name of the pen to put away (or default)
+          ## `2` | `withSource` | Optional
+          ##
+          ## @return 1 If the provided pen name does not exist
+          ## @return 2 If the provided source name does not exist
+          ##
+          
+          local __shellpen__pens_putAway_penName=default
+          local __shellpen__pens_putAway_withSource=false
+          if [ "$1" = "withSource" ]
+          then
+            __shellpen__pens_putAway_withSource=true
+            shift
+          elif [ "$2" = "withSource" ]
+          then
+            __shellpen__pens_putAway_penName="$1"
+            __shellpen__pens_putAway_withSource=true
+          elif [ $# -eq 1 ]
+          then
+            __shellpen__pens_putAway_penName="$1"
+          fi
+          
+          local __shellpen__pens_putAway_penIndex=''
+          if ! shellpen -- getPenIndex "$__shellpen__pens_putAway_penName" - __shellpen__pens_putAway_penIndex
+          then
+            shellpen -- errors argumentError '%s\n%s' "Pen not found: '$__shellpen__pens_putAway_penName'" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          else
+            if [ "$__shellpen__pens_putAway_withSource" = true ]
+            then
+              local __shellpen__pens_putAway_sourceName=''
+              shellpen pens getSource "$__shellpen__pens_putAway_penName" - __shellpen__pens_putAway_sourceName
+              shellpen sources putAway "$__shellpen__pens_putAway_sourceName" || return %?
+            fi
+            unset "_SHELLPEN_PENS[$__shellpen__pens_putAway_penIndex]"
+            unset "_SHELLPEN_PEN_SOURCES[$__shellpen__pens_putAway_penIndex]"
+            if [ "$_SHELLPEN_CURRENT_PEN_NAME" = "$__shellpen__pens_putAway_penName" ]
+            then
+              _SHELLPEN_CURRENT_PEN_NAME=default
+              _SHELLPEN_CURRENT_PEN_INDEX=0
+            fi
+            _SHELLPEN_PENS=("${_SHELLPEN_PENS[@]}")
+            _SHELLPEN_PEN_SOURCES=("${_SHELLPEN_PEN_SOURECS[@]}")
+          fi
         ## @
   
             ;;
@@ -1338,6 +1415,47 @@ shellpen() {
           _SHELLPEN_FUNCTION_OPEN+=("")
           _SHELLPEN_CASE_OPEN+=("")
           _SHELLPEN_MAIN_FUNCTION+=("")
+        ## @
+  
+            ;;
+        "putAway")
+        ## @command shellpen sources putAway
+          if [ $# -eq 1 ]
+          then
+            local __shellpen__sources_putAway_sourceIndex=''
+            if shellpen -- getSourceIndex "$1" - __shellpen__sources_putAway_sourceIndex
+            then
+          
+              unset "_SHELLPEN_SOURCES[$__shellpen__sources_putAway_sourceIndex]"
+              unset "_SHELLPEN_SOURCECODE[$__shellpen__sources_putAway_sourceIndex]"
+              unset "_SHELLPEN_SOURCES_FILE_PATHS[$__shellpen__sources_putAway_sourceIndex]"
+              unset "_SHELLPEN_INDENT_LEVELS[$__shellpen__sources_putAway_sourceIndex]"
+              unset "_SHELLPEN_FUNCTION_OPEN[$__shellpen__sources_putAway_sourceIndex]"
+              unset "_SHELLPEN_CASE_OPEN[$__shellpen__sources_putAway_sourceIndex]"
+              unset "_SHELLPEN_MAIN_FUNCTION[$__shellpen__sources_putAway_sourceIndex]"
+          
+              _SHELLPEN_SOURCES=("${_SHELLPEN_SOURCES[@]}")
+              _SHELLPEN_SOURCECODE=("${_SHELLPEN_SOURCECODE[@]}")
+              _SHELLPEN_SOURCES_FILE_PATHS=("${_SHELLPEN_SOURCES_FILE_PATHS[@]}")
+              _SHELLPEN_INDENT_LEVELS=("${_SHELLPEN_INDENT_LEVELS[@]}")
+              _SHELLPEN_FUNCTION_OPEN=("${_SHELLPEN_FUNCTION_OPEN[@]}")
+              _SHELLPEN_CASE_OPEN=("${_SHELLPEN_CASE_OPEN[@]}")
+              _SHELLPEN_MAIN_FUNCTION=("${_SHELLPEN_MAIN_FUNCTION[@]}")
+          
+              if [ "$_SHELLPEN_CURRENT_SOURCE_INDEX" = "$__shellpen__sources_putAway_sourceIndex" ]
+              then
+                _SHELLPEN_CURRENT_SOURCE_INDEX=0
+                _SHELLPEN_CURRENT_SOURCE_NAME="default"
+              fi
+          
+            else
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            fi
+          else
+            shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+            return 1
+          fi
         ## @
   
             ;;

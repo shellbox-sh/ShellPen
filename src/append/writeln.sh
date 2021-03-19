@@ -7,8 +7,8 @@ then
     FN -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: FN ${__FN__originalCliCommands[*]}"
     return 1
   else
-    _SHELLPEN_SOURCECODE[$__shellpen__append_writeln_sourceIndex]+="$( FN indentation )$*${__shellpen__append_writeln_newLine}"
+    _SHELLPEN_SOURCECODE[$__shellpen__append_writeln_sourceIndex]+="$( FN append indentation )$*${__shellpen__append_writeln_newLine}"
   fi
 else
-  _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( FN indentation )$*${__shellpen__append_writeln_newLine}"
+  _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$( FN append indentation )$*${__shellpen__append_writeln_newLine}"
 fi
