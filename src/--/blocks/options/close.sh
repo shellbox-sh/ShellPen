@@ -2,6 +2,6 @@
 if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
 then
   FN append writeln ";;"
-  FN indent--
+  FN append indent--
 fi
 _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false

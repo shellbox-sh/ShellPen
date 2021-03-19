@@ -2,18 +2,18 @@
 
 source shellpen.sh
 
-shellpen :
+shellpen -
 
-: function sayHello
-  : local command="\$1"
-  : shift
-  : case "\$command"
-    : option hello
-      : echo "Hello \$*!"
-    : option goodbye
-      : echo "Goodbye \$*!"
+- function sayHello
+  - local command="\$1"
+  - shift
+  - case "\$command"
+    - option hello
+      - echo "Hello \$*!"
+    - option goodbye
+      - echo "Goodbye \$*!"
 
-: main sayHello
+- main sayHello
 
 # Load the generated code
 eval "$( shellpen result )"

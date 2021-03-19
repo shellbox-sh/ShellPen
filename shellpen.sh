@@ -105,7 +105,19 @@ shellpen() {
                           ;;
                       "open")
                       ## @command shellpen -- blocks functions open
-                        _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+                        if [ -n "$SHELLPEN_SOURCE" ]
+                        then
+                          local __shellpen__append_main_sourceIndex=''
+                          if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_main_sourceIndex
+                          then
+                            shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+                            return 1
+                          else
+                            _SHELLPEN_FUNCTION_OPEN[$__shellpen__append_main_sourceIndex]=true
+                          fi
+                        else
+                          _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=true
+                        fi
                       ## @
             
                           ;;
@@ -130,7 +142,7 @@ shellpen() {
                         if [ "${_SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" = true ]
                         then
                           shellpen append writeln ";;"
-                          shellpen indent--
+                          shellpen append indent--
                         fi
                         _SHELLPEN_OPTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
                       ## @
@@ -379,14 +391,8 @@ shellpen() {
         "case")
         ## @command shellpen append case
           shellpen append writeln "case \"$1\" in"
-          shellpen indent++
+          shellpen append indent++
           shellpen -- blocks cases open
-        ## @
-  
-            ;;
-        "code")
-        ## @command shellpen append code
-          shellpen result "$@"
         ## @
   
             ;;
@@ -415,9 +421,9 @@ shellpen() {
             ;;
         "else")
         ## @command shellpen append else
-          shellpen indent--
+          shellpen append indent--
           shellpen append writeln "else"
-          shellpen indent++
+          shellpen append indent++
         ## @
   
             ;;
@@ -426,10 +432,10 @@ shellpen() {
           if [ $# -eq 1 ]
           then
             shellpen append writeln echo \"$*\" '>&2'
-            shellpen return 1
+            shellpen append return 1
           else
             shellpen append writeln printf $@ '>&2'
-            shellpen return 1
+            shellpen append return 1
           fi
         ## @
   
@@ -439,14 +445,14 @@ shellpen() {
           shellpen -- blocks options close
           _SHELLPEN_CASE_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
           # Close existing option, if open
-          shellpen indent--
+          shellpen append indent--
           shellpen append writeln "esac"
         ## @
   
             ;;
         "fi")
         ## @command shellpen append fi
-          shellpen indent--
+          shellpen append indent--
           shellpen append writeln "fi"
         ## @
   
@@ -461,7 +467,7 @@ shellpen() {
         ## @command shellpen append function
           shellpen append writeln
           shellpen append writeln "${1%()}() {"
-          shellpen indent++
+          shellpen append indent++
           shellpen -- blocks functions open
         ## @
   
@@ -470,19 +476,43 @@ shellpen() {
         ## @command shellpen append if
           shellpen append writeln "if $*"
           shellpen append writeln "then"
-          shellpen indent++
+          shellpen append indent++
         ## @
   
             ;;
         "indent++")
         ## @command shellpen append indent++
-          _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
+          if [ -n "$SHELLPEN_SOURCE" ]
+          then
+            local __shellpen__append_indentPlus_sourceIndex=''
+            if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_indentPlus_sourceIndex
+            then
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            else
+              _SHELLPEN_INDENT_LEVELS[$__shellpen__append_indentPlus_sourceIndex]="$(( ${_SHELLPEN_INDENT_LEVELS[$__shellpen__append_indentPlus_sourceIndex]} + 1 ))"
+            fi
+          else
+            _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} + 1 ))"
+          fi
         ## @
   
             ;;
         "indent--")
         ## @command shellpen append indent--
-          _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} - 1 ))"
+          if [ -n "$SHELLPEN_SOURCE" ]
+          then
+            local __shellpen__append_indentMinus_sourceIndex=''
+            if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_indentMinus_sourceIndex
+            then
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            else
+              _SHELLPEN_INDENT_LEVELS[$__shellpen__append_indentMinus_sourceIndex]="$(( ${_SHELLPEN_INDENT_LEVELS[$__shellpen__append_indentMinus_sourceIndex]} - 1 ))"
+            fi
+          else
+            _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} - 1 ))"
+          fi
         ## @
   
             ;;
@@ -505,7 +535,19 @@ shellpen() {
             ;;
         "main")
         ## @command shellpen append main
-          _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$1"
+          if [ -n "$SHELLPEN_SOURCE" ]
+          then
+            local __shellpen__append_main_sourceIndex=''
+            if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_main_sourceIndex
+            then
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            else
+              _SHELLPEN_MAIN_FUNCTION[$__shellpen__append_main_sourceIndex]="$1"
+            fi
+          else
+            _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$1"
+          fi
         ## @
   
             ;;
@@ -514,7 +556,7 @@ shellpen() {
           shellpen -- blocks options close
           shellpen append writeln "$1)"
           shellpen -- blocks options open
-          shellpen indent++
+          shellpen append indent++
         ## @
   
             ;;
@@ -538,7 +580,7 @@ shellpen() {
             ;;
         "}")
         ## @command shellpen append }
-          shellpen indent--
+          shellpen append indent--
           shellpen append writeln "}"
           _SHELLPEN_FUNCTION_OPEN[$_SHELLPEN_CURRENT_SOURCE_INDEX]=false
         ## @
@@ -630,6 +672,12 @@ shellpen() {
           return 1
           ;;
       esac
+    ## @
+
+        ;;
+    "code")
+    ## @command shellpen code
+      shellpen result "$@"
     ## @
 
         ;;
@@ -810,7 +858,6 @@ shellpen() {
               return 2
             else
               eval "$__shellpen__pens_new_aliasFunctionCode"
-              shellpen result
             fi
           fi
           
@@ -909,12 +956,6 @@ shellpen() {
     "-")
     ## @command shellpen -
       shellpen pen -
-    ## @
-
-        ;;
-    ":")
-    ## @command shellpen :
-      shellpen pen :
     ## @
 
         ;;

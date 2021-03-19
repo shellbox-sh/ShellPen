@@ -2,15 +2,15 @@
 
 source shellpen.sh
 
-shellpen :
+shellpen -
 
-: function myFunction {
-  : if [ '$#' -eq 0 ]
-    : echo 'Hello!'
-  : else
-    : echo 'Hello $*!'
-  : fi
-: }
+- function myFunction {
+  - if [ '$#' -eq 0 ]
+    - echo 'Hello!'
+  - else
+    - echo 'Hello $*!'
+  - fi
+- }
 
 # Load the generated code
 eval "$( shellpen result )"

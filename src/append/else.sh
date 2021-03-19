@@ -1,3 +1,3 @@
-FN indent--
+FN append indent--
 FN append writeln "else"
-FN indent++
+FN append indent++

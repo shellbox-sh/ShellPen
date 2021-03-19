@@ -1,3 +1,3 @@
 FN append writeln "case \"$1\" in"
-FN indent++
+FN append indent++
 FN -- blocks cases open
