@@ -454,6 +454,13 @@ shellpen() {
         ## @
   
             ;;
+        "done")
+        ## @command shellpen append done
+          shellpen append indent--
+          shellpen append writeln "done"
+        ## @
+  
+            ;;
         "echo")
         ## @command shellpen append echo
           shellpen append writeln "echo \"$*\""
@@ -470,7 +477,13 @@ shellpen() {
             ;;
         "error")
         ## @command shellpen append error
-          if [ $# -eq 1 ]
+          # TODO get return code if provided!
+          
+          if [ $# -eq 0 ]
+          then
+            shellpen append writeln echo '>&2'
+            shellpen append return 1
+          elif [ $# -eq 1 ]
           then
             shellpen append writeln echo \"$*\" '>&2'
             shellpen append return 1
@@ -503,6 +516,14 @@ shellpen() {
         ## @
   
             ;;
+        "for")
+        ## @command shellpen append for
+          shellpen append writeln "for $*"
+          shellpen append writeln "do"
+          shellpen append indent++
+        ## @
+  
+            ;;
         "function")
         ## @command shellpen append function
           shellpen append writeln
@@ -531,7 +552,8 @@ shellpen() {
             ;;
         "if")
         ## @command shellpen append if
-          shellpen append writeln "if $*"
+          local __shellpen__if_source="${*/AND/&&}"
+          shellpen append writeln "if ${__shellpen__if_source/OR/||}"
           shellpen append writeln "then"
           shellpen append indent++
         ## @
@@ -600,6 +622,23 @@ shellpen() {
             fi
           else
             _SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]="$(( ${_SHELLPEN_INDENT_LEVELS[$_SHELLPEN_CURRENT_SOURCE_INDEX]} - 1 ))"
+          fi
+        ## @
+  
+            ;;
+        "int")
+        ## @command shellpen append int
+          if [ $# -eq 1 ]
+          then
+            if [[ "$1" =~ ^[^=]+=[^=]+$ ]]
+            then
+              shellpen append writeln "declare -i ${1%%=*}=${1#*=}"
+            else
+              shellpen append writeln "declare -i $*"
+            fi
+          elif [ $# -eq 2 ]
+          then
+            shellpen append writeln "declare -i $1=$2"
           fi
         ## @
   
@@ -720,6 +759,18 @@ shellpen() {
         ## @
   
             ;;
+        "++")
+        ## @command shellpen append ++
+          shellpen append writeln "(( $1++ ))"
+        ## @
+  
+            ;;
+        "--")
+        ## @command shellpen append --
+          shellpen append writeln "(( $1-- ))"
+        ## @
+  
+            ;;
         ":")
         ## @command shellpen append :
           shellpen append writeln ":"
@@ -766,6 +817,20 @@ shellpen() {
         ## @
   
             ;;
+        "stderr")
+        ## @command shellpen append stderr
+          if [ $# -eq 0 ]
+          then
+            shellpen append writeln echo '>&2'
+          elif [ $# -eq 1 ]
+          then
+            shellpen append writeln echo \"$*\" '>&2'
+          else
+            shellpen append writeln printf $@ '>&2'
+          fi
+        ## @
+  
+            ;;
         "switchTo")
         ## @command shellpen append switchTo
           ## > Switch pen to write to a different source
@@ -795,6 +860,15 @@ shellpen() {
             shellpen -- errors argumentError '%s\n%s' 'Invalid arguments' "Command: shellpen ${__shellpen__originalCliCommands[*]}"
             return 1
           fi
+        ## @
+  
+            ;;
+        "while")
+        ## @command shellpen append while
+          local __shellpen__while_source="${*/AND/&&}"
+          shellpen append writeln "while ${__shellpen__while_source/OR/||}"
+          shellpen append writeln "do"
+          shellpen append indent++
         ## @
   
             ;;
@@ -861,8 +935,7 @@ shellpen() {
   
             ;;
         *)
-          echo "Unknown 'shellpen append' command: $__shellpen__mainCliCommands_command2" >&2
-          return 1
+          echo "# ARGS to append $# '$*'"
           ;;
       esac
     ## @
