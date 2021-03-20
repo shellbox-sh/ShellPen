@@ -424,6 +424,12 @@ shellpen() {
         ## @
   
             ;;
+        "break")
+        ## @command shellpen append break
+          shellpen append writeln "break"
+        ## @
+  
+            ;;
         "case")
         ## @command shellpen append case
           shellpen append writeln "case \"$1\" in"
