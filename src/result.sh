@@ -1,4 +1,5 @@
 FN -- blocks closeAll
+FN -- writeMain
 
 if [ "$1" = "-n" ]
 then

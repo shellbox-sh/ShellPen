@@ -335,12 +335,31 @@ shellpen() {
             ;;
         "writeMain")
         ## @command shellpen -- writeMain
-          if [ -n "${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
+          if [ -n "$SHELLPEN_SOURCE" ]
           then
-            shellpen append writeln
-            shellpen append writeln "[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ] && \"${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}\" \"\$@\""
+            local __shellpen__append_append_sourceIndex=''
+            if ! shellpen -- getSourceIndex "$SHELLPEN_SOURCE" - __shellpen__append_append_sourceIndex
+            then
+              shellpen -- errors argumentError '%s\n%s' "Source '$1' does not exist" "Command: shellpen ${__shellpen__originalCliCommands[*]}"
+              return 1
+            else
+              if [ -n "${_SHELLPEN_MAIN_FUNCTION[$__shellpen__append_append_sourceIndex]}" ]
+              then
+                shellpen append writeln
+                shellpen append writeln "[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ] && \"${_SHELLPEN_MAIN_FUNCTION[$__shellpen__append_append_sourceIndex]}\" \"\$@\""
+              fi
+              _SHELLPEN_MAIN_FUNCTION[$__shellpen__append_append_sourceIndex]=""
+              _SHELLPEN_SOURCECODE[$__shellpen__append_append_sourceIndex]+="$*"
+            fi
+          else
+            if [ -n "${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}" ]
+            then
+              shellpen append writeln
+              shellpen append writeln "[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ] && \"${_SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]}\" \"\$@\""
+            fi
+            _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]=""
+            _SHELLPEN_SOURCECODE[$_SHELLPEN_CURRENT_SOURCE_INDEX]+="$*"
           fi
-          _SHELLPEN_MAIN_FUNCTION[$_SHELLPEN_CURRENT_SOURCE_INDEX]=""
         ## @
   
             ;;
@@ -720,6 +739,7 @@ shellpen() {
         "result")
         ## @command shellpen append result
           shellpen -- blocks closeAll
+          shellpen -- writeMain
           
           if [ -n "$SHELLPEN_SOURCE" ]
           then
@@ -1276,6 +1296,7 @@ shellpen() {
     "result")
     ## @command shellpen result
       shellpen -- blocks closeAll
+      shellpen -- writeMain
       
       if [ "$1" = "-n" ]
       then

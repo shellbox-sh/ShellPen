@@ -1,4 +1,5 @@
 FN -- blocks closeAll
+FN -- writeMain
 
 if [ -n "$SHELLPEN_SOURCE" ]
 then
