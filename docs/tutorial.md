@@ -17,29 +17,18 @@ Are you ready? Let's get started!
 
 ## Table of Contents
 
-[⚙️ ShellPen Core](#-shellpen-core)
-
-[✏️ Create Adapter](#-create-adapter)
-
-[🔖 Register Adapter](#-register-adapter)
-
-[💬 Call Adapter](#-call-adapter)
-
-[🖋️ Respond to Pen Writing](#-respond-to-pen-writing)
-
-[🔍 Respond to Document Preview](#-respond-to-document-preview)
-
-[↩️ Handling Actions](#️-handling-actions)
-
-[🛢️ Document Store](#-document-store)
-
-[📝 Write to Document](#-write-to-document)
-
-[🌲 Writing Nested XML Nodes](#-writing-nested-xml-nodes)
-
-[▶️ Add Indentation](#-add-indentation)
-
-[💲 Document Variables](#-document-variables)
+ - [⚙️ ShellPen Core](#-shellpen-core)
+ - [✏️ Create Adapter](#-create-adapter)
+ - [🔖 Register Adapter](#-register-adapter)
+ - [💬 Call Adapter](#-call-adapter)
+ - [🖋️ Respond to Pen Writing](#-respond-to-pen-writing)
+ - [🔍 Respond to Document Preview](#-respond-to-document-preview)
+ - [↩️ Handling Actions](#️-handling-actions)
+ - [🛢️ Document Store](#-document-store)
+ - [📝 Write to Document](#-write-to-document)
+ - [🌲 Writing Nested XML Nodes](#-writing-nested-xml-nodes)
+ - [▶️ Add Indentation](#-add-indentation)
+ - [🎉 Wrap-up](#-document-variables)
 
 ## ⚙️ ShellPen Core
 
@@ -412,34 +401,10 @@ $ ShellPen documents preview xmlDoc
 > To configure the indent size for your adapter:  
   `export SHELLPEN_INDENT="\t"` (_or whatever you wish your indent to be_)
 
-## 💲 Document Variables
+## 🎉 Wrap-up
 
-The XML is looking great! But how about providing an `<?xml>` declaration?
+That's it for this tutorial!
 
-Let's allow users to, at any point, set a variable to include `<?xml>`.
+Hopefully this was enough to get you started.
 
-```sh
-$ XML node "text"
-# ...
-$ XML ?xml 1.0
-# ...
-$ XML node "text"
-#
-```
-
-There are two ways we could accomplish this:
-
-1. Instead of `writeln`, use `prependln` and add to the start of the document
-2. Set variable for whether to include `<?xml>` (_e.g. to demonstrate variables!_)
-
-### String Variables
-
-...
-
-### List Variables
-
-...
-
-### Map Variables
-
-...
+Now, hop over to the 🧐 [ShellPen Adapter Guide](/adapters) to learn more!
