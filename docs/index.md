@@ -4,7 +4,7 @@
 {% raw %}
 # 🖋️ Shell Pen
 
-> 🖋️ Generate Shell Script Source Code using a familiar DSL!
+> 🖋️ Generate BASH source code, XML, HTML, CSV, and more!
 
 Download the [latest version](https://github.com/shellbox-sh/shellpen/archive/v0.1.0.tar.gz) by clicking one of the download links above or:
 
@@ -12,144 +12,188 @@ Download the [latest version](https://github.com/shellbox-sh/shellpen/archive/v0
 curl -o- https://shellpen.sh/installer.sh | bash
 ```
 
-## BASH Codegen
+- _This includes support for all languages, click links below for specific installers_
 
-🖋️ Import the `shellpen` library:
+## ✒️ Supported Languages
 
-```sh
-source shellpen.sh
-```
+`ShellPen` has built-in adapters available for authoring:
 
-🖋️ Use the DSL to define variables, functions, conditionals, etc!
+ - [XML (`.xml`)](/xml)
+ - [HTML (`.html`)](/html)
+ - [Plain-text (`.txt`)](/text)
+ - [Markdown (`.md`)](/markdown)
+ - [BASH source code (`.sh`)](/bash)
+ - [Comma-delimited files (`.csv`)](/csv)
+ - [INI configuration files (`.ini`)](/ini)
 
-```sh
-shellpen -
+### 🖊️ `ShellPen` for developers
 
-- function sayHello
-  - local command="\$1"
-  - shift
-  - case "\$command"
-    - option hello
-      - echo "Hello \$*!"
-    - option goodbye
-      - echo "Goodbye \$*!"
+_See [Authoring a ShellPen adapter](/dev) to author your own `ShellPen` adapter!_
 
-- main sayHello
-```
+# 🖋️ Getting Started
 
-🔍 Preview the current source code content
+[✍️ Installation](#-installation)
 
-```sh
-shellpen preview
-```
+[📄 Documents](#-documents)
+ - [Create Document](#create-document)
+ - [Write to Document](#write-to-document)
+ - [View Document](#view-document)
 
-```sh
-#! /usr/bin/env bash
+[🖊️ Pens](#️-pens)
+ - [Create Pen](#create-pen)
+ - [Write to Document using Pen](#write-to-document-using-pen)
+ - [View Document](#view-document-1)
+ - [How does this work?](#-how-does-this-work)
 
-sayHello() {
-  local command=$1
-  shift
-  case "$command" in
-    hello)
-      echo "Hello $*!"
-      ;;
-    goodbye)
-      echo "Goodbye $*!"
-      ;;
-  esac
-}
+[🎓 Learn More](#-learn-more)
 
-[ "${BASH_SOURCE[0]}" = "$0" ] && "sayHello" "$@"
-```
+## ✍️ Installation
 
-💾 Save and run it!
+> _If you are interested in authoring one specific language only, follow the relevant link in [Supported Languages](#supported-languages) for instructions on installation_.
+
+The examples on this page will use the `ShellPen` HTML writer.
+
+To install _just_ the HTML writer, run the following command:
 
 ```sh
-shellpen save say-hello.sh
+curl -o- https://shellpen.sh/html/installer.sh | bash
 ```
+
+To verify your download, you can run the downloaded `ShellPen` file:
 
 ```sh
-./say-hello.sh hello Rebecca
-# => "Hello Rebecca!"
+./ShellPen --version
+# => ShellPen version 2.0.0
 ```
 
-# 📝 Sources
+## 📄 Documents
 
-`shellpen` can write to one or multiple sources.
+`ShellPen` writes to _"documents"_ which represent text you wish to generate.
 
-- A source represents a snippet of source code to write
-- A source can optionally be tied to a local file
+For example, a document might represent a chunk of HTML or Plain-text.
 
-Sources allow you to manage multiple pieces of source code.
+> _Note: documents are not files, they are simply a representation of a chunk of text to write to (which may optionally be saved to a file)_
 
-🗒️ Declare multiple sources
+### Create Document
+
+- This example creates a new HTML document named `webpage`:
 
 ```sh
-shellpen -
-
-shellpen source cats.sh
-shellpen source dogs.sh
-
-shellpen sources use cats.sh
-- function meow
-  - echo "Meow"
-
-shellpen sources use dogs.sh
-- function woof
-  - echo "Woof"
-
-shellpen preview cats.sh
-# => "meow() { echo "Meow" ..."
-
-shellpen preview dogs.sh
-# => "woof() { echo "Woof" ..."
+$ ShellPen documents create html example
 ```
 
-To make switching between sources easier, you can use pens!
+### Write to Document
 
-# ✒️ Pens
-
-In `shellpen`, a "pen" is associated with a particular source.
-
-You can have many pens, each associated with a separate source 🖊️ 🖋️ 🖌️
+- This example adds a new HTML node named `<title>` to `webpage`:
 
 ```sh
-shellpen pen :cat
-shellpen pen :dog
-
-:cat writeTo cat.sh
-:dog writeTo dog.sh
-
-:cat function meow
-  :cat echo "Meow"
-
-:dog function "woof"
-  :dog echo "Woof"
-
-:cat preview cats.sh
-# => "meow() { echo "Meow" ..."
-
-:dog preview dogs.sh
-# => "woof() { echo "Woof" ..."
+$ ShellPen documents write webpage title "Hello, world!"
 ```
 
-Pens are helpers for easily calling `shellpen` functions for any given source!
+### View Document
+
+- This example previews the current state of the `webpage` document:
 
 ```sh
-# This is a shortcut to get a pen named `:`
-# which writes to the currently selected source:
-shellpen -
-
-# If you want to write to a different source:
-- switchTo [source]
-
-# This is another shortcut for quickly
-# getting a pen for the currently selected source:
-shellpen pen [name]
-
-# Or get a pen for a particular source:
-shellpen pen [name] [source]
+$ ShellPen documents preview hello
 ```
+
+```html
+<title>Hello, world!</title>
+```
+
+> You may have noticed that these commands are a bit verbose!  
+> `ShellPen` _"pens"_ provide a simpler interface for writing documents 🖊️
+
+## 🖊️ Pens
+
+`ShellPen` uses _"pens"_ to improve the experience of writing to documents.
+
+Pens are shell aliases which are bound to writing to a certain document.
+
+### Create Pen
+
+- This example creates a new pen named `page` which writes to the `webpage` document:
+
+```sh
+$ ShellPen pens create page webpage
+```
+
+Now you can write HTML to the `webpage` document using the `page` alias:
+
+### Write to Document using Pen
+
+- This example adds new `<ul>` and `<li>` nodes to the `webpage` document:
+
+```sh
+$ page ul
+$ page - li "Hello, list item!
+```
+
+Now preview the `webpage` document after writing using the `.e.g.` pen:
+
+### View Document
+
+```sh
+$ ShellPen documents preview hello
+```
+
+```html
+<title>Hello, world!</title>
+<ul>
+  <li>Hello, list item!</li>
+</ul>
+```
+
+#### ❓ How does this work?
+
+A `ShellPen` _"pen"_ is a shell function bound to write to a certain document.
+
+This pen command:
+
+```sh
+$ pen - li "Hello, list item!"
+```
+
+Is identical to the running following command:
+
+```sh
+$ ShellPen documents write webpage - li "Hello, list item!"
+```
+
+# 🎓 Learn More
+
+To learn how to use `ShellPen` for a certain language, click the link below:
+
+ - [XML (`.xml`)](/xml)
+ - [HTML (`.html`)](/html)
+ - [Plain-text (`.txt`)](/text)
+ - [Markdown (`.md`)](/markdown)
+ - [BASH source code (`.sh`)](/bash)
+ - [Comma-delimited files (`.csv`)](/csv)
+ - [INI configuration files (`.ini`)](/ini)
+
+To learn the generic `ShellPen` command-line API, view the [API Reference](/api).
+
+To learn how to author your own `ShellPen` API, view the [Developer docs](/dev).
+
+## 👩‍💻 BASH Developers
+
+> Note for BASH developers:
+
+If you are using BASH, you can `source` `ShellPen` as a library.
+
+This provides the following benefits:
+
+ - Performance (_`ShellPen` stores documents in variables rather than files_)
+ - Expanded API (_`ShellPen` functions can set output variables in BASH_)
+
+`ShellPen` detects whether it was run as a binary or BASH function.
+
+> To force `ShellPen` into binary mode when using it as a function, set
+> the `SHELLPEN_MODE=binary` global variable before calling `ShellPen`.
+
+To learn more, view the [Developer docs](/dev).
 
 ---
 

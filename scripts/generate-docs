@@ -1,5 +1,24 @@
 #! /usr/bin/env bash
 
+generateREADME() {
+  cp docs/_templates/readmeHeader.md README.md
+  cat docs/_templates/index.md >> README.md
+}
+
+generateWebsiteIndex() {
+  cp docs/_templates/websiteHeader.md docs/index.md
+  cat docs/_templates/index.md >> docs/index.md
+  echo >> docs/index.md
+  echo '{% endraw %}' >> docs/index.md
+}
+
+if [ "$1" = "-x" ]
+then
+  generateREADME
+  generateWebsiteIndex
+  exit 0
+fi
+
 TEMPLATE=docs/_templates/command_reference.shx.md
 API_ROOT=api
 
@@ -16,18 +35,6 @@ tree "$tree"
 
 context() { docgen context "$@"; }
 command() { docgen context commands "$@"; }
-
-generateREADME() {
-  cp docs/_templates/readmeHeader.md README.md
-  cat docs/_templates/index.md >> README.md
-}
-
-generateWebsiteIndex() {
-  cp docs/_templates/websiteHeader.md docs/index.md
-  cat docs/_templates/index.md >> docs/index.md
-  echo >> docs/index.md
-  echo '{% endraw %}' >> docs/index.md
-}
 
 writeMarkdownFile() {
   local markdownFile="docs/${1/#"@commands"/"$API_ROOT"}.md"
