@@ -58,6 +58,9 @@ To verify your download, you can run the downloaded `ShellPen` file:
 ```sh
 ./ShellPen --version
 # => ShellPen version 2.0.0
+# => 
+# => Adapters installed:
+# => - html
 ```
 
 ## 📄 Documents

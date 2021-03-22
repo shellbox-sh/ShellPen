@@ -62,6 +62,9 @@ To verify your download, you can run the downloaded `ShellPen` file:
 ```sh
 ./ShellPen --version
 # => ShellPen version 2.0.0
+# => 
+# => Adapters installed:
+# => - html
 ```
 
 ## 📄 Documents
@@ -114,7 +117,7 @@ Pens are shell aliases which are bound to writing to a certain document.
 - This example creates a new pen named `page` which writes to the `webpage` document:
 
 ```sh
-$ ShellPen pens create page webpage
+$ ShellPen pens create page --writeTo webpage
 ```
 
 Now you can write HTML to the `webpage` document using the `page` alias:
