@@ -12,12 +12,12 @@ generateWebsiteIndex() {
   echo '{% endraw %}' >> docs/index.md
 }
 
-if [ "$1" = "-x" ]
-then
-  generateREADME
-  generateWebsiteIndex
-  exit 0
-fi
+generateREADME
+generateWebsiteIndex
+
+[ "$1" = "-x" ] && exit 0
+
+#
 
 TEMPLATE=docs/_templates/command_reference.shx.md
 API_ROOT=api
@@ -25,13 +25,38 @@ API_ROOT=api
 source vendor/docgen.sh
 source vendor/shx.sh
 
-tree="$( mktemp -d )"
+if [ "$1" = "--tree" ]
+then
+  shift
+  tree="$1"
+  shift
+else
+  tree="$( mktemp -d )"
+fi
 
 docgen parseTree setRoot "$tree"
-docgen parseToTree shellpen.sh
-docgen context create new
 
-tree "$tree"
+if [ "$1" = "--parse" ]
+then
+  shift
+  [ -d "$tree" ] && rm -r "$tree"
+  mkdir -p "$tree"
+  docgen parseToTree src/
+else
+  [ -d "$tree" ] || { echo "Tree not found '$tree' - try calling with --tree [tree] --parse to create new" >&2; exit 1; }
+fi
+
+if [ "$1" = "--recurse" ]
+then
+  recurse=true
+  shift
+fi
+
+[ $# -eq 0 ] && { echo "Please provide @command paths to generate Markdown files for" >&2; exit 1; }
+
+tree -a "$tree"
+
+docgen context create new
 
 context() { docgen context "$@"; }
 command() { docgen context commands "$@"; }
@@ -55,27 +80,21 @@ writeMarkdownFiles() {
 
   echo "$( writeMarkdownFile "$commandPath" )"
 
-  declare -a commandPaths=()
-  if docgen context commands list commandPaths
+  if [ "$recurse" = true ]
   then
-    commandPath=''
-    for commandPath in "${commandPaths[@]}"
-    do
-      echo "$( writeMarkdownFiles "$commandPath" )"
-    done
+    declare -a commandPaths=()
+    if docgen context commands list commandPaths
+    then
+      commandPath=''
+      for commandPath in "${commandPaths[@]}"
+      do
+        echo "$( writeMarkdownFiles "$commandPath" )"
+      done
+    fi
   fi
 }
 
-generateWebsiteIndex
-generateREADME
-
-if [ $# -eq 0 ]
-then
-  writeMarkdownFiles "@commands/shellpen"
-else
-  for arg in "$@"
-  do
-    # accepts a command path relative to shellpen
-    writeMarkdownFiles "@commands/shellpen/$arg"
-  done
-fi
+for arg in "$@"
+do
+  writeMarkdownFiles "@commands/$arg"
+done

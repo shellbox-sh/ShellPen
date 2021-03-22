@@ -117,7 +117,7 @@ Pens are shell aliases which are bound to writing to a certain document.
 - This example creates a new pen named `page` which writes to the `webpage` document:
 
 ```sh
-$ ShellPen pens create page --writeTo webpage
+$ ShellPen pens create page webpage
 ```
 
 Now you can write HTML to the `webpage` document using the `page` alias:

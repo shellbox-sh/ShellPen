@@ -20,7 +20,11 @@ title: "<%= $(command getName) %>"
 
 <!-- Todo, if there are no subcommands under the child commands, use a smaller heading size -->
 
+<% if [ -n "$(command getName)" ]; then %>
 # <%= $(command getName) %>
+<% else %>
+# <%= ${commandPath#@commands/} %>
+<% fi %>
 
 <% if context has sourceCode.sh; then %>
 
@@ -40,13 +44,13 @@ title: "<%= $(command getName) %>"
 <%= $(command getDescription) %>
 <% fi %>
 
-<% if command getParameterNames parameterNames; then -%>
+<% if context getList parameters parameterNames; then -%>
 #### Parameters
 
-| | Description |
-|-|-------------|
+| | Type | Description |
+|-|------|-------------|
 <% for parameterName in "${parameterNames[@]}"; do -%>
-| `<%= $parameterName %>` | <%= $(command getParameterDescription "$parameterName" ) %> |
+| `<%= $parameterName %>` | <%= $(context getValue "parameters/$parameterName/type" ) %> | <%= $(context getValue "parameters/$parameterName/description" ) %> |
 <% done %>
 <% fi %>
 
@@ -127,11 +131,11 @@ title: "<%= $(command getName) %>"
 <% fi %>
 
 <% parameterNames=() %>
-<% if command getParameterNames parameterNames; then -%>
-| | Description |
-|-|-------------|
+<% if context getList parameters parameterNames; then -%>
+| | Type | Description |
+|-|------|-------------|
 <% for parameterName in "${parameterNames[@]}"; do -%>
-| `<%= $parameterName %>` | <%= $(command getParameterDescription "$parameterName" ) %> |
+| `<%= $parameterName %>` | <%= $(context getValue "parameters/$parameterName/type" ) %> | <%= $(context getValue "parameters/$parameterName/description" ) %> |
 <% done %>
 <% fi %>
 
@@ -164,11 +168,11 @@ title: "<%= $(command getName) %>"
 <% fi %>
 
 <% parameterNames=() %>
-<% if command getParameterNames parameterNames; then -%>
-| | Description |
-|-|-------------|
+<% if context getList parameters parameterNames; then -%>
+| | Type | Description |
+|-|------|-------------|
 <% for parameterName in "${parameterNames[@]}"; do -%>
-| `<%= $parameterName %>` | <%= $(command getParameterDescription "$parameterName" ) %> |
+| `<%= $parameterName %>` | <%= $(context getValue "parameters/$parameterName/type" ) %> | <%= $(context getValue "parameters/$parameterName/description" ) %> |
 <% done %>
 <% fi %>
 

@@ -365,8 +365,21 @@ shopt -s extglob
                     docgen x context isSet || { docgen -- errors parserWarning "Shell argument found but no context set - '($(docgen x lines current getText))'"; return 1; }
                     local __docgen_parsers_shellArgumentParser_argumentName="${__docgen_parsers_shellArgumentParser_documentationText%% *}"
                     local __docgen_parsers_shellArgumentParser_argumentDescription="${__docgen_parsers_shellArgumentParser_documentationText#* }"
+                    local __docgen_parsers_shellArgumentParser_argumentType=''
+                    if [[ "$__docgen_parsers_shellArgumentParser_argumentDescription" =~ ^\[([^\]]+)\][[:space:]](.*)$ ]]
+                    then
+                      __docgen_parsers_shellArgumentParser_argumentType="${BASH_REMATCH[1]}"
+                      __docgen_parsers_shellArgumentParser_argumentDescription="${BASH_REMATCH[2]}"
+                    fi
                     # Arguments write to 'parameters'
-                    docgen x context write ".docgen/parameters/$__docgen_parsers_shellArgumentParser_argumentName" "$__docgen_parsers_shellArgumentParser_argumentDescription"
+                
+                    # OLD
+                    # docgen x context write ".docgen/parameters/$__docgen_parsers_shellArgumentParser_argumentName" "$__docgen_parsers_shellArgumentParser_argumentDescription"
+                
+                    # NEW
+                    [ -n "$__docgen_parsers_shellArgumentParser_argumentType" ] && docgen x context write ".docgen/parameters/$__docgen_parsers_shellArgumentParser_argumentName/type" "$__docgen_parsers_shellArgumentParser_argumentType"
+                    docgen x context write ".docgen/parameters/$__docgen_parsers_shellArgumentParser_argumentName/description" "$__docgen_parsers_shellArgumentParser_argumentDescription"
+                
                     return 0
                   fi
                 fi
@@ -383,7 +396,7 @@ shopt -s extglob
                 then
                   if [[ "$__docgen_parsers_shellCommandParser_documentationText" = "\$ "* ]]
                   then
-                    local __docgen_parsers_shellCommandParser_fullCommandName="${__docgen_parsers_shellCommandParser_documentationText%%$ }"
+                    local __docgen_parsers_shellCommandParser_fullCommandName="${__docgen_parsers_shellCommandParser_documentationText#\$ }"
                     local __docgen_parsers_shellCommandParser_contextPath="${__docgen_parsers_shellCommandParser_fullCommandName// //}"
                     # Shell commands write to '@commands'
                     docgen x context set "@commands/$__docgen_parsers_shellCommandParser_contextPath"
