@@ -3,8 +3,6 @@
 ---
 # 🖋️ Shell Pen
 
-> 🖋️ Generate BASH source code, XML, HTML, CSV, and more!
-
 Download the [latest version](https://github.com/shellbox-sh/shellpen/archive/v0.1.0.tar.gz) by clicking one of the download links above or:
 
 ```sh
@@ -29,7 +27,7 @@ curl -o- https://shellpen.sh/installer.sh | bash
 
 _See [Authoring a ShellPen adapter](/dev) to author your own `ShellPen` adapter!_
 
-# 🖋️ Getting Started
+# ✒️ Getting Started
 
 [✍️ Installation](#-installation)
 
@@ -78,7 +76,7 @@ For example, a document might represent a chunk of HTML or Plain-text.
 - This example creates a new HTML document named `webpage`:
 
 ```sh
-$ ShellPen documents create html example
+$ ShellPen documents create html webpage
 ```
 
 ### Write to Document
