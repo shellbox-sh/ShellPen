@@ -1,5 +1,5 @@
 ---
-title: "shellpen adapters register"
+title: "ShellPen documents delete"
 ---
 
 {% raw %}
@@ -8,7 +8,7 @@ title: "shellpen adapters register"
 
 
 
-[🔙 Back to shellpen adapters](/api/shellpen/adapters)
+[🔙 Back to ShellPen documents](/api/ShellPen/documents)
 
 ---
 
@@ -21,7 +21,7 @@ title: "shellpen adapters register"
 <!-- Todo, if there are no subcommands under the child commands, use a smaller heading size -->
 
 
-# shellpen adapters register
+# ShellPen documents delete
 
 
 
@@ -31,9 +31,7 @@ title: "shellpen adapters register"
 
 {% endraw %}
 {% highlight sh %}
-# register code
-:
-# hello
+
 {% endhighlight %}
 {% raw %}
 
@@ -41,12 +39,6 @@ title: "shellpen adapters register"
 
 
 
-
-#### Parameters
-
-| | Type | Description |
-|-|------|-------------|
-| `$1` | `out` String | foo |
 
 
 

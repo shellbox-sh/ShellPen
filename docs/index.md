@@ -93,10 +93,10 @@ $ ShellPen documents write webpage title "Hello, world!"
 
 ### View Document
 
-- This example previews the current state of the `webpage` document:
+- This example prints the current state of the `webpage` document:
 
 ```sh
-$ ShellPen documents preview hello
+$ ShellPen documents print hello
 ```
 
 ```html
@@ -131,12 +131,12 @@ $ page ul
 $ page - li "Hello, list item!
 ```
 
-Now preview the `webpage` document after writing using the `.e.g.` pen:
+Now print the `webpage` document after writing using the `.e.g.` pen:
 
 ### View Document
 
 ```sh
-$ ShellPen documents preview hello
+$ ShellPen documents print hello
 ```
 
 ```html
@@ -153,7 +153,7 @@ A `ShellPen` _"pen"_ is a shell function bound to write to a certain document.
 This pen command:
 
 ```sh
-$ pen - li "Hello, list item!"
+$ page - li "Hello, list item!"
 ```
 
 Is identical to the running following command:

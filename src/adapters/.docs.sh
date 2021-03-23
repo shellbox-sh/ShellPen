@@ -1,56 +1,57 @@
-## $ shellpen adapters
+## $ ShellPen documents
+## $ ShellPen documents create
+## $ ShellPen documents list
+## $ ShellPen documents print
+## $ ShellPen documents write
+## $ ShellPen documents delete
+
+## $ ShellPen pens
+## $ ShellPen pens create
+## $ ShellPen pens delete
+## $ ShellPen pens list
+## $ ShellPen pens write
+
+## $ ShellPen adapters
 ## > Adapters...
 ##
-## $ shellpen adapters registry
-## reg
-## Something
+## $ ShellPen adapters registry
+## $ ShellPen adapters registry deregister
+## $ ShellPen adapters registry register
+## $ ShellPen adapters registry list
 ##
-## $ shellpen adapters registry add
+## $ ShellPen adapters context
+## $ ShellPen adapters context push
+## $ ShellPen adapters context pop
+## $ ShellPen adapters context shift
+## $ ShellPen adapters context unshift
+## $ ShellPen adapters context getFirst
+## $ ShellPen adapters context getLast
+## $ ShellPen adapters context getCount
+## $ ShellPen adapters context getAtIndex
 ##
-## Something
+## $ ShellPen adapters output
+## $ ShellPen adapters output write
+## $ ShellPen adapters output writeln
+## $ ShellPen adapters output prepend
+## $ ShellPen adapters output prependln
 ##
-## $ shellpen adapters registry remove
-## Hello
-## Something
+## $ ShellPen adapters noindent
+## $ ShellPen adapters noindent write
+## $ ShellPen adapters noindent writeln
+## $ ShellPen adapters noindent prepend
+## $ ShellPen adapters noindent prependln
 ##
-## $ shellpen adapters context
-## $ shellpen adapters context push
-## $ shellpen adapters context pop
-## $ shellpen adapters context shift
-## $ shellpen adapters context unshift
-## $ shellpen adapters context getFirst
-## $ shellpen adapters context getLast
-## $ shellpen adapters context getCount
-## $ shellpen adapters context getAtIndex
+## $ ShellPen adapters text
+## $ ShellPen adapters text get
+## $ ShellPen adapters text set
+## $ ShellPen adapters text has
+## $ ShellPen adapters text unset
 ##
-## $ shellpen adapters groups
-## $ shellpen adapters groups add
-## $ shellpen adapters groups remove
-## $ shellpen adapters groups getAll
-## $ shellpen adapters groups getCurrent
-## $ shellpen adapters groups setCurrent
-## $ shellpen adapters groups getCount
-## $ shellpen adapters groups getAtIndex
-## $ shellpen adapters groups getFirst
-## $ shellpen adapters groups getLast
-##
-## $ shellpen adapters text
-## $ shellpen adapters text get
-## $ shellpen adapters text set
-## $ shellpen adapters text unset
-##
-## $ shellpen adapters bool
-## $ shellpen adapters bool get
-## $ shellpen adapters bool set
-## $ shellpen adapters bool unset
-##
-## $ shellpen adapters list
-## $ shellpen adapters list add
-## $ shellpen adapters list remove
-## $ shellpen adapters list clear
-## $ shellpen adapters list destroy
-## $ shellpen adapters list getAll
-## $ shellpen adapters list getCount
-## $ shellpen adapters list getAtIndex
-## $ shellpen adapters list getFirst
-## $ shellpen adapters list getLast
+## $ ShellPen adapters indent
+## $ ShellPen adapters indent ++
+## $ ShellPen adapters indent --
+## $ ShellPen adapters indent getText
+## $ ShellPen adapters indent setDepth
+## $ ShellPen adapters indent getDepth
+## $ ShellPen adapters indent setIndendText
+## $ ShellPen adapters indent getIndentText
