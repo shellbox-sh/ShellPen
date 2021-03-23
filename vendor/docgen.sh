@@ -233,22 +233,22 @@ shopt -s extglob
                     __docgen_parsers_descriptionParser_contextDescription="${__docgen_parsers_descriptionParser_currentLineDocumentation}${__docgen_parsers_descriptionParser_newLine}"
                   fi
                 
-                  while docgen x lines gotoNext
-                  do
-                    if docgen x lines current getDecoratorName >/dev/null || ! docgen x lines current isDocumentation >/dev/null # add hasDecorator or similar
-                    then 
-                      docgen x lines gotoPrevious
-                      break
-                    fi
+                  # while docgen x lines gotoNext
+                  # do
+                  #   if docgen x lines current getDecoratorName >/dev/null || ! docgen x lines current isDocumentation >/dev/null # add hasDecorator or similar
+                  #   then 
+                  #     docgen x lines gotoPrevious
+                  #     break
+                  #   fi
                 
-                    if docgen x lines current isDocumentation
-                    then
-                      local __docgen_parsers_descriptionParser_currentLineDocumentation=''
-                      docgen x lines current getDocumentation __docgen_parsers_descriptionParser_currentLineDocumentation
-                      # change to +=
-                      __docgen_parsers_descriptionParser_contextDescription="${__docgen_parsers_descriptionParser_contextDescription}${__docgen_parsers_descriptionParser_currentLineDocumentation}${__docgen_parsers_descriptionParser_newLine}"
-                    fi
-                  done
+                  #   if docgen x lines current isDocumentation
+                  #   then
+                  #     local __docgen_parsers_descriptionParser_currentLineDocumentation=''
+                  #     docgen x lines current getDocumentation __docgen_parsers_descriptionParser_currentLineDocumentation
+                  #     # change to +=
+                  #     __docgen_parsers_descriptionParser_contextDescription="${__docgen_parsers_descriptionParser_contextDescription}${__docgen_parsers_descriptionParser_currentLineDocumentation}${__docgen_parsers_descriptionParser_newLine}"
+                  #   fi
+                  # done
                 
                   if [ -n "$__docgen_parsers_descriptionParser_contextDescription" ]
                   then

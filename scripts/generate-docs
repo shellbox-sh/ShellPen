@@ -54,7 +54,7 @@ fi
 
 [ $# -eq 0 ] && { echo "Please provide @command paths to generate Markdown files for" >&2; exit 1; }
 
-tree -a "$tree"
+tree "$tree"
 
 docgen context create new
 

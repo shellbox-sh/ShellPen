@@ -80,7 +80,11 @@ title: "<%= $(command getName) %>"
       fi
     %>
 
+<% if [ -n "$(command getName)" ]; then %>
 ## [`<%= $commandName %>`](<%= ${commandLink,,} %>)
+<% else %>
+## [`<%= ${commandPath#@commands/} %>`](<%= ${commandLink,,} %>)
+<% fi %>
 
     <% subcommandPaths=() -%>
     <% if command list subcommandPaths; then -%>
