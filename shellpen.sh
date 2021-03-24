@@ -364,6 +364,12 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "return")
+                __shellpen__command+=("return")
+                shellpen --shellpen-private writeDSL writeln "return $1"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "[[")
                 __shellpen__command+=("[[")
                 declare -a commands=('writeln [[')
@@ -379,6 +385,21 @@ shellpen() {
                   elif [ "$1" = OR ]
                   then
                     commands+=('||')
+                    commands+=('')
+                    (( index += 2 ))
+                  elif [ "$1" = '{' ]
+                  then
+                    commands+=('{')
+                    commands+=('')
+                    (( index += 2 ))
+                  elif [ "$1" = '}' ]
+                  then
+                    commands+=('}')
+                    commands+=('')
+                    (( index += 2 ))
+                  elif [ "$1" = ',' ]
+                  then
+                    commands+=(',')
                     commands+=('')
                     (( index += 2 ))
                   else
@@ -400,6 +421,19 @@ shellpen() {
                     # Chomp the most recent 
  and make it ' || ' instead
                   __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ || }"
+                  elif [ "$command" = '{' ]
+                  then
+                    # Add {
+                    shellpen --shellpen-private writeDSL write '{ '
+                  elif [ "$command" = '}' ]
+                  then
+                    # Add }
+                    shellpen --shellpen-private writeDSL write '}'
+                  elif [ "$command" = ',' ]
+                  then
+                    # Chomp the most recent 
+ and make it '; ' instead
+                  __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/; }"
                   else
                     shellpen --shellpen-private writeDSL $command
                   fi
@@ -504,6 +538,21 @@ shellpen() {
                     commands+=('||')
                     commands+=('')
                     (( index += 2 ))
+                  elif [ "$1" = '{' ]
+                  then
+                    commands+=('{')
+                    commands+=('')
+                    (( index += 2 ))
+                  elif [ "$1" = '}' ]
+                  then
+                    commands+=('}')
+                    commands+=('')
+                    (( index += 2 ))
+                  elif [ "$1" = ',' ]
+                  then
+                    commands+=(',')
+                    commands+=('')
+                    (( index += 2 ))
                   else
                     commands[$index]+=" $1"
                   fi
@@ -523,6 +572,19 @@ shellpen() {
                     # Chomp the most recent 
  and make it ' || ' instead
                   __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ || }"
+                  elif [ "$command" = '{' ]
+                  then
+                    # Add {
+                    shellpen --shellpen-private writeDSL write '{ '
+                  elif [ "$command" = '}' ]
+                  then
+                    # Add }
+                    shellpen --shellpen-private writeDSL write '}'
+                  elif [ "$command" = ',' ]
+                  then
+                    # Chomp the most recent 
+ and make it '; ' instead
+                  __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/; }"
                   else
                     shellpen --shellpen-private writeDSL $command
                   fi
