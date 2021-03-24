@@ -1,1 +1,0 @@
-( set -o posix; set ) | grep SHELLPEN

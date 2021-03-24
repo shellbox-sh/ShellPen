@@ -1,1 +1,0 @@
-FN sources getFilePath "$@" >/dev/null
