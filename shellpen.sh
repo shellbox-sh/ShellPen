@@ -249,6 +249,25 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "toFile")
+                __shellpen__command+=("toFile")
+                # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
+                
+                local filePath="$1"
+                shift
+                
+                local command="$1"
+                shift
+                
+                shellpen --shellpen-private writeDSL $command "$@"
+                
+                # Chomp the 
+ and replace it with ' > "file path"
+'
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ > \"$filePath\"$NEWLINE}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "elif")
                 __shellpen__command+=("elif")
                 shellpen --shellpen-private contexts writeNullIfEmpty
@@ -300,6 +319,51 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "stderr")
+                __shellpen__command+=("stderr")
+                # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
+                
+                local command="$1"
+                shift
+                
+                shellpen --shellpen-private writeDSL $command "$@"
+                
+                # Chomp the 
+ and replace it with ' >&2
+'
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ >&2$NEWLINE}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "printf")
+                __shellpen__command+=("printf")
+                # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
+                
+                shellpen --shellpen-private writeDSL write "printf"
+                
+                local encounteredDashDash=false
+                local encounteredFormatter=false
+                
+                local argument=''
+                for argument in "$@"
+                do
+                  [ "$argument" = -- ] && encounteredDashDash=true
+                  if [ "$encounteredDashDash" = false ] && [ "$encounteredFormatter" = false ] && [[ "$argument" = *"%"* ]] && [[ ! "$argument" = "'"* ]]
+                  then
+                    encounteredFormatter=true
+                    shellpen --shellpen-private writeDSL write " '$argument'"
+                  elif [[ "$argument" =~ ^\' ]] || [[ "$argument" =~ ^\" ]] || [[ "$argument" =~ ^- ]] # If it starts with a quote of some kind, don't double quote it, also if it starts with a dash, like -v
+                  then
+                    shellpen --shellpen-private writeDSL write " $argument"
+                  else
+                    shellpen --shellpen-private writeDSL write " \"$argument\""
+                  fi
+                done
+                
+                shellpen --shellpen-private writeDSL writeln
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "fi")
                 __shellpen__command+=("fi")
                 shellpen --shellpen-private contexts writeNullIfEmpty
@@ -319,6 +383,25 @@ shellpen() {
                 __shellpen__command+=("write")
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*"
                 shellpen --shellpen-private contexts markLastNotEmpty
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "cleanSlate")
+                __shellpen__command+=("cleanSlate")
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]=""
+                
+                unset "__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID"
+                unset "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID"
+                
+                # Recreate supporting arrays for tracking the nested context
+                if [ -z "$BASH_PRE_43" ]
+                then
+                  declare -g -a "__SHELLPEN_CONTEXT_$sourceId=()"
+                  declare -g -a "__SHELLPEN_CONTEXT_EMPTY_$sourceId=()"
+                else
+                  eval "__SHELLPEN_CONTEXT_$sourceId=()"
+                  eval "__SHELLPEN_CONTEXT_EMPTY_$sourceId=()"
+                fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -429,12 +512,13 @@ shellpen() {
               __SHELLPEN_SOURCES+=("$sourceId")
               __SHELLPEN_SOURCES_TEXTS+=("")
             
-              # Create supporting array for tracking the nested context
+              # Create supporting arrays for tracking the nested context
               if [ -z "$BASH_PRE_43" ]
               then
                 declare -g -a "__SHELLPEN_CONTEXT_$sourceId=()"
                 declare -g -a "__SHELLPEN_CONTEXT_EMPTY_$sourceId=()"
               else
+                eval "__SHELLPEN_CONTEXT_$sourceId=()"
                 eval "__SHELLPEN_CONTEXT_EMPTY_$sourceId=()"
               fi
             else
