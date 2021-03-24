@@ -1,32 +1,26 @@
-# Includes unit tests peeking into the __SHELLPEN variables...
 @spec.create_list_delete_pens() {
   expect { shellpen pens list } toBeEmpty
   expect "${#__SHELLPEN_SOURCES[@]}" toEqual 0
-  expect "$( declare -p | grep SHELLPEN_CONTEXT )" toBeEmpty
 
   shellpen -
 
   expect { shellpen pens list } toEqual "-"
   expect "${#__SHELLPEN_SOURCES[@]}" toEqual 1
-  expect "$( declare -p | grep SHELLPEN_CONTEXT )" not toBeEmpty
 
   shellpen :
 
   expect { shellpen pens list } toEqual "-\n:"
   expect "${#__SHELLPEN_SOURCES[@]}" toEqual 2
-  expect "$( declare -p | grep SHELLPEN_CONTEXT )" not toBeEmpty
 
   : putAway
 
   expect { shellpen pens list } toEqual "-"
   expect "${#__SHELLPEN_SOURCES[@]}" toEqual 1
-  expect "$( declare -p | grep SHELLPEN_CONTEXT )" not toBeEmpty
 
   - putAway
 
   expect { shellpen pens list } toBeEmpty
   expect "${#__SHELLPEN_SOURCES[@]}" toEqual 0
-  expect "$( declare -p | grep SHELLPEN_CONTEXT )" toBeEmpty
 }
 
 @spec.requires_one_argument() {

@@ -6,9 +6,9 @@ then
   fi
 else
   eval "
-    if [ "${__SHELLPEN_CONTEXT$SHELLPEN_SOURCE_ID[$SHELLPEN_CONTEXT_RIGHT_INDEX]}" = true ]
+    if [ \"\${__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[$SHELLPEN_CONTEXT_RIGHT_INDEX]}\" = \"true\" ]
     then
-      !fn --shellpen-private writeDSL : 
+      !fn --shellpen-private writeDSL ':'
     fi
   "
 fi

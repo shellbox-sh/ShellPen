@@ -62,9 +62,9 @@ shellpen() {
                   fi
                 else
                   eval "
-                    if [ "${__SHELLPEN_CONTEXT$SHELLPEN_SOURCE_ID[$SHELLPEN_CONTEXT_RIGHT_INDEX]}" = true ]
+                    if [ \"\${__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[$SHELLPEN_CONTEXT_RIGHT_INDEX]}\" = \"true\" ]
                     then
-                      shellpen --shellpen-private writeDSL : 
+                      shellpen --shellpen-private writeDSL ':'
                     fi
                   "
                 fi
@@ -75,7 +75,11 @@ shellpen() {
                 __shellpen__command+=("closeAndWriteAll")
                 while [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
                 do
+                  local currentDepth="$SHELLPEN_CONTEXT_DEPTH"
+                  local lastCommand="$( shellpen --shellpen-private contexts getLast )"
                   shellpen --shellpen-private contexts writeLastUsingDSL
+                  local updatedDepth="$SHELLPEN_CONTEXT_DEPTH"
+                  [ $currentDepth -eq $updatedDepth ] && { echo "shellpen --shellpen-private contexts closeAndWriteAll: Internal DSL Error. Expected '$lastCommand' to pop context stack." >&2; return 1; }
                 done
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -107,7 +111,7 @@ shellpen() {
                 then
                   shellpen --shellpen-private writeDSL ${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}
                 else
-                  eval "shellpen --shellpen-private writeDSL \${__SHELLPEN_CONTEXT$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
+                  eval "shellpen --shellpen-private writeDSL \${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
                 fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -118,7 +122,7 @@ shellpen() {
                 then
                   printf '%s' "${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
                 else
-                  eval "printf '%s' \"\${__SHELLPEN_CONTEXT$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}\""
+                  eval "printf '%s' \"\${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}\""
                 fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -131,7 +135,7 @@ shellpen() {
                   SHELLPEN_SOURCE_CONTEXT_EMPTY+=("true")
                 else
                   eval "__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID+=(\"\$*\")"
-                  eval "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID+=(\"	rue\")"
+                  eval "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID+=(\"true\")"
                 fi
                 
                 (( SHELLPEN_CONTEXT_DEPTH++ ))
