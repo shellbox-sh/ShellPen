@@ -8,9 +8,7 @@ Download the [latest version](https://github.com/shellbox-sh/shellpen/archive/v0
 curl -o- https://shellpen.sh/installer.sh | bash
 ```
 
-## BASH Codegen
-
-🖋️ Import the `shellpen` library:
+➡️ Import the `shellpen` library:
 
 ```sh
 source shellpen.sh
@@ -20,6 +18,8 @@ source shellpen.sh
 
 ```sh
 shellpen -
+
+- shebang
 
 - function sayHello
   - local command="\$1"
@@ -36,7 +36,7 @@ shellpen -
 🔍 Preview the current source code content
 
 ```sh
-shellpen preview
+- code
 ```
 
 ```sh
@@ -61,7 +61,7 @@ sayHello() {
 💾 Save and run it!
 
 ```sh
-shellpen save say-hello.sh
+- code > say-hello.sh
 ```
 
 ```sh
@@ -69,43 +69,9 @@ shellpen save say-hello.sh
 # => "Hello Rebecca!"
 ```
 
-# 📝 Sources
-
-`shellpen` can write to one or multiple sources.
-
-- A source represents a snippet of source code to write
-- A source can optionally be tied to a local file
-
-Sources allow you to manage multiple pieces of source code.
-
-🗒️ Declare multiple sources
-
-```sh
-shellpen -
-
-shellpen source cats.sh
-shellpen source dogs.sh
-
-shellpen sources use cats.sh
-- function meow
-  - echo "Meow"
-
-shellpen sources use dogs.sh
-- function woof
-  - echo "Woof"
-
-shellpen preview cats.sh
-# => "meow() { echo "Meow" ..."
-
-shellpen preview dogs.sh
-# => "woof() { echo "Woof" ..."
-```
-
-To make switching between sources easier, you can use pens!
-
 # ✒️ Pens
 
-In `shellpen`, a "pen" is associated with a particular source.
+In `shellpen`, every "pen" writes to a unique source.
 
 You can have many pens, each associated with a separate source 🖊️ 🖋️ 🖌️
 
@@ -113,38 +79,53 @@ You can have many pens, each associated with a separate source 🖊️ 🖋️ �
 shellpen pen :cat
 shellpen pen :dog
 
-:cat writeTo cat.sh
-:dog writeTo dog.sh
-
 :cat function meow
   :cat echo "Meow"
 
 :dog function "woof"
   :dog echo "Woof"
 
-:cat preview cats.sh
+:cat code cats.sh
 # => "meow() { echo "Meow" ..."
 
-:dog preview dogs.sh
+:dog code dogs.sh
 # => "woof() { echo "Woof" ..."
 ```
 
-Pens are helpers for easily calling `shellpen` functions for any given source!
+Once you are finished with the source, you may "put away" the pen.
 
 ```sh
-# This is a shortcut to get a pen named `:`
-# which writes to the currently selected source:
 shellpen -
 
-# If you want to write to a different source:
-- switchTo [source]
+- comment "Hello, world!"
 
-# This is another shortcut for quickly
-# getting a pen for the currently selected source:
-shellpen pen [name]
+- code
+# => "# Hello, world!"
 
-# Or get a pen for a particular source:
-shellpen pen [name] [source]
+- putAway
+
+- code
+# => "-: command not found"
+```
+
+This clears out the source.
+
+Of course, you may always pickup the same pen again with a fresh source.
+
+Alternatively, you may "clean the slate" to get a fresh source with the same pen.
+
+```sh
+shellpen -
+
+- comment Hello
+
+- code
+# => "# Hello"
+
+- cleanSlate
+
+- code
+# => ""
 ```
 
 ---
