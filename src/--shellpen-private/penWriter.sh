@@ -1,11 +1,13 @@
 [ -z "$SHELLPEN_PEN" ] && { echo "SHELLPEN_PEN name is required to write to source, none provided." >&2; return 1; }
+[ -z "$SHELLPEN_PEN_INDEX" ] && { echo "SHELLPEN_PEN_INDEX is required to write to source, none provided." >&2; return 1; }
 [ -z "$SHELLPEN_SOURCE_ID" ] && { echo "SHELLPEN_SOURCE_ID identifier is required to write to source, none provided." >&2; return 1; }
-[ -z "$SHELLPEN_SOURCE_INDEX" ] && { echo "SHELLPEN_SOURCE_INDEX is required to write to source, none provided." >&2; return 1; }
 
 if [ -z "$BASH_PRE_43" ]
 then
   local SHELLPEN_SOURCE_CONTEXT
   typeset -n SHELLPEN_SOURCE_CONTEXT="__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID"
+  local SHELLPEN_SOURCE_CONTEXT_EMPTY
+  typeset -n SHELLPEN_SOURCE_CONTEXT_EMPTY="__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID"
 fi
 
 local NEWLINE=$'\\n' # FIXME hack for caseEsac
@@ -20,9 +22,11 @@ fi
 declare -i i=0
 while [ $i -lt $SHELLPEN_CONTEXT_DEPTH ]
 do
-  INTENT+="$SHELLPEN_INDENT"
+  INDENT+="$SHELLPEN_INDENT"
   (( i++ ))
 done
 unset i
 
-!fn -- "$@"
+local SHELLPEN_CONTEXT_RIGHT_INDEX="$(( SHELLPEN_CONTEXT_DEPTH - 1 ))"
+
+!fn --shellpen-private writeDSL "$@"
