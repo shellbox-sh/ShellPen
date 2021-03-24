@@ -364,6 +364,49 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "[[")
+                __shellpen__command+=("[[")
+                declare -a commands=('writeln [[')
+                local index=0
+                
+                while [ $# -gt 0 ]
+                do
+                  if [ "$1" = AND ]
+                  then
+                    commands+=('&&')
+                    commands+=('')
+                    (( index += 2 ))
+                  elif [ "$1" = OR ]
+                  then
+                    commands+=('||')
+                    commands+=('')
+                    (( index += 2 ))
+                  else
+                    commands[$index]+=" $1"
+                  fi
+                  shift
+                done
+                
+                local command=''
+                for command in "${commands[@]}"
+                do
+                  if [ "$command" = '&&' ]
+                  then
+                    # Chomp the most recent 
+ and make it ' && ' instead
+                  __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ && }"
+                  elif [ "$command" = '||' ]
+                  then
+                    # Chomp the most recent 
+ and make it ' || ' instead
+                  __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ || }"
+                  else
+                    shellpen --shellpen-private writeDSL $command
+                  fi
+                done
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "fi")
                 __shellpen__command+=("fi")
                 shellpen --shellpen-private contexts writeNullIfEmpty
@@ -441,6 +484,49 @@ shellpen() {
                 
                 # Push the DSL command to run to CLOSE this block
                 shellpen --shellpen-private contexts push "}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "[")
+                __shellpen__command+=("[")
+                declare -a commands=('writeln [')
+                local index=0
+                
+                while [ $# -gt 0 ]
+                do
+                  if [ "$1" = AND ]
+                  then
+                    commands+=('&&')
+                    commands+=('')
+                    (( index += 2 ))
+                  elif [ "$1" = OR ]
+                  then
+                    commands+=('||')
+                    commands+=('')
+                    (( index += 2 ))
+                  else
+                    commands[$index]+=" $1"
+                  fi
+                  shift
+                done
+                
+                local command=''
+                for command in "${commands[@]}"
+                do
+                  if [ "$command" = '&&' ]
+                  then
+                    # Chomp the most recent 
+ and make it ' && ' instead
+                  __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ && }"
+                  elif [ "$command" = '||' ]
+                  then
+                    # Chomp the most recent 
+ and make it ' || ' instead
+                  __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ || }"
+                  else
+                    shellpen --shellpen-private writeDSL $command
+                  fi
+                done
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
