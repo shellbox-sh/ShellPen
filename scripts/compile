@@ -1,2 +1,2 @@
 #! /usr/bin/env bash
-./vendor/caseEsacCompiler compile shellpen shellpen.sh src/
+./vendor/caseEsac compile --src src/ --out shellpen.sh
