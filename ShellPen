@@ -1,0 +1,129 @@
+#! /usr/bin/env bash
+
+SHELLPEN_VERSION="2.0.0"
+
+ShellPen() {
+  SHELLPEN_ROOT="${SHELLPEN_ROOT:-$HOME/.shellpen}"
+  
+  if [ -z "${SHELLPEN_MODE+x}" ]
+  then
+    if [ "${BASH_SOURCE[0]}" = "$0" ]
+    then
+      SHELLPEN_MODE=executable
+    else
+      SHELLPEN_MODE=library
+    fi
+  else
+    if [ "${BASH_SOURCE[0]}" = "$0" ] && [ "$SHELLPEN_MODE" = library ]
+    then
+      # TODO change all to use compiler errors when possible...
+      echo "Cannot configure ShellPen mode to 'library' when running as an executable" >&2
+      return 1
+    fi
+  fi
+  declare -a __ShellPen__args=("$@") # :shared:
+  declare -a __ShellPen__command=("ShellPen") # :shared:
+  if [ $# -eq 0 ]
+  then
+    echo "ShellPen: Arguments are required but none were provided" >&2
+    return 1
+  else
+    local __ShellPen__1="$1"
+    shift
+    case "$__ShellPen__1" in
+      "adapters")
+        __ShellPen__command+=("adapters")
+        local __ShellPen__2="$1"
+        shift
+        case "$__ShellPen__2" in
+          "registry")
+            __ShellPen__command+=("registry")
+            local __ShellPen__3="$1"
+            shift
+            case "$__ShellPen__3" in
+              "add")
+                __ShellPen__command+=("add")
+                # $ ShellPen adapters registry add
+                # $1 
+                
+                # SHELLPEN_REGISTRY_NAMES
+                
+                if _ contains "$1"
+                unset __ShellPen__command[$(( ${#__ShellPen__command[@]} - 1 ))]
+                __ShellPen__command=("__ShellPen__command[@]")
+                ;;
+              *)
+                echo "Command not found: '$__ShellPen__2'" >&2
+                return 1
+                ;;
+            esac
+            unset __ShellPen__command[$(( ${#__ShellPen__command[@]} - 1 ))]
+            __ShellPen__command=("__ShellPen__command[@]")
+            ;;
+          *)
+            echo "Command not found: '$__ShellPen__1'" >&2
+            return 1
+            ;;
+        esac
+        unset __ShellPen__command[$(( ${#__ShellPen__command[@]} - 1 ))]
+        __ShellPen__command=("__ShellPen__command[@]")
+        ;;
+      "config")
+        __ShellPen__command+=("config")
+        local __ShellPen__2="$1"
+        shift
+        case "$__ShellPen__2" in
+          "dump")
+            __ShellPen__command+=("dump")
+            local variableName=''
+            for variableName in SHELLPEN_VERSION SHELLPEN_MODE SHELLPEN_ROOT
+            do
+              echo "$variableName:	$( eval \"printf '%s' \$$variableName\" )"
+            done
+            unset __ShellPen__command[$(( ${#__ShellPen__command[@]} - 1 ))]
+            __ShellPen__command=("__ShellPen__command[@]")
+            ;;
+          *)
+            echo "Command not found: '$__ShellPen__1'" >&2
+            return 1
+            ;;
+        esac
+        unset __ShellPen__command[$(( ${#__ShellPen__command[@]} - 1 ))]
+        __ShellPen__command=("__ShellPen__command[@]")
+        ;;
+      "documents")
+        __ShellPen__command+=("documents")
+        local __ShellPen__2="$1"
+        shift
+        case "$__ShellPen__2" in
+          *)
+            echo "Command not found: '$__ShellPen__1'" >&2
+            return 1
+            ;;
+        esac
+        unset __ShellPen__command[$(( ${#__ShellPen__command[@]} - 1 ))]
+        __ShellPen__command=("__ShellPen__command[@]")
+        ;;
+      "pens")
+        __ShellPen__command+=("pens")
+        local __ShellPen__2="$1"
+        shift
+        case "$__ShellPen__2" in
+          *)
+            echo "Command not found: '$__ShellPen__1'" >&2
+            return 1
+            ;;
+        esac
+        unset __ShellPen__command[$(( ${#__ShellPen__command[@]} - 1 ))]
+        __ShellPen__command=("__ShellPen__command[@]")
+        ;;
+      *)
+        echo "Command not found: '$__ShellPen__0'" >&2
+        return 1
+        ;;
+    esac
+  fi
+}
+
+[ "${BASH_SOURCE[0]}" = "$0" ] && "ShellPen" "$@"
+

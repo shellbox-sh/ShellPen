@@ -1,2 +1,5 @@
 #! /usr/bin/env bash
-./vendor/caseEsacCompiler compile shellpen shellpen.sh src/
+./vendor/caseEsac compile --src src/ --out ShellPen --fn ShellPen
+
+# Fix caseEsac to do this with --exe flag
+chmod +x ShellPen
