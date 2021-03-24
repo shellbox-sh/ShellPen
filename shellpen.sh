@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+SHELLPEN_VERSION="2.0.0"
+
 # Private ShellPen variables:
 __SHELLPEN_SOURCES=()
 __SHELLPEN_PENS=()
@@ -20,7 +22,7 @@ shellpen() {
   declare -a __shellpen__args=("$@") # :shared:
   declare -a __shellpen__command=("shellpen") # :shared:
   # Default single argument to pen creation, e.g. $ shellpen myPen
-  [ $# -eq 1 ] && shellpen pens new "$1" && return $?
+  [ $# -eq 1 ] && [ "$1" != "--version" ] && shellpen pens new "$1" && return $?
   if [ $# -eq 0 ]
   then
     echo "shellpen: Arguments are required but none were provided" >&2
@@ -29,6 +31,12 @@ shellpen() {
     local __shellpen__1="$1"
     shift
     case "$__shellpen__1" in
+      "--version")
+        __shellpen__command+=("--version")
+        echo "ShellPen version $SHELLPEN_VERSION"
+        unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+        __shellpen__command=("__shellpen__command[@]")
+        ;;
       "sources")
         __shellpen__command+=("sources")
         local __shellpen__2="$1"
@@ -54,19 +62,22 @@ shellpen() {
             case "$__shellpen__3" in
               "writeNullIfEmpty")
                 __shellpen__command+=("writeNullIfEmpty")
-                if [ -z "$BASH_PRE_43" ]
+                if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
                 then
-                  if [ "${SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]}" = true ]
+                  if [ -z "$BASH_PRE_43" ]
                   then
-                    shellpen --shellpen-private writeDSL : 
-                  fi
-                else
-                  eval "
-                    if [ \"\${__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[$SHELLPEN_CONTEXT_RIGHT_INDEX]}\" = \"true\" ]
+                    if [ "${SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]}" = true ]
                     then
-                      shellpen --shellpen-private writeDSL ':'
+                      shellpen --shellpen-private writeDSL : 
                     fi
-                  "
+                  else
+                    eval "
+                      if [ \"\${__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[$SHELLPEN_CONTEXT_RIGHT_INDEX]}\" = \"true\" ]
+                      then
+                        shellpen --shellpen-private writeDSL ':'
+                      fi
+                    "
+                  fi
                 fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -238,6 +249,16 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "elif")
+                __shellpen__command+=("elif")
+                shellpen --shellpen-private contexts writeNullIfEmpty
+                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL writeln "elif $*"
+                shellpen --shellpen-private writeDSL writeln "then"
+                shellpen --shellpen-private contexts push "fi"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               ":")
                 __shellpen__command+=(":")
                 shellpen --shellpen-private writeDSL writeln ":"
@@ -257,6 +278,15 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "else")
+                __shellpen__command+=("else")
+                shellpen --shellpen-private contexts writeNullIfEmpty
+                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL writeln "else"
+                shellpen --shellpen-private contexts push "fi"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "comment")
                 __shellpen__command+=("comment")
                 shellpen --shellpen-private writeDSL writeln "# $*"
@@ -267,6 +297,14 @@ shellpen() {
                 __shellpen__command+=("appendln")
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$*${NEWLINE}"
                 shellpen --shellpen-private contexts markLastNotEmpty
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "fi")
+                __shellpen__command+=("fi")
+                shellpen --shellpen-private contexts writeNullIfEmpty
+                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL writeln "fi"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -284,6 +322,23 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "then")
+                __shellpen__command+=("then")
+                # No-op
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "if")
+                __shellpen__command+=("if")
+                # Write the function
+                shellpen --shellpen-private writeDSL writeln "if $*"
+                shellpen --shellpen-private writeDSL writeln "then"
+                
+                # Push the DSL command to run to CLOSE this block
+                shellpen --shellpen-private contexts push "fi"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "putAway")
                 __shellpen__command+=("putAway")
                 unset "__SHELLPEN_PENS[$SHELLPEN_PEN_INDEX]"
@@ -296,11 +351,7 @@ shellpen() {
                 ;;
               "fn")
                 __shellpen__command+=("fn")
-                # [ $# -ne 1 ] && { echo "fn: requires one argument [function name]" >&2; return 1; }
-                
                 local functionName="$1"
-                
-                # [[ "$functionName" =~ ([^\(]+)\([[:space:]]*\)[[:space:]]*[\{]* ]] && functionName="${BASH_REMATCH[1]}"
                 
                 # Write the function
                 shellpen --shellpen-private writeDSL writeln "$functionName() {"

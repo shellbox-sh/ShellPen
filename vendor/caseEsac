@@ -1749,7 +1749,6 @@ caseEsac() {
             ;;
         "caseOptionForFile")
         ## @command caseEsac -- caseOptionForFile
-          echo "PATH MUST - case option for file '$1'" >> log.log
           
           (( PARSE_CONTEXT_ID++ ))
           
@@ -1760,7 +1759,6 @@ caseEsac() {
           
           - option "\"$__caseEsac__optionNameForFile\""
           caseEsac -- function addToCommandList "$__caseEsac__optionNameForFile"
-            echo "MUST APPEND FILE '$1'" >> log.log
             caseEsac -- appendFile "$1"
             caseEsac -- function popCommandList
             - ::
@@ -2497,7 +2495,6 @@ caseEsac() {
                                           case "$__caseEsac__mainCliCommands_command6" in
                                             "dollarVariables")
                                             ## @command caseEsac -- file processors localVariablePrefixes replacers dollarVariables
-                                              echo "$ DOLLAR REPLACER $" >> log.log
                                               
                                               local __caseEsac__dollarVariableReplacer_VARIABLE_TO_REPLACE_INDEX=''
                                               eval "
@@ -2508,7 +2505,6 @@ caseEsac() {
                                               
                                                   if [[ \"\$1\" =~ ^(.*)\\\$([{]?)([\!\#]?)\$__caseEsac__dollarVariableReplacer_VARIABLE_TO_REPLACE([^a-zA-Z0-9_]*)(.*)\$ ]]
                                                   then
-                                                    echo \"PARSE-LOCAL DOLLAR MATCH \${BASH_REMATCH[*]}\" >> log.log
                                                     printf '%s' \"\${BASH_REMATCH[1]}\\\$\${BASH_REMATCH[2]}\${BASH_REMATCH[3]}\${__caseEsac__dollarVariableReplacer_REPLACEMENT_NAME}\${BASH_REMATCH[4]}\${BASH_REMATCH[5]}\"
                                                     # printf '%s' \"\$1\"
                                                     return 0 # we can do other variables in the next round! we'll be called multiple times per line if we make changes.
@@ -2523,7 +2519,6 @@ caseEsac() {
                                                 ;;
                                             "localDeclarationVariables")
                                             ## @command caseEsac -- file processors localVariablePrefixes replacers localDeclarationVariables
-                                              echo "$ LOCAL DECLARATION $" >> log.log
                                               
                                               local __caseEsac__dollarVariableReplacer_VARIABLE_TO_REPLACE_INDEX=''
                                               eval "

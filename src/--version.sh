@@ -1,0 +1,1 @@
+echo "ShellPen version $SHELLPEN_VERSION"
