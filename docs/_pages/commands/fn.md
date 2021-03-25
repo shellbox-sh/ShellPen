@@ -19,7 +19,7 @@ local functionName="$1"
 !fn --shellpen-private writeDSL writeln "$functionName() {"
 
 # Push the DSL command to run to CLOSE this block
-!fn --shellpen-private contexts push "}"
+!fn --shellpen-private writeDSL --push "}"
 {% endhighlight %}
 
 </details>

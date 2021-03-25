@@ -13,8 +13,8 @@ sidebar:
 
 {% highlight sh %}
 
-__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(!fn --shellpen-private getCurrentIndent)$*${NEWLINE}"
-!fn --shellpen-private contexts markLastNotEmpty
+__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(!fn --shellpen-private writeDSL --getIndent)$*${NEWLINE}"
+!fn --shellpen-private writeDSL --mark-last-not-empty
 {% endhighlight %}
 
 </details>

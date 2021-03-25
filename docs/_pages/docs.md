@@ -58,3 +58,18 @@ sidebar:
 | [`while`](/docs/while) | [Begin a `while` loop](/docs/while) |
 | [`writeln`](/docs/writeln) | [Append a line of text to source output including indentation](/docs/writeln) |
 | [`write`](/docs/write) | [Append a string of text to source output including indentation](/docs/write) |
+
+
+## Extending Syntax
+
+| [`extend`](/docs/extend) | [Extend `shellpen` with custom syntax](/docs/extend) |
+| [`$PEN`](/docs/PEN) | [Write using the current pen](/docs/PEN) |
+| [`--push`](/docs/--push) | [Push an item onto the current stack](/docs/--push) |
+| [`--pop`](/docs/--pop) | [Pop the last item off the current stack (_rightmost_)](/docs/--pop) |
+| [`--get-indent`](/docs/--get-indent) | [Get the text string to use to indent appended text](/docs/--get-indent) |
+| [`--get-stack`](/docs/--get-stack) | [Populate a provided array with the full current stack](/docs/--get-stack) |
+| [`--get-last-pushed`](/docs/--get-last-pushed) | [Get last item pushed onto the current stack](/docs/--get-last-pushed) |
+| [`--eval-last-pushed`](/docs/--eval-last-pushed) | [Evaluate the last item pushed onto the current stack](/docs/--eval-last-pushed) |
+| [`--eval-full-stack`](/docs/--eval-full-stack) | [Close every item on current stack (_from right to left_)](/docs/--eval-full-stack) |
+| [`--mark-last-not-empty`](/docs/--mark-last-not-empty) | [Mark the last item on current stack as not empty](/docs/--mark-last-not-empty) |
+| [`--write-null-if-last-empty`](/docs/--write-null-if-last-empty) | [Append a `:` if the last item in the current stack is empty](/docs/--write-null-if-last-empty) |

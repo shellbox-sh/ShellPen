@@ -14,7 +14,7 @@ sidebar:
 {% highlight sh %}
 
 !fn --shellpen-private writeDSL writeln "case \"$1\" in"
-!fn --shellpen-private contexts push "esac"
+!fn --shellpen-private writeDSL --push "esac"
 {% endhighlight %}
 
 </details>

@@ -1,0 +1,40 @@
+---
+title: '--mark-last-not-empty'
+permalink: /docs/--mark-last-not-empty
+layout: single
+sidebar:
+  nav: 'command_reference'
+---
+
+
+
+<details>
+  <summary>View Source</summary>
+
+{% highlight sh %}
+
+if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
+then
+
+  if [ -z "$BASH_PRE_43" ]
+  then
+    SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]="false"
+  else
+    eval "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]=\"false\""
+  fi
+
+fi
+{% endhighlight %}
+
+</details>
+
+
+
+> Mark the last item on current stack as not empty
+
+
+
+
+
+
+

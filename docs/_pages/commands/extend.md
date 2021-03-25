@@ -1,6 +1,6 @@
 ---
-title: 'esac'
-permalink: /docs/esac
+title: 'extend'
+permalink: /docs/extend
 layout: single
 sidebar:
   nav: 'command_reference'
@@ -13,15 +13,14 @@ sidebar:
 
 {% highlight sh %}
 
-!fn --shellpen-private writeDSL --pop
-!fn --shellpen-private writeDSL writeln "esac"
+__SHELLPEN_EXTENSIONS+=("$*")
 {% endhighlight %}
 
 </details>
 
 
 
-> End a `case` / `esac` statement
+> Extend `shellpen` with custom syntax
 
 
 

@@ -53,3 +53,17 @@ DSL_COMMANDS=(
 'writeln'
 'write'
 )
+
+EXTENSIONS_COMMANDS=(
+  'extend'
+  '$PEN'
+  '--push'
+  '--pop'
+  '--get-indent'
+  '--get-stack'
+  '--get-last-pushed'
+  '--eval-last-pushed'
+  '--eval-full-stack'
+  '--mark-last-not-empty'
+  '--write-null-if-last-empty'
+)

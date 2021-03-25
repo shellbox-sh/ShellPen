@@ -1,3 +1,6 @@
+## $ EXTENSIONS --get-indent
+## > Get the text string to use to indent appended text
+
 local INDENT=''
 
 if [ -z "$BASH_PRE_43" ]

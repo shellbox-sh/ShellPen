@@ -15,7 +15,7 @@ sidebar:
 
 !fn --shellpen-private writeDSL writeln "while $*"
 !fn --shellpen-private writeDSL writeln "do"
-!fn --shellpen-private contexts push "done"
+!fn --shellpen-private writeDSL --push "done"
 {% endhighlight %}
 
 </details>

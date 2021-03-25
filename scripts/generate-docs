@@ -78,4 +78,15 @@ do
   shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
 done
 
+# Let's do pages for the extensions commands too!
+commandName=''
+for commandName in "${EXTENSIONS_COMMANDS[@]}"
+do
+  pageName="$commandName"
+  [ "$pageName" = '$PEN' ] && pageName='PEN'
+  context goto path "@commands/EXTENSIONS/$commandName"
+  echo "Generating $commandName.md"
+  shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
+done
+
 echo "Done."

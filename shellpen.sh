@@ -34,6 +34,9 @@ shellpen() {
     case "$__shellpen__1" in
       "extend")
         __shellpen__command+=("extend")
+        ## $ EXTENSIONS extend
+        ## > Extend `shellpen` with custom syntax
+        
         __SHELLPEN_EXTENSIONS+=("$*")
         unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
         __shellpen__command=("__shellpen__command[@]")
@@ -151,28 +154,6 @@ shellpen() {
             then
               shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?
             fi
-            unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-            __shellpen__command=("__shellpen__command[@]")
-            ;;
-          "getCurrentIndent")
-            __shellpen__command+=("getCurrentIndent")
-            local INDENT=''
-            
-            if [ -z "$BASH_PRE_43" ]
-            then
-              declare -i SHELLPEN_CONTEXT_DEPTH="${#SHELLPEN_SOURCE_CONTEXT[@]}"
-            else
-              eval "declare -i SHELLPEN_CONTEXT_DEPTH=\"\${#__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[@]}\""
-            fi
-            
-            declare -i i=0
-            while [ $i -lt $SHELLPEN_CONTEXT_DEPTH ]
-            do
-              INDENT+="$SHELLPEN_INDENT"
-              (( i++ ))
-            done
-            
-            printf '%s' "$INDENT"
             unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
             __shellpen__command=("__shellpen__command[@]")
             ;;
@@ -438,7 +419,7 @@ shellpen() {
               "--eval-last-pushed")
                 __shellpen__command+=("--eval-last-pushed")
                 ## $ EXTENSIONS --eval-last-pushed
-                ## > Close last item on current stack (_rightmost_)
+                ## > Evaluate the last item pushed onto the current stack
                 
                 if [ -z "$BASH_PRE_43" ]
                 then
@@ -446,6 +427,31 @@ shellpen() {
                 else
                   eval "shellpen --shellpen-private writeDSL \${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
                 fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "--get-indent")
+                __shellpen__command+=("--get-indent")
+                ## $ EXTENSIONS --get-indent
+                ## > Get the text string to use to indent appended text
+                
+                local INDENT=''
+                
+                if [ -z "$BASH_PRE_43" ]
+                then
+                  declare -i SHELLPEN_CONTEXT_DEPTH="${#SHELLPEN_SOURCE_CONTEXT[@]}"
+                else
+                  eval "declare -i SHELLPEN_CONTEXT_DEPTH=\"\${#__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[@]}\""
+                fi
+                
+                declare -i i=0
+                while [ $i -lt $SHELLPEN_CONTEXT_DEPTH ]
+                do
+                  INDENT+="$SHELLPEN_INDENT"
+                  (( i++ ))
+                done
+                
+                printf '%s' "$INDENT"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -565,7 +571,7 @@ shellpen() {
                 ## > Append a `#` command line
                 
                 # Do not use writeln because comments should not mark blocks as not empty
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)# $*${NEWLINE}"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --getIndent)# $*${NEWLINE}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -720,7 +726,7 @@ shellpen() {
                 ## $ DSL writeln
                 ## > Append a line of text to source output including indentation
                 
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*${NEWLINE}"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --getIndent)$*${NEWLINE}"
                 shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -760,8 +766,36 @@ shellpen() {
                 ## $ DSL write
                 ## > Append a string of text to source output including indentation
                 
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --getIndent)$*"
                 shellpen --shellpen-private writeDSL --mark-last-not-empty
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "--get-stack")
+                __shellpen__command+=("--get-stack")
+                ## $ EXTENSIONS --get-stack
+                ## > Populate a provided array with the full current stack
+                
+                [ $# -eq 0 ] && { echo "shellpen --shellpen-private writeDSL --get-stack [Extension Error]: requires name of an array variable to populate with the stack items" >&2; return 1; }
+                
+                if [ -z "$BASH_PRE_43" ]
+                then
+                  local array
+                  typeset -n array="$1"
+                  local stackItem=''
+                  for stackItem in "${SHELLPEN_SOURCE_CONTEXT[@]}"
+                  do
+                    array+=("$stackItem")
+                  done
+                else
+                  eval "
+                    local stackItem=''
+                    for stackItem in \"\${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[@]}\"
+                    do
+                      $1+=(\"\$stackItem\")
+                    done
+                  "
+                fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

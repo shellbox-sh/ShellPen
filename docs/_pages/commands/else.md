@@ -13,10 +13,10 @@ sidebar:
 
 {% highlight sh %}
 
-!fn --shellpen-private contexts writeNullIfEmpty
-!fn --shellpen-private contexts pop
+!fn --shellpen-private writeDSL --write-null-if-last-empty
+!fn --shellpen-private writeDSL --pop
 !fn --shellpen-private writeDSL writeln "else"
-!fn --shellpen-private contexts push "fi"
+!fn --shellpen-private writeDSL --push "fi"
 {% endhighlight %}
 
 </details>

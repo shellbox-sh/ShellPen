@@ -13,7 +13,7 @@ sidebar:
 
 {% highlight sh %}
 
-!fn --shellpen-private contexts closeAndWriteAll
+!fn --shellpen-private writeDSL --eval-full-stack
 printf '%s' "${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
 {% endhighlight %}
 
