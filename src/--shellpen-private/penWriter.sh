@@ -29,4 +29,4 @@ unset i
 
 local SHELLPEN_CONTEXT_RIGHT_INDEX="$(( SHELLPEN_CONTEXT_DEPTH - 1 ))"
 
-!fn --shellpen-private writeDSL "$@"
+!fn --shellpen-private writeShellCommand "$@"

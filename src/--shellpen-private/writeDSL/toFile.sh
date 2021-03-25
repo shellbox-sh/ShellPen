@@ -8,5 +8,5 @@ shift
 
 !fn --shellpen-private writeDSL $command "$@"
 
-# Chomp the \n and replace it with ' > "file path"\n'
+# Chomp the newline and replace it with ' > "file path"newline'
 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ > \"$filePath\"$NEWLINE}"
