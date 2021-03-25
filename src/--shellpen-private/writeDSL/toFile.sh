@@ -1,3 +1,5 @@
+## $ DSL toFile
+
 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
 
 local filePath="$1"

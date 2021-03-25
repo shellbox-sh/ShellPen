@@ -1,3 +1,5 @@
+## $ DSL if
+
 # Write the function
 !fn --shellpen-private writeDSL writeln "if $*"
 !fn --shellpen-private writeDSL writeln "then"

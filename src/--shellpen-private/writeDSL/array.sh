@@ -1,3 +1,5 @@
+## $ DSL array
+
 local typeArgument='-a '
 local globalArgument=''
 

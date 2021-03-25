@@ -1,3 +1,5 @@
+## $ DSL fromCommand
+
 local commandString="$1"
 shift
 

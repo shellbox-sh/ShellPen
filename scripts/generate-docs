@@ -1,29 +1,64 @@
 #! /usr/bin/env bash
 
+# Hand-write this for manual sorting:
+DSL_COMMANDS=(
+'$'
+':'
+'::'
+'['
+'[['
+'{{'
+'}'
+'appendln'
+'append'
+'array'
+'case'
+'cleanSlate'
+'code'
+'comment'
+'declare'
+'done'
+'do'
+'echo'
+'elif'
+'else'
+'esac'
+'fi'
+'fn'
+'for'
+'fromCommand'
+'fromFile'
+'fromStdin'
+'fromText'
+'if'
+'int'
+'local'
+'map'
+'option'
+'printf'
+'putAway'
+'return'
+'shift'
+'then'
+'toFile'
+'toStderr'
+'unset'
+'var'
+'while'
+'writeln'
+'write'
+)
+
 ./scripts/compile
 
 source vendor/docgen.sh
 source vendor/shx.sh
 
-generateREADME() {
-  cp docs/_templates/readmeHeader.md README.md
-  cat docs/_templates/index.md >> README.md
-}
-
-generateWebsiteIndex() {
-  cp docs/_templates/websiteHeader.md docs/index.md
-  cat docs/_templates/index.md | sed "s|(https://shellpen.sh|(|g" >> docs/index.md
-  echo >> docs/index.md
-  echo '{% endraw %}' >> docs/index.md
-}
-
-TEMPLATE=docs/_templates/command_reference.shx.md
-API_ROOT=api
-
 if [ "$1" = "--tree" ]
 then
   shift
   tree="$1"
+  mkdir -p "$tree"
   shift
 else
   tree="$( mktemp -d )"
@@ -45,9 +80,6 @@ context() { docgen context "$@"; }
 command() { docgen context commands "$@"; }
 
 docgen context create new
-
-generateREADME
-generateWebsiteIndex
 
 # if [ "$1" = "--examples" ]
 # then
@@ -75,45 +107,22 @@ then
   fi
 fi
 
-[ $# -eq 0 ] && { echo "Please provide @command paths to generate Markdown files for" >&2; exit 1; }
+# 1. Generate /docs which has a reference of every command with a short description in a table
+echo "Generating docs.md"
+shx render docs/_templates/docs.shx.md > docs/_pages/docs.md
 
-writeMarkdownFile() {
-  local markdownFile="docs/${1/#"@commands"/"$API_ROOT"}.md"
-
-  mkdir -p "${markdownFile%/*}"
-
-  [ "${markdownFile##*/}" = ':.md' ] && markdownFile="${markdownFile/%:.md/colon.md}"
-
-  shx render "$TEMPLATE" > "$markdownFile"
-}
-
-writeMarkdownFiles() {
-  local commandPath="$1"
-
-  echo "writeMarkdownFiles $commandPath"
-
-  docgen context goto path "$commandPath"
-
-  echo "$( writeMarkdownFile "$commandPath" )"
-
-  if [ "$recurse" = true ]
-  then
-    declare -a commandPaths=()
-    if docgen context commands list commandPaths
-    then
-      commandPath=''
-      for commandPath in "${commandPaths[@]}"
-      do
-        echo "$( writeMarkdownFiles "$commandPath" )"
-      done
-    fi
-  fi
-}
-
-for arg in "$@"
+# 2. Generate each of the command pages
+[ -d docs/_pages/commands ] && rm -r docs/_pages/commands
+mkdir -p docs/_pages/commands
+commandName=''
+for commandName in "${DSL_COMMANDS[@]}"
 do
-  writeMarkdownFiles "@commands/$arg"
+  pageName="$commandName"
+  [ "$pageName" = ':' ] && pageName='colon'
+  [ "$pageName" = '::' ] && pageName='colon-colon'
+  context goto path "@commands/DSL/$commandName"
+  echo "Generating $commandName.md"
+  shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
 done
 
-[ -f docs/_.md ] && mv docs/_.md docs/docs.md
-[ -d docs/_ ] && mv docs/_/* docs/ && rm -r docs/_
+echo "Done."

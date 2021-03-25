@@ -1,3 +1,5 @@
+## $ DSL for
+
 # Write the function
 !fn --shellpen-private writeDSL writeln "for $*"
 !fn --shellpen-private writeDSL writeln "do"

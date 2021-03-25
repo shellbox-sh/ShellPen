@@ -1,3 +1,5 @@
+## $ DSL fromText
+
 local string="$1"
 shift
 

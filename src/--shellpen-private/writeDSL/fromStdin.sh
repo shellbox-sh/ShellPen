@@ -1,3 +1,5 @@
+## $ DSL fromStdin
+
 local stdinSource="$1"
 shift
 

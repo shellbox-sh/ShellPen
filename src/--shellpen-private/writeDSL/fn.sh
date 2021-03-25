@@ -1,3 +1,5 @@
+## $ DSL fn
+
 local functionName="$1"
 
 # Write the function

@@ -1,3 +1,5 @@
+## $ DSL printf
+
 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
 
 !fn --shellpen-private writeDSL write "printf"

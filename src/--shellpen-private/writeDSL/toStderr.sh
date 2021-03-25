@@ -1,3 +1,5 @@
+## $ DSL toStderr
+
 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
 
 local command="$1"

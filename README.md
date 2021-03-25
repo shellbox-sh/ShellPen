@@ -82,9 +82,6 @@ You can have many pens, each associated with a separate source 🖊️ 🖋️ �
 shellpen pen :cat
 shellpen pen :dog
 
-:cat writeTo cat.sh
-:dog writeTo dog.sh
-
 :cat function meow
   :cat echo "Meow"
 
