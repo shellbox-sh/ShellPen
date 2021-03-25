@@ -41,6 +41,8 @@ fi
 
 
 
+> Define an array variable
+
 
 
 

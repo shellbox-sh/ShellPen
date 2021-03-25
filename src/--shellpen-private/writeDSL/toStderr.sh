@@ -1,4 +1,5 @@
 ## $ DSL toStderr
+## > Append `>&2` to the following command
 
 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
 

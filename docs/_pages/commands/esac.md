@@ -21,6 +21,8 @@ sidebar:
 
 
 
+> End a `case` / `esac` statement
+
 
 
 

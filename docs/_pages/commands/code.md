@@ -21,6 +21,8 @@ printf '%s' "${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
 
 
 
+> Output the source code for the current pen (_does not modify to current source_)
+
 
 
 

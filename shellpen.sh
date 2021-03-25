@@ -363,6 +363,7 @@ shellpen() {
               "code")
                 __shellpen__command+=("code")
                 ## $ DSL code
+                ## > Output the source code for the current pen (_does not modify to current source_)
                 
                 shellpen --shellpen-private contexts closeAndWriteAll
                 printf '%s' "${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
@@ -372,6 +373,7 @@ shellpen() {
               "toFile")
                 __shellpen__command+=("toFile")
                 ## $ DSL toFile
+                ## > Append `> [file path]` to the following command
                 
                 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
                 
@@ -391,6 +393,7 @@ shellpen() {
               "elif")
                 __shellpen__command+=("elif")
                 ## $ DSL elif
+                ## > Add an `elif` to an `if` conditional block
                 
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private contexts pop
@@ -403,6 +406,7 @@ shellpen() {
               "fromFile")
                 __shellpen__command+=("fromFile")
                 ## $ DSL fromFile
+                ## > Append `< "[file path]"` to the following command
                 
                 local filePath="$1"
                 shift
@@ -420,6 +424,7 @@ shellpen() {
               "var")
                 __shellpen__command+=("var")
                 ## $ DSL var
+                ## > Define a variable
                 
                 if [ $# -eq 1 ]
                 then
@@ -442,7 +447,7 @@ shellpen() {
               ":")
                 __shellpen__command+=(":")
                 ## $ DSL :
-                ## > Outputs the `:` null statement
+                ## > Output a line containing the `:` null character
                 
                 shellpen --shellpen-private writeDSL writeln ":"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -451,6 +456,7 @@ shellpen() {
               "fromStdin")
                 __shellpen__command+=("fromStdin")
                 ## $ DSL fromStdin
+                ## > Append `< [argument]` to the following command
                 
                 local stdinSource="$1"
                 shift
@@ -468,6 +474,7 @@ shellpen() {
               "fromText")
                 __shellpen__command+=("fromText")
                 ## $ DSL fromText
+                ## > Append `<<< "[text]"` to the following command
                 
                 local string="$1"
                 shift
@@ -485,6 +492,7 @@ shellpen() {
               "int")
                 __shellpen__command+=("int")
                 ## $ DSL int
+                ## > Define an integer variable
                 
                 local globalArgument=''
                 [ "$1" = '-g' ] && { globalArgument='-g '; shift; }
@@ -510,6 +518,7 @@ shellpen() {
               "do")
                 __shellpen__command+=("do")
                 ## $ DSL do
+                ## > Syntax sugar. Does not write source code. (_Loops automatically add `do`_)
                 
                 # No-op
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -518,6 +527,7 @@ shellpen() {
               "local")
                 __shellpen__command+=("local")
                 ## $ DSL local
+                ## > Define a local variable
                 
                 if [ $# -eq 1 ]
                 then
@@ -540,6 +550,7 @@ shellpen() {
               "unset")
                 __shellpen__command+=("unset")
                 ## $ DSL unset
+                ## > `unset` a variable
                 
                 shellpen --shellpen-private writeDSL writeln "unset $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -548,6 +559,7 @@ shellpen() {
               "echo")
                 __shellpen__command+=("echo")
                 ## $ DSL echo
+                ## > `echo` the provided arguments (_wrapped in `"..."`_)
                 
                 if [ $# -eq 0 ]
                 then
@@ -561,6 +573,7 @@ shellpen() {
               "dot")
                 __shellpen__command+=("dot")
                 ## $ DSL .
+                ## > Source a shell source file via `.`
                 
                 shellpen --shellpen-private writeDSL writeln ". $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -569,6 +582,7 @@ shellpen() {
               "append")
                 __shellpen__command+=("append")
                 ## $ DSL append
+                ## > Append a string of text to source output _without indentation_
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$*"
                 shellpen --shellpen-private contexts markLastNotEmpty
@@ -578,6 +592,7 @@ shellpen() {
               "while")
                 __shellpen__command+=("while")
                 ## $ DSL while
+                ## > Begin a `while` loop
                 
                 shellpen --shellpen-private writeDSL writeln "while $*"
                 shellpen --shellpen-private writeDSL writeln "do"
@@ -588,6 +603,7 @@ shellpen() {
               "declare")
                 __shellpen__command+=("declare")
                 ## $ DSL declare
+                ## > Declare a variable (shortcuts available: [`int`](/docs/int), [`array`](/docs/array), [`map`](/docs/map))
                 
                 shellpen --shellpen-private writeDSL writeln "declare $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -596,6 +612,7 @@ shellpen() {
               "toStderr")
                 __shellpen__command+=("toStderr")
                 ## $ DSL toStderr
+                ## > Append `>&2` to the following command
                 
                 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
                 
@@ -612,6 +629,7 @@ shellpen() {
               "else")
                 __shellpen__command+=("else")
                 ## $ DSL else
+                ## > Add an `else` to an `if` conditional block
                 
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private contexts pop
@@ -623,6 +641,7 @@ shellpen() {
               "comment")
                 __shellpen__command+=("comment")
                 ## $ DSL comment
+                ## > Append a `#` command line
                 
                 # Do not use writeln because comments should not mark blocks as not empty
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)# $*${NEWLINE}"
@@ -632,6 +651,7 @@ shellpen() {
               "appendln")
                 __shellpen__command+=("appendln")
                 ## $ DSL appendln
+                ## > Append a line of text to source output _without indentation_
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$*${NEWLINE}"
                 shellpen --shellpen-private contexts markLastNotEmpty
@@ -641,6 +661,7 @@ shellpen() {
               "case")
                 __shellpen__command+=("case")
                 ## $ DSL case
+                ## > Begin a `case` / `esac` statement
                 
                 shellpen --shellpen-private writeDSL writeln "case \"$1\" in"
                 shellpen --shellpen-private contexts push "esac"
@@ -650,6 +671,7 @@ shellpen() {
               "esac")
                 __shellpen__command+=("esac")
                 ## $ DSL esac
+                ## > End a `case` / `esac` statement
                 
                 shellpen --shellpen-private contexts pop
                 shellpen --shellpen-private writeDSL writeln "esac"
@@ -659,6 +681,7 @@ shellpen() {
               "printf")
                 __shellpen__command+=("printf")
                 ## $ DSL printf
+                ## > `printf` the provided arguments (_with `'%s'` formatter support_)
                 
                 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
                 
@@ -690,6 +713,7 @@ shellpen() {
               "return")
                 __shellpen__command+=("return")
                 ## $ DSL return
+                ## > Append a `return [code]` statement
                 
                 shellpen --shellpen-private writeDSL writeln "return $1"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -698,6 +722,7 @@ shellpen() {
               "option")
                 __shellpen__command+=("option")
                 ## $ DSL option
+                ## > Add an option to a `case` / `esac` statement
                 
                 shellpen --shellpen-private writeDSL writeln "$1)"
                 shellpen --shellpen-private contexts push "::"
@@ -707,7 +732,7 @@ shellpen() {
               "::")
                 __shellpen__command+=("::")
                 ## $ DSL ::
-                ## > Writes a ';;' for use in `case`/`esac` `option`s
+                ## > Write a `;;` for use in `case`/`esac` `option`s
                 
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private writeDSL writeln ";;"
@@ -718,6 +743,7 @@ shellpen() {
               "[[")
                 __shellpen__command+=("[[")
                 ## $ DSL [[
+                ## > Starts a line with a `[[` statement, e.g. `[[ '"$1"' =~ ^-- ]] AND ...`
                 
                 shellpen --shellpen-private writeDSL writeln "[[ $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -726,6 +752,7 @@ shellpen() {
               "done")
                 __shellpen__command+=("done")
                 ## $ DSL done
+                ## > End a `for` or `while` loop
                 
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private contexts pop
@@ -736,6 +763,7 @@ shellpen() {
               "for")
                 __shellpen__command+=("for")
                 ## $ DSL for
+                ## > Begin a `for` loop
                 
                 # Write the function
                 shellpen --shellpen-private writeDSL writeln "for $*"
@@ -749,6 +777,7 @@ shellpen() {
               "fi")
                 __shellpen__command+=("fi")
                 ## $ DSL fi
+                ## > End an `if` conditional block
                 
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private contexts pop
@@ -759,6 +788,7 @@ shellpen() {
               "map")
                 __shellpen__command+=("map")
                 ## $ DSL map
+                ## > Define an associative array variable
                 
                 shellpen --shellpen-private writeDSL array -A "$@"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -767,6 +797,7 @@ shellpen() {
               "writeln")
                 __shellpen__command+=("writeln")
                 ## $ DSL writeln
+                ## > Append a line of text to source output including indentation
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*${NEWLINE}"
                 shellpen --shellpen-private contexts markLastNotEmpty
@@ -776,6 +807,7 @@ shellpen() {
               "array")
                 __shellpen__command+=("array")
                 ## $ DSL array
+                ## > Define an array variable
                 
                 local typeArgument='-a '
                 local globalArgument=''
@@ -805,6 +837,7 @@ shellpen() {
               "write")
                 __shellpen__command+=("write")
                 ## $ DSL write
+                ## > Append a string of text to source output including indentation
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*"
                 shellpen --shellpen-private contexts markLastNotEmpty
@@ -814,6 +847,7 @@ shellpen() {
               "cleanSlate")
                 __shellpen__command+=("cleanSlate")
                 ## $ DSL cleanSlate
+                ## > Clean the slate of the current pen (_does not output source code_)
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]=""
                 
@@ -835,6 +869,7 @@ shellpen() {
               "then")
                 __shellpen__command+=("then")
                 ## $ DSL then
+                ## > Syntax sugar. Does not write source code. (_`if` conditionals automatically add `then`_)
                 
                 # No-op
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -843,6 +878,7 @@ shellpen() {
               "if")
                 __shellpen__command+=("if")
                 ## $ DSL if
+                ## > Begin an `if` conditional block
                 
                 # Write the function
                 shellpen --shellpen-private writeDSL writeln "if $*"
@@ -856,6 +892,7 @@ shellpen() {
               "putAway")
                 __shellpen__command+=("putAway")
                 ## $ DSL putAway
+                ## > Delete the current pen (_does not output source code_)
                 
                 unset "__SHELLPEN_PENS[$SHELLPEN_PEN_INDEX]"
                 unset "__SHELLPEN_SOURCES[$SHELLPEN_PEN_INDEX]"
@@ -868,6 +905,7 @@ shellpen() {
               "fromCommand")
                 __shellpen__command+=("fromCommand")
                 ## $ DSL fromCommand
+                ## > Append `< <([command])` to the following command
                 
                 local commandString="$1"
                 shift
@@ -905,6 +943,7 @@ shellpen() {
               "fn")
                 __shellpen__command+=("fn")
                 ## $ DSL fn
+                ## > Begin a function definition block
                 
                 local functionName="$1"
                 
@@ -919,6 +958,7 @@ shellpen() {
               "source")
                 __shellpen__command+=("source")
                 ## $ DSL source
+                ## > Source a shell source file
                 
                 shellpen --shellpen-private writeDSL writeln "source $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -927,6 +967,7 @@ shellpen() {
               "{{")
                 __shellpen__command+=("{{")
                 ## $ DSL {{
+                ## > Write a `((` arithmetic statement (_replaces `}}` with `))`_)
                 
                 shellpen --shellpen-private writeDSL writeln "(( ${*/\}\}/\)\)}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -935,6 +976,7 @@ shellpen() {
               "[")
                 __shellpen__command+=("[")
                 ## $ DSL [
+                ## > Starts a line with a `[` statement, e.g. `[ '$#' -eq 0 ] AND ...`
                 
                 shellpen --shellpen-private writeDSL writeln "[ $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -943,6 +985,7 @@ shellpen() {
               "}")
                 __shellpen__command+=("}")
                 ## $ DSL }
+                ## > Closes a function or an open `{` block
                 
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private contexts pop
@@ -953,6 +996,7 @@ shellpen() {
               "shift")
                 __shellpen__command+=("shift")
                 ## $ DSL shift
+                ## > `shift` a command-line argument
                 
                 shellpen --shellpen-private writeDSL writeln "shift"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]

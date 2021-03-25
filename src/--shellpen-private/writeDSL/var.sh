@@ -1,4 +1,5 @@
 ## $ DSL var
+## > Define a variable
 
 if [ $# -eq 1 ]
 then

@@ -1,4 +1,5 @@
 ## $ DSL if
+## > Begin an `if` conditional block
 
 # Write the function
 !fn --shellpen-private writeDSL writeln "if $*"

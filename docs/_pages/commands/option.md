@@ -21,6 +21,8 @@ sidebar:
 
 
 
+> Add an option to a `case` / `esac` statement
+
 
 
 

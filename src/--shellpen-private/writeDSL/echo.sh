@@ -1,4 +1,5 @@
 ## $ DSL echo
+## > `echo` the provided arguments (_wrapped in `"..."`_)
 
 if [ $# -eq 0 ]
 then

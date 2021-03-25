@@ -1,2 +1,2 @@
 ## $ DSL ,
-## > Outputs a ';' semicolon
+## > Output a `;` semicolon

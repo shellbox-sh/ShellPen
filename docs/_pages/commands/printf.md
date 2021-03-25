@@ -43,6 +43,8 @@ done
 
 
 
+> `printf` the provided arguments (_with `'%s'` formatter support_)
+
 
 
 

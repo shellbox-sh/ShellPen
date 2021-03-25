@@ -28,6 +28,8 @@ __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELL
 
 
 
+> Append `>&2` to the following command
+
 
 
 

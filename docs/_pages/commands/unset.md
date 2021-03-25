@@ -20,6 +20,8 @@ sidebar:
 
 
 
+> `unset` a variable
+
 
 
 

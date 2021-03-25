@@ -1,4 +1,5 @@
 ## $ DSL fi
+## > End an `if` conditional block
 
 !fn --shellpen-private contexts writeNullIfEmpty
 !fn --shellpen-private contexts pop

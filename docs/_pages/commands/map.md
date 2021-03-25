@@ -20,6 +20,8 @@ sidebar:
 
 
 
+> Define an associative array variable
+
 
 
 

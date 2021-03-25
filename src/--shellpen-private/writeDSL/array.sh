@@ -1,4 +1,5 @@
 ## $ DSL array
+## > Define an array variable
 
 local typeArgument='-a '
 local globalArgument=''

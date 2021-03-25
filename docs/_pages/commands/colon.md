@@ -20,7 +20,7 @@ sidebar:
 
 
 
-> Outputs the `:` null statement
+> Output a line containing the `:` null character
 
 
 

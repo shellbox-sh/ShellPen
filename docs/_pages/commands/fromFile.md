@@ -29,6 +29,8 @@ __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELL
 
 
 
+> Append `< "[file path]"` to the following command
+
 
 
 

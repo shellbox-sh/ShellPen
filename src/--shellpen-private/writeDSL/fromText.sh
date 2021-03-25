@@ -1,4 +1,5 @@
 ## $ DSL fromText
+## > Append `<<< "[text]"` to the following command
 
 local string="$1"
 shift

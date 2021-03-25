@@ -1,4 +1,5 @@
 ## $ DSL printf
+## > `printf` the provided arguments (_with `'%s'` formatter support_)
 
 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
 

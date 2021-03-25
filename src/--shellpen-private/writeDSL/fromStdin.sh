@@ -1,4 +1,5 @@
 ## $ DSL fromStdin
+## > Append `< [argument]` to the following command
 
 local stdinSource="$1"
 shift

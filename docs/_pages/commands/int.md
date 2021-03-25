@@ -37,6 +37,8 @@ fi
 
 
 
+> Define an integer variable
+
 
 
 

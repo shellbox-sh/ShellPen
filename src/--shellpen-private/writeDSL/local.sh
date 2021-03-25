@@ -1,4 +1,5 @@
 ## $ DSL local
+## > Define a local variable
 
 if [ $# -eq 1 ]
 then

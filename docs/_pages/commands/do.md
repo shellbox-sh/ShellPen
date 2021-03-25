@@ -20,6 +20,8 @@ sidebar:
 
 
 
+> Syntax sugar. Does not write source code. (_Loops automatically add `do`_)
+
 
 
 

@@ -22,7 +22,7 @@ sidebar:
 
 
 
-> Writes a ';;' for use in `case`/`esac` `option`s
+> Write a `;;` for use in `case`/`esac` `option`s
 
 
 

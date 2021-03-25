@@ -25,6 +25,8 @@ sidebar:
 
 
 
+> Begin a `for` loop
+
 
 
 

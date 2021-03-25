@@ -24,6 +24,8 @@ unset "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID"
 
 
 
+> Delete the current pen (_does not output source code_)
+
 
 
 

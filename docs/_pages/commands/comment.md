@@ -21,6 +21,8 @@ __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(!fn --shellpen-private getCurr
 
 
 
+> Append a `#` command line
+
 
 
 

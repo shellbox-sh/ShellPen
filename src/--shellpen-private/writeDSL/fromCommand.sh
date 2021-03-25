@@ -1,4 +1,5 @@
 ## $ DSL fromCommand
+## > Append `< <([command])` to the following command
 
 local commandString="$1"
 shift

@@ -1,4 +1,5 @@
 ## $ DSL elif
+## > Add an `elif` to an `if` conditional block
 
 !fn --shellpen-private contexts writeNullIfEmpty
 !fn --shellpen-private contexts pop

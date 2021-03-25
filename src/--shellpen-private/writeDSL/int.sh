@@ -1,4 +1,5 @@
 ## $ DSL int
+## > Define an integer variable
 
 local globalArgument=''
 [ "$1" = '-g' ] && { globalArgument='-g '; shift; }

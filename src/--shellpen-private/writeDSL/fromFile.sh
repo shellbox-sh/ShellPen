@@ -1,4 +1,5 @@
 ## $ DSL fromFile
+## > Append `< "[file path]"` to the following command
 
 local filePath="$1"
 shift
