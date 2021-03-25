@@ -1,1 +1,0 @@
-FN -- getPenIndex "$@" >/dev/null

@@ -1,74 +1,81 @@
 #! /usr/bin/env bash
 
-TEMPLATE=docs/_templates/command_reference.shx.md
-API_ROOT=api
+./scripts/compile
 
+source scripts/dsl_commands.sh
 source vendor/docgen.sh
 source vendor/shx.sh
 
-tree="$( mktemp -d )"
+if [ "$1" = "--tree" ]
+then
+  shift
+  tree="$1"
+  mkdir -p "$tree"
+  shift
+else
+  tree="$( mktemp -d )"
+fi
 
 docgen parseTree setRoot "$tree"
-docgen parseToTree shellpen.sh
-docgen context create new
 
-tree "$tree"
+if [ "$1" = "--parse" ]
+then
+  shift
+  [ -d "$tree" ] && rm -r "$tree"
+  mkdir -p "$tree"
+  docgen parseToTree src/
+else
+  [ -d "$tree" ] || { echo "Tree not found '$tree' - try calling with --tree [tree] --parse to create new" >&2; exit 1; }
+fi
 
 context() { docgen context "$@"; }
 command() { docgen context commands "$@"; }
 
-generateREADME() {
-  cp docs/_templates/readmeHeader.md README.md
-  cat docs/_templates/index.md >> README.md
-}
+docgen context create new
 
-generateWebsiteIndex() {
-  cp docs/_templates/websiteHeader.md docs/index.md
-  cat docs/_templates/index.md >> docs/index.md
-  echo >> docs/index.md
-  echo '{% endraw %}' >> docs/index.md
-}
-
-writeMarkdownFile() {
-  local markdownFile="docs/${1/#"@commands"/"$API_ROOT"}.md"
-
-  mkdir -p "${markdownFile%/*}"
-
-  [ "${markdownFile##*/}" = ':.md' ] && markdownFile="${markdownFile/%:.md/colon.md}"
-
-  shx render "$TEMPLATE" > "$markdownFile"
-}
-
-writeMarkdownFiles() {
-  local commandPath="$1"
-
-  echo "writeMarkdownFiles $commandPath"
-
-  docgen context goto path "$commandPath"
-
-  echo "$( writeMarkdownFile "$commandPath" )"
-
-  declare -a commandPaths=()
-  if docgen context commands list commandPaths
-  then
-    commandPath=''
-    for commandPath in "${commandPaths[@]}"
-    do
-      echo "$( writeMarkdownFiles "$commandPath" )"
-    done
-  fi
-}
-
-generateWebsiteIndex
-generateREADME
-
-if [ $# -eq 0 ]
+if [ "$1" = "--examples" ]
 then
-  writeMarkdownFiles "@commands/shellpen"
-else
-  for arg in "$@"
-  do
-    # accepts a command path relative to shellpen
-    writeMarkdownFiles "@commands/shellpen/$arg"
-  done
+  shift
+  ./scripts/generate-examples --tree "$tree"
 fi
+
+[ "$1" = "-x" ] && exit 0
+
+if [ "$1" = "--recurse" ]
+then
+  recurse=true
+  shift
+fi
+
+if [ "$1" = "--tree" ]
+then
+  shift
+  if [ "$1" = "--all" ]
+  then
+    shift
+    tree -a "$tree"
+  else
+    tree "$tree"
+  fi
+fi
+
+# 1. Generate /docs which has a reference of every command with a short description in a table
+echo "Generating docs.md"
+shx render docs/_templates/docs.shx.md > docs/_pages/docs.md
+
+# 2. Generate each of the command pages
+[ -d docs/_pages/commands ] && rm -r docs/_pages/commands
+mkdir -p docs/_pages/commands
+commandName=''
+for commandName in "${DSL_COMMANDS[@]}"
+do
+  pageName="$commandName"
+  [ "$pageName" = '.' ] && pageName='dot'
+  [ "$pageName" = ':' ] && pageName='colon'
+  [ "$pageName" = '::' ] && pageName='colon-colon'
+  context goto path "@commands/DSL/$commandName"
+  echo "Generating $commandName.md"
+  shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
+done
+
+echo "Done."

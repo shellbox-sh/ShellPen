@@ -1,135 +1,49 @@
-@spec.create_pen_for_default_source() {
-  expect { shellpen pens list } toEqual "default"
+@spec.create_list_delete_pens() {
+  expect { shellpen pens list } toBeEmpty
+  expect "${#__SHELLPEN_SOURCES[@]}" toEqual 0
 
-  assert shellpen pen :foo
+  shellpen -
 
-  expect { shellpen pens list } toEqual "default\n:foo"
+  expect { shellpen pens list } toEqual "-"
+  expect "${#__SHELLPEN_SOURCES[@]}" toEqual 1
 
-  expect { shellpen pens getSource :foo } toEqual "default"
+  shellpen :
+
+  expect { shellpen pens list } toEqual "-\n:"
+  expect "${#__SHELLPEN_SOURCES[@]}" toEqual 2
+
+  : putAway
+
+  expect { shellpen pens list } toEqual "-"
+  expect "${#__SHELLPEN_SOURCES[@]}" toEqual 1
+
+  - putAway
+
+  expect { shellpen pens list } toBeEmpty
+  expect "${#__SHELLPEN_SOURCES[@]}" toEqual 0
 }
 
-@spec.create_pen_for_existing_source() {
-  shellpen sources new foo
-  expect { shellpen sources list } toEqual "default\nfoo"
-  expect { shellpen pens list } toEqual "default"
-
-  assert shellpen pen :foo foo
-
-  expect { shellpen pens list } toEqual "default\n:foo"
-  expect { shellpen pens getSource :foo } toEqual "foo"
-  expect { shellpen sources list } toEqual "default\nfoo"
+@spec.requires_one_argument() {
+  expect { shellpen pens new } toFail "shellpen pens new: requires one argument [pen name], none provided"
+  expect { shellpen pens new one two } toFail "shellpen pens new: requires only one argument [pen name], 2 provided"
 }
 
-@spec.create_pen_for_new_source() {
-  expect { shellpen sources list } toEqual "default"
-  expect { shellpen pens list } toEqual "default"
+@spec.cannot_create_pen_if_one_with_same_name_already_exists() {
+  shellpen -
 
-  assert shellpen pen :foo foo
+  expect { shellpen - } toFail "exists"
 
-  expect { shellpen pens list } toEqual "default\n:foo"
-  expect { shellpen pens getSource :foo } toEqual "foo"
-  expect { shellpen sources list } toEqual "default\nfoo"
+  expect { shellpen pens list } toEqual "-"
+  expect "${#__SHELLPEN_SOURCES[@]}" toEqual 1
 }
 
-@spec.invalid_alias_name() {
-  SHELLPEN_SILENCE=true
-  expect { shellpen pen :foo - ^this:@wont\$Wo=rk } toFail "Alias name '^this:@wont\$Wo=rk' is not valid"
-}
+@spec.can_use_multiple_pens() {
+  shellpen A
+  shellpen B
 
-@spec.writes_to_the_correct_source() {
-  shellpen pen :foo foo.sh
-  shellpen pen :bar bar.sh
+  A comment Hello
+  B comment World
 
-  :foo comment "Hello from foo"
-  :foo write "# FOO"
-
-  :bar comment "Hello from bar"
-  :bar write "# BAR"
-
-  shellpen sources use foo.sh
-  expect { shellpen preview } toContain "Hello from foo" "FOO"
-  expect { shellpen preview } not toContain "bar" "BAR"
-
-  shellpen sources use bar.sh
-  expect { shellpen preview } toContain "Hello from bar" "BAR"
-  expect { shellpen preview } not toContain "foo" "FOO"
-
-}
-
-@spec.can_change_which_source_a_pen_writes_to() {
-  shellpen pen :pen
-
-  expect { shellpen sources list } toEqual "default"
-  expect { shellpen pens list } toEqual "default\n:pen"
-
-  :pen comment "Hello"
-
-  shellpen sources new differentSource
-
-  expect { shellpen sources list } toEqual "default\ndifferentSource"
-  expect { shellpen pens list } toEqual "default\n:pen"
-  expect { shellpen preview } toContain "Hello"
-
-  :pen switchTo differentSource
-
-  :pen comment "Different Source"
-
-  expect { shellpen preview } toContain "Hello"
-  expect { shellpen preview } not toContain "Different Source"
-
-  shellpen sources use differentSource
-
-  expect { shellpen preview } not toContain "Hello"
-  expect { shellpen preview } toContain "Different Source"
-
-  # Or, without using the pen function:
-  shellpen pens switchSource :pen default
-
-  :pen comment "Back to default"
-
-  shellpen sources use default
-  expect { shellpen preview } toContain "Back to default"
-
-  shellpen sources use differentSource
-  expect { shellpen preview } not toContain "Back to default"
-}
-
-@pending.can_provide_a_file_path_as_well_when_making_new_sources() {
-  :
-}
-
-@spec.can_delete_a_pen() {
-  shellpen pen :pen penSource
-
-  expect { shellpen pens list } toEqual "default\n:pen"
-  expect { shellpen sources list } toEqual "default\npenSource"
-
-  :pen putAway
-
-  expect { shellpen pens list } toEqual "default"
-  expect { shellpen sources list } toEqual "default\npenSource"
-}
-
-@spec.can_delete_a_pen_another_way_too() {
-  shellpen pen :pen penSource
-
-  expect { shellpen pens list } toEqual "default\n:pen"
-  expect { shellpen sources list } toEqual "default\npenSource"
-
-  shellpen pens putAway :pen
-
-  expect { shellpen pens list } toEqual "default"
-  expect { shellpen sources list } toEqual "default\npenSource"
-}
-
-@spec.can_delete_a_pen_with_its_source() {
-  shellpen pen :pen penSource
-
-  expect { shellpen pens list } toEqual "default\n:pen"
-  expect { shellpen sources list } toEqual "default\npenSource"
-
-  :pen putAway withSource
-
-  expect { shellpen pens list } toEqual "default"
-  expect { shellpen sources list } toEqual "default"
+  expect { A code } toEqual "# Hello"
+  expect { B code } toEqual "# World"
 }

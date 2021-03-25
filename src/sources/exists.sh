@@ -1,1 +1,0 @@
-FN -- getSourceIndex "$@" >/dev/null

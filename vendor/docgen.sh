@@ -233,22 +233,22 @@ shopt -s extglob
                     __docgen_parsers_descriptionParser_contextDescription="${__docgen_parsers_descriptionParser_currentLineDocumentation}${__docgen_parsers_descriptionParser_newLine}"
                   fi
                 
-                  while docgen x lines gotoNext
-                  do
-                    if docgen x lines current getDecoratorName >/dev/null || ! docgen x lines current isDocumentation >/dev/null # add hasDecorator or similar
-                    then 
-                      docgen x lines gotoPrevious
-                      break
-                    fi
+                  # while docgen x lines gotoNext
+                  # do
+                  #   if docgen x lines current getDecoratorName >/dev/null || ! docgen x lines current isDocumentation >/dev/null # add hasDecorator or similar
+                  #   then 
+                  #     docgen x lines gotoPrevious
+                  #     break
+                  #   fi
                 
-                    if docgen x lines current isDocumentation
-                    then
-                      local __docgen_parsers_descriptionParser_currentLineDocumentation=''
-                      docgen x lines current getDocumentation __docgen_parsers_descriptionParser_currentLineDocumentation
-                      # change to +=
-                      __docgen_parsers_descriptionParser_contextDescription="${__docgen_parsers_descriptionParser_contextDescription}${__docgen_parsers_descriptionParser_currentLineDocumentation}${__docgen_parsers_descriptionParser_newLine}"
-                    fi
-                  done
+                  #   if docgen x lines current isDocumentation
+                  #   then
+                  #     local __docgen_parsers_descriptionParser_currentLineDocumentation=''
+                  #     docgen x lines current getDocumentation __docgen_parsers_descriptionParser_currentLineDocumentation
+                  #     # change to +=
+                  #     __docgen_parsers_descriptionParser_contextDescription="${__docgen_parsers_descriptionParser_contextDescription}${__docgen_parsers_descriptionParser_currentLineDocumentation}${__docgen_parsers_descriptionParser_newLine}"
+                  #   fi
+                  # done
                 
                   if [ -n "$__docgen_parsers_descriptionParser_contextDescription" ]
                   then
@@ -365,8 +365,21 @@ shopt -s extglob
                     docgen x context isSet || { docgen -- errors parserWarning "Shell argument found but no context set - '($(docgen x lines current getText))'"; return 1; }
                     local __docgen_parsers_shellArgumentParser_argumentName="${__docgen_parsers_shellArgumentParser_documentationText%% *}"
                     local __docgen_parsers_shellArgumentParser_argumentDescription="${__docgen_parsers_shellArgumentParser_documentationText#* }"
+                    local __docgen_parsers_shellArgumentParser_argumentType=''
+                    if [[ "$__docgen_parsers_shellArgumentParser_argumentDescription" =~ ^\[([^\]]+)\][[:space:]](.*)$ ]]
+                    then
+                      __docgen_parsers_shellArgumentParser_argumentType="${BASH_REMATCH[1]}"
+                      __docgen_parsers_shellArgumentParser_argumentDescription="${BASH_REMATCH[2]}"
+                    fi
                     # Arguments write to 'parameters'
-                    docgen x context write ".docgen/parameters/$__docgen_parsers_shellArgumentParser_argumentName" "$__docgen_parsers_shellArgumentParser_argumentDescription"
+                
+                    # OLD
+                    # docgen x context write ".docgen/parameters/$__docgen_parsers_shellArgumentParser_argumentName" "$__docgen_parsers_shellArgumentParser_argumentDescription"
+                
+                    # NEW
+                    [ -n "$__docgen_parsers_shellArgumentParser_argumentType" ] && docgen x context write ".docgen/parameters/$__docgen_parsers_shellArgumentParser_argumentName/type" "$__docgen_parsers_shellArgumentParser_argumentType"
+                    docgen x context write ".docgen/parameters/$__docgen_parsers_shellArgumentParser_argumentName/description" "$__docgen_parsers_shellArgumentParser_argumentDescription"
+                
                     return 0
                   fi
                 fi
@@ -383,7 +396,7 @@ shopt -s extglob
                 then
                   if [[ "$__docgen_parsers_shellCommandParser_documentationText" = "\$ "* ]]
                   then
-                    local __docgen_parsers_shellCommandParser_fullCommandName="${__docgen_parsers_shellCommandParser_documentationText%%$ }"
+                    local __docgen_parsers_shellCommandParser_fullCommandName="${__docgen_parsers_shellCommandParser_documentationText#\$ }"
                     local __docgen_parsers_shellCommandParser_contextPath="${__docgen_parsers_shellCommandParser_fullCommandName// //}"
                     # Shell commands write to '@commands'
                     docgen x context set "@commands/$__docgen_parsers_shellCommandParser_contextPath"
@@ -1602,9 +1615,9 @@ shopt -s extglob
                         then
                           if [ -n "$1" ]
                           then
-                            printf -v "$1" -- "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
+                            printf -v "$1" '%s' "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
                           else
-                            printf -- "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
+                            printf '%s' "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
                           fi
                         else
                           return 1
@@ -1717,9 +1730,9 @@ shopt -s extglob
                         then
                           if [ -n "$1" ]
                           then
-                            printf -v "$1" -- "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
+                            printf -v "$1" '%s' "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
                           else
-                            printf -- "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
+                            printf '%s' "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
                           fi
                         else
                           return 1
@@ -1789,7 +1802,7 @@ shopt -s extglob
                         
                         if [[ "${_DOCGEN_CURRENT_FILE_LINES["$(( $_DOCGEN_CURRENT_FILE_LINES_CURSOR - 1 ))"]}" =~ $DOCGEN_DOCUMENTATION_PATTERN ]]
                         then
-                          printf -- "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
+                          printf '%s' "${BASH_REMATCH[$DOCGEN_DOCUMENTATION_PATTERN_CAPTURE_GROUP]}"
                         else
                           return 1
                         fi
