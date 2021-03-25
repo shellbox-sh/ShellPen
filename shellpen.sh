@@ -381,6 +381,20 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "case")
+                __shellpen__command+=("case")
+                shellpen --shellpen-private writeDSL writeln "case \"$1\" in"
+                shellpen --shellpen-private contexts push "esac"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "esac")
+                __shellpen__command+=("esac")
+                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL writeln "esac"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "stderr")
                 __shellpen__command+=("stderr")
                 # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
@@ -427,6 +441,21 @@ shellpen() {
               "return")
                 __shellpen__command+=("return")
                 shellpen --shellpen-private writeDSL writeln "return $1"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "option")
+                __shellpen__command+=("option")
+                shellpen --shellpen-private writeDSL writeln "$1)"
+                shellpen --shellpen-private contexts push "::"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "::")
+                __shellpen__command+=("::")
+                shellpen --shellpen-private contexts writeNullIfEmpty
+                shellpen --shellpen-private writeDSL writeln ";;"
+                shellpen --shellpen-private contexts pop
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

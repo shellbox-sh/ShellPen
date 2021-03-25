@@ -149,3 +149,7 @@ else
   :
 fi'
 }
+
+@pending.if_with_inner_if() {
+  :
+}
