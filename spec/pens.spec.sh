@@ -36,3 +36,14 @@
   expect { shellpen pens list } toEqual "-"
   expect "${#__SHELLPEN_SOURCES[@]}" toEqual 1
 }
+
+@spec.can_use_multiple_pens() {
+  shellpen A
+  shellpen B
+
+  A comment Hello
+  B comment World
+
+  expect { A code } toEqual "# Hello"
+  expect { B code } toEqual "# World"
+}

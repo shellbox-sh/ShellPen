@@ -65,10 +65,12 @@ done < "some/file/path"'
   - while [ '$#' -gt 0 ]
   - do
     - echo "Hi"
+    - shift
   - fromStdin some/file/path done
   expect { - code } toEqual 'while [ $# -gt 0 ]
 do
   echo "Hi"
+  shift
 done < some/file/path'
 }
 

@@ -518,7 +518,8 @@ shellpen() {
                 ;;
               "comment")
                 __shellpen__command+=("comment")
-                shellpen --shellpen-private writeDSL writeln "# $*"
+                # Do not use writeln because comments should not mark blocks as not empty
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)# $*${NEWLINE}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -604,6 +605,17 @@ shellpen() {
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private contexts pop
                 shellpen --shellpen-private writeDSL writeln "done"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "for")
+                __shellpen__command+=("for")
+                # Write the function
+                shellpen --shellpen-private writeDSL writeln "for $*"
+                shellpen --shellpen-private writeDSL writeln "do"
+                
+                # Push the DSL command to run to CLOSE this block
+                shellpen --shellpen-private contexts push "done"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -752,6 +764,12 @@ shellpen() {
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private contexts pop
                 shellpen --shellpen-private writeDSL writeln "}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "shift")
+                __shellpen__command+=("shift")
+                shellpen --shellpen-private writeDSL writeln "shift"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
