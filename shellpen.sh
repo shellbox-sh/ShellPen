@@ -98,6 +98,14 @@ shellpen() {
             local bracesOpen=false
             local commandIsFunctionDeclaration=false # fn is allowed to use curlies
             
+            # raw skips this processing, you can include 'AND' ',' etc all you want!
+            if [ "$1" = raw ]
+            then
+              shift
+              shellpen --shellpen-private writeSingleCommand $*
+              return $?
+            fi
+            
             while [ $# -gt 0 ]
             do
               if [ "$1" = '|' ]
@@ -132,11 +140,16 @@ shellpen() {
                 shellpen --shellpen-private writeSingleCommand append '}'
                 bracesOpen=false
             
-              elif [ "$bracesOpen" = true ] && [ "$1" = ',' ]
+              elif [ "$1" = ',' ]
               then
                 # Write the current command and chomp off its newline then write this ;
                 [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-                shellpen --shellpen-private writeSingleCommand append '; '
+                if [ $# -eq 1 ]
+                then
+                  shellpen --shellpen-private writeSingleCommand append ';'
+                else
+                  shellpen --shellpen-private writeSingleCommand append '; '
+                fi
             
               else
                 [ "${#currentCommand[@]}" -eq 0 ] && [ "$1" = fn ] && commandIsFunctionDeclaration=true
@@ -503,7 +516,12 @@ shellpen() {
                 ;;
               "echo")
                 __shellpen__command+=("echo")
-                shellpen --shellpen-private writeDSL writeln "echo \"$*\""
+                if [ $# -eq 0 ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "echo"
+                else
+                  shellpen --shellpen-private writeDSL writeln "echo \"$*\""
+                fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -785,6 +803,12 @@ shellpen() {
                 
                 # Push the DSL command to run to CLOSE this block
                 shellpen --shellpen-private contexts push "}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "{{")
+                __shellpen__command+=("{{")
+                shellpen --shellpen-private writeDSL writeln "(( ${*/\}\}/\)\)}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

@@ -14,6 +14,8 @@ extensions:
     url: "#item"
   - title: Getting Started
     url: "#item"
+  - title: Why?
+    url: "#item"
 
 - title: "Using Pens"
   url: "/"
@@ -71,7 +73,7 @@ extensions:
   children:
   - title: '<code>if</code> / <code>fi</code>'
     url: "#item"
-  - title: '<code>case</code> / <code>esac</code>'
+  - title: '<code>case</code> / <code>option</code> / <code>esac</code>'
     url: "#item"
   - title: '<code>[ ... ]</code> <code>AND</code> / <code>OR</code>'
     url: "#item"
@@ -81,6 +83,11 @@ extensions:
   - title: '<code>for</code>'
     url: "#item"
   - title: '<code>while</code>'
+    url: "#item"
+- title: "Arithmetic"
+  url: "/"
+  children:
+  - title: '<code>{{ ... }}</code>'
     url: "#item"
 - title: "Pipes | STDIN"
   url: "/"

@@ -6,6 +6,12 @@ shellpen -
   expect { - code } toEqual 'echo "Hello"'
 }
 
+@spec.can_echo_nothing() {
+  - echo
+
+  expect { - code } toEqual 'echo'
+}
+
 @spec.can_printf() {
   - printf "Hello"
   expect { - code } toEqual 'printf "Hello"'
