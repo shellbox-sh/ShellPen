@@ -59,8 +59,14 @@ do
 
   else
     [ "${#currentCommand[@]}" -eq 0 ] && [ "$1" = fn ] && commandIsFunctionDeclaration=true
-    # Ain't nothin' special, just add it to the command :)
-    currentCommand+=("$1")
+    # HACK for caseEsac which does not, at this time, allow for commands to be started with '.'
+    if [ "${#currentCommand[@]}" -eq 0 ] && [ "$1" = '.' ]
+    then
+      currentCommand+=("dot")
+    else
+      # Ain't nothin' special, just add it to the command :)
+      currentCommand+=("$1")
+    fi
   fi
 
   shift

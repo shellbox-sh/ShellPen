@@ -153,8 +153,14 @@ shellpen() {
             
               else
                 [ "${#currentCommand[@]}" -eq 0 ] && [ "$1" = fn ] && commandIsFunctionDeclaration=true
-                # Ain't nothin' special, just add it to the command :)
-                currentCommand+=("$1")
+                # HACK for caseEsac which does not, at this time, allow for commands to be started with '.'
+                if [ "${#currentCommand[@]}" -eq 0 ] && [ "$1" = '.' ]
+                then
+                  currentCommand+=("dot")
+                else
+                  # Ain't nothin' special, just add it to the command :)
+                  currentCommand+=("$1")
+                fi
               fi
             
               shift
@@ -436,6 +442,7 @@ shellpen() {
               ":")
                 __shellpen__command+=(":")
                 ## $ DSL :
+                ## > Outputs the `:` null statement
                 
                 shellpen --shellpen-private writeDSL writeln ":"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -548,6 +555,14 @@ shellpen() {
                 else
                   shellpen --shellpen-private writeDSL writeln "echo \"$*\""
                 fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "dot")
+                __shellpen__command+=("dot")
+                ## $ DSL .
+                
+                shellpen --shellpen-private writeDSL writeln ". $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -692,7 +707,7 @@ shellpen() {
               "::")
                 __shellpen__command+=("::")
                 ## $ DSL ::
-                ## > Description of `::`
+                ## > Writes a ';;' for use in `case`/`esac` `option`s
                 
                 shellpen --shellpen-private contexts writeNullIfEmpty
                 shellpen --shellpen-private writeDSL writeln ";;"
@@ -875,11 +890,11 @@ shellpen() {
                 ## @example
                 ##   - echo "Hello" \| $ sed "'s/foo/bar'"
                 ## @example output
-                ##   echo "Hello" | sed "'s/foo/bar'
+                ##   echo "Hello" | sed 's/foo/bar'
                 ## @example Different
                 ##   - echo "Hello FOO BAR" \| $ sed "'s/foo/bar'"
                 ## @example Different output
-                ##   echo "Hello FOO BAR" | sed "'s/foo/bar'
+                ##   echo "Hello FOO BAR" | sed 's/foo/bar'
                 ##
                 ## You must supply your own quotations.
                 
@@ -898,6 +913,14 @@ shellpen() {
                 
                 # Push the DSL command to run to CLOSE this block
                 shellpen --shellpen-private contexts push "}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "source")
+                __shellpen__command+=("source")
+                ## $ DSL source
+                
+                shellpen --shellpen-private writeDSL writeln "source $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

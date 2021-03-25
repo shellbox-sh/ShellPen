@@ -1,5 +1,7 @@
 # Hand-write this for manual sorting:
 DSL_COMMANDS=(
+'.'
+','
 '$'
 ':'
 '::'
@@ -9,6 +11,7 @@ DSL_COMMANDS=(
 '}'
 'appendln'
 'append'
+'AND'
 'array'
 'case'
 'cleanSlate'
@@ -33,10 +36,12 @@ DSL_COMMANDS=(
 'local'
 'map'
 'option'
+'OR'
 'printf'
 'putAway'
 'return'
 'shift'
+'source'
 'then'
 'toFile'
 'toStderr'

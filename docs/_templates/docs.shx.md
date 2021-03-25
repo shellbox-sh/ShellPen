@@ -9,6 +9,7 @@ sidebar:
 <% for commandName in "${DSL_COMMANDS[@]}"; do -%>
 <% context goto path "@commands/DSL/$commandName" -%>
 <% pageName="$( echo "$commandName" | sed "s/{{/{{ '{{' }}/g" )" -%>
+<% [ "$pageName" = '.' ] && pageName='dot' -%>
 <% [ "$pageName" = ':' ] && pageName='colon' -%>
 <% [ "$pageName" = '::' ] && pageName='colon-colon' -%>
 <% outputName="$( echo "$commandName" | sed "s/{{/{{ '{{' }}/g" )" -%>

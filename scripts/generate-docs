@@ -70,6 +70,7 @@ commandName=''
 for commandName in "${DSL_COMMANDS[@]}"
 do
   pageName="$commandName"
+  [ "$pageName" = '.' ] && pageName='dot'
   [ "$pageName" = ':' ] && pageName='colon'
   [ "$pageName" = '::' ] && pageName='colon-colon'
   context goto path "@commands/DSL/$commandName"

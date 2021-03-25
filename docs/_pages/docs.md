@@ -6,15 +6,18 @@ sidebar:
   nav: 'command_reference'
 ---
 
+| [`.`](/docs/dot) |  |
+| [`,`](/docs/,) | Outputs a ';' semicolon |
 | [`$`](/docs/$) | Run any arbitrary command |
-| [`:`](/docs/colon) |  |
-| [`::`](/docs/colon-colon) | Description of `::` |
+| [`:`](/docs/colon) | Outputs the `:` null statement |
+| [`::`](/docs/colon-colon) | Writes a ';;' for use in `case`/`esac` `option`s |
 | [`[`](/docs/[) |  |
 | [`[[`](/docs/[[) |  |
 | [`{{ '{{' }}`](/docs/{{ '{{' }}) |  |
 | [`}`](/docs/}) |  |
 | [`appendln`](/docs/appendln) |  |
 | [`append`](/docs/append) |  |
+| [`AND`](/docs/AND) | Used for generating `&&` |
 | [`array`](/docs/array) |  |
 | [`case`](/docs/case) |  |
 | [`cleanSlate`](/docs/cleanSlate) |  |
@@ -39,10 +42,12 @@ sidebar:
 | [`local`](/docs/local) |  |
 | [`map`](/docs/map) |  |
 | [`option`](/docs/option) |  |
+| [`OR`](/docs/OR) | Used for generating `||` |
 | [`printf`](/docs/printf) |  |
 | [`putAway`](/docs/putAway) |  |
 | [`return`](/docs/return) |  |
 | [`shift`](/docs/shift) |  |
+| [`source`](/docs/source) |  |
 | [`then`](/docs/then) |  |
 | [`toFile`](/docs/toFile) |  |
 | [`toStderr`](/docs/toStderr) |  |

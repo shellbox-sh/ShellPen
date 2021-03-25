@@ -1,6 +1,6 @@
 ---
-title: ':'
-permalink: /docs/colon
+title: 'source'
+permalink: /docs/source
 layout: single
 sidebar:
   nav: 'command_reference'
@@ -13,14 +13,12 @@ sidebar:
 
 {% highlight sh %}
 
-!fn --shellpen-private writeDSL writeln ":"
+!fn --shellpen-private writeDSL writeln "source $*"
 {% endhighlight %}
 
 </details>
 
 
-
-> Outputs the `:` null statement
 
 
 
