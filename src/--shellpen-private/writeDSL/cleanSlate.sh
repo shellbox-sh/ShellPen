@@ -1,5 +1,5 @@
 ## $ DSL cleanSlate
-## > Clean the slate of the current pen (_does not output source code_)
+## > Clean the slate of the current pen (_resets source code_)
 
 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]=""
 

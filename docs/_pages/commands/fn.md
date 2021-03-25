@@ -26,7 +26,7 @@ local functionName="$1"
 
 
 
-> Begin a function definition block
+> Begin a `function` definition block
 
 
 

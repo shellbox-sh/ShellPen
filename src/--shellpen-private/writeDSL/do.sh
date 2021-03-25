@@ -1,4 +1,4 @@
 ## $ DSL do
-## > Syntax sugar. Does not write source code. (_Loops automatically add `do`_)
+## > Syntax sugar (_does not modify source code_)
 
 # No-op

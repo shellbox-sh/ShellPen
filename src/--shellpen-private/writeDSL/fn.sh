@@ -1,5 +1,5 @@
 ## $ DSL fn
-## > Begin a function definition block
+## > Begin a `function` definition block
 
 local functionName="$1"
 

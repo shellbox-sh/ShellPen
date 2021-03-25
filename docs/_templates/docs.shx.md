@@ -13,5 +13,5 @@ sidebar:
 <% [ "$pageName" = ':' ] && pageName='colon' -%>
 <% [ "$pageName" = '::' ] && pageName='colon-colon' -%>
 <% outputName="$( echo "$commandName" | sed "s/{{/{{ '{{' }}/g" )" -%>
-| [`<%= $outputName %>`](/docs/<%= $pageName %>) | <%= $(context getValue description | head -1 | sed 's/^> //' | sed "s/{{/{{ '{{' }}/g" 2>/dev/null) %> |
+| [`<%= $outputName %>`](/docs/<%= $pageName %>) | [<%= $(context getValue description | head -1 | sed 's/^> //' | sed "s/{{/{{ '{{' }}/g" 2>/dev/null) %>](/docs/<%= $pageName %>) |
 <% done %>

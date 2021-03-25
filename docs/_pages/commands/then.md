@@ -20,7 +20,7 @@ sidebar:
 
 
 
-> Syntax sugar. Does not write source code. (_`if` conditionals automatically add `then`_)
+> Syntax sugar (_does not modify source code_)
 
 
 

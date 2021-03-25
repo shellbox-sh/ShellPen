@@ -33,7 +33,7 @@ fi
 
 
 
-> Clean the slate of the current pen (_does not output source code_)
+> Clean the slate of the current pen (_resets source code_)
 
 
 

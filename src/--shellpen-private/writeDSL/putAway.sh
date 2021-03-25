@@ -1,5 +1,5 @@
 ## $ DSL putAway
-## > Delete the current pen (_does not output source code_)
+## > Delete the current pen (_also deletes source code_)
 
 unset "__SHELLPEN_PENS[$SHELLPEN_PEN_INDEX]"
 unset "__SHELLPEN_SOURCES[$SHELLPEN_PEN_INDEX]"

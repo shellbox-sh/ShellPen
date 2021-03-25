@@ -363,7 +363,7 @@ shellpen() {
               "code")
                 __shellpen__command+=("code")
                 ## $ DSL code
-                ## > Output the source code for the current pen (_does not modify to current source_)
+                ## > Output the code for the current pen (_does not modify source_)
                 
                 shellpen --shellpen-private contexts closeAndWriteAll
                 printf '%s' "${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
@@ -518,7 +518,7 @@ shellpen() {
               "do")
                 __shellpen__command+=("do")
                 ## $ DSL do
-                ## > Syntax sugar. Does not write source code. (_Loops automatically add `do`_)
+                ## > Syntax sugar (_does not modify source code_)
                 
                 # No-op
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -847,7 +847,7 @@ shellpen() {
               "cleanSlate")
                 __shellpen__command+=("cleanSlate")
                 ## $ DSL cleanSlate
-                ## > Clean the slate of the current pen (_does not output source code_)
+                ## > Clean the slate of the current pen (_resets source code_)
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]=""
                 
@@ -869,7 +869,7 @@ shellpen() {
               "then")
                 __shellpen__command+=("then")
                 ## $ DSL then
-                ## > Syntax sugar. Does not write source code. (_`if` conditionals automatically add `then`_)
+                ## > Syntax sugar (_does not modify source code_)
                 
                 # No-op
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -892,7 +892,7 @@ shellpen() {
               "putAway")
                 __shellpen__command+=("putAway")
                 ## $ DSL putAway
-                ## > Delete the current pen (_does not output source code_)
+                ## > Delete the current pen (_also deletes source code_)
                 
                 unset "__SHELLPEN_PENS[$SHELLPEN_PEN_INDEX]"
                 unset "__SHELLPEN_SOURCES[$SHELLPEN_PEN_INDEX]"
@@ -948,7 +948,7 @@ shellpen() {
               "fn")
                 __shellpen__command+=("fn")
                 ## $ DSL fn
-                ## > Begin a function definition block
+                ## > Begin a `function` definition block
                 
                 local functionName="$1"
                 
