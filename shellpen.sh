@@ -340,9 +340,45 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "fromFile")
+                __shellpen__command+=("fromFile")
+                local filePath="$1"
+                shift
+                
+                local command="$1"
+                shift
+                
+                shellpen --shellpen-private writeDSL $command "$@"
+                
+                # Chomp the newline and replace it with ' < "path"newline'
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ < \"$filePath\"$NEWLINE}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               ":")
                 __shellpen__command+=(":")
                 shellpen --shellpen-private writeDSL writeln ":"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "fromSTDIN")
+                __shellpen__command+=("fromSTDIN")
+                local string="$1"
+                shift
+                
+                local command="$1"
+                shift
+                
+                shellpen --shellpen-private writeDSL $command "$@"
+                
+                # Chomp the newline and replace it with ' <<< "string"newline'
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ <<< \"$string\"$NEWLINE}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "do")
+                __shellpen__command+=("do")
+                # No-op
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -356,6 +392,14 @@ shellpen() {
                 __shellpen__command+=("append")
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$*"
                 shellpen --shellpen-private contexts markLastNotEmpty
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "while")
+                __shellpen__command+=("while")
+                shellpen --shellpen-private writeDSL writeln "while $*"
+                shellpen --shellpen-private writeDSL writeln "do"
+                shellpen --shellpen-private contexts push "done"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -465,6 +509,14 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "done")
+                __shellpen__command+=("done")
+                shellpen --shellpen-private contexts writeNullIfEmpty
+                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL writeln "done"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "fi")
                 __shellpen__command+=("fi")
                 shellpen --shellpen-private contexts writeNullIfEmpty
@@ -530,6 +582,21 @@ shellpen() {
                 unset "__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]"
                 unset "__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID"
                 unset "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "fromCommand")
+                __shellpen__command+=("fromCommand")
+                local commandString="$1"
+                shift
+                
+                local command="$1"
+                shift
+                
+                shellpen --shellpen-private writeDSL $command "$@"
+                
+                # Chomp the newline and replace it with ' < <(command here)newline'
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ < <\($commandString\)$NEWLINE}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
