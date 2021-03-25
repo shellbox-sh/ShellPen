@@ -93,3 +93,14 @@ extensions:
     url: "#item"
   - title: '<code>fromCommand</code>'
     url: "#item"
+- title: "Extending the Syntax"
+  url: "/"
+  children:
+  - title: '<code>shellpen extend</code>'
+    url: "#item"
+  - title: '<code>return 0</code> or <code>return 1</code>'
+    url: "#item"
+  - title: '<code>return 2</code>'
+    url: "#item"
+  - title: '<code>|</code> <code>AND</code> <code>OR</code>'
+    url: "#item"

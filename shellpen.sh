@@ -5,6 +5,7 @@ SHELLPEN_VERSION="2.0.0"
 # Private ShellPen variables:
 __SHELLPEN_SOURCES=()
 __SHELLPEN_PENS=()
+__SHELLPEN_EXTENSIONS=()
 
 # Public configurable variable
 SHELLPEN_INDENT="${SHELLPEN_INDENT:-  }"
@@ -31,6 +32,18 @@ shellpen() {
     local __shellpen__1="$1"
     shift
     case "$__shellpen__1" in
+      "extend")
+        __shellpen__command+=("extend")
+        __SHELLPEN_EXTENSIONS+=("$*")
+        unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+        __shellpen__command=("__shellpen__command[@]")
+        ;;
+      "--extensionWrite")
+        __shellpen__command+=("--extensionWrite")
+        shellpen --shellpen-private writeDSL "$@"
+        unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+        __shellpen__command=("__shellpen__command[@]")
+        ;;
       "--version")
         __shellpen__command+=("--version")
         echo "ShellPen version $SHELLPEN_VERSION"
@@ -55,6 +68,28 @@ shellpen() {
         local __shellpen__2="$1"
         shift
         case "$__shellpen__2" in
+          "writeSingleCommand")
+            __shellpen__command+=("writeSingleCommand")
+            local extensionFunction=''
+            local extensionReturnCode=''
+            for extensionFunction in "${__SHELLPEN_EXTENSIONS[@]}"
+            do
+              $extensionFunction "$@"
+              extensionReturnCode=$?
+              if [ $extensionReturnCode -eq 0 ]
+              then
+                return 0
+              elif [ $extensionReturnCode -eq 2 ]
+              then
+                # Stop, let it print its error message and halt things
+                return 2
+              fi
+            done
+            
+            shellpen --shellpen-private writeDSL "$@"
+            unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+            __shellpen__command=("__shellpen__command[@]")
+            ;;
           "writeShellCommand")
             __shellpen__command+=("writeShellCommand")
             # Tackle AND, OR, { }, |, etc.
@@ -68,40 +103,40 @@ shellpen() {
               if [ "$1" = '|' ]
               then
                 # Write the current command and chomp off its newline then write this pipe
-                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-                shellpen --shellpen-private writeDSL append ' | '
+                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+                shellpen --shellpen-private writeSingleCommand append ' | '
             
               elif [ "$1" = 'AND' ]
               then
                 # Write the current command and chomp off its newline then write this &&
-                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-                shellpen --shellpen-private writeDSL append ' && '
+                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+                shellpen --shellpen-private writeSingleCommand append ' && '
             
               elif [ "$1" = 'OR' ]
               then
                 # Write the current command and chomp off its newline then write this ||
-                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-                shellpen --shellpen-private writeDSL append ' || '
+                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+                shellpen --shellpen-private writeSingleCommand append ' || '
             
               elif [ "$1" = '{' ] && [ "$commandIsFunctionDeclaration" != true ]
               then
                 # Write the current command and chomp off its newline then write this {
-                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-                shellpen --shellpen-private writeDSL append '{ ' 
+                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+                shellpen --shellpen-private writeSingleCommand append '{ ' 
                 bracesOpen=true
             
               elif [ "$bracesOpen" = true ] && [ "$1" = '}' ]
               then
                 # Write the current command and chomp off its newline then write this }
-                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-                shellpen --shellpen-private writeDSL append '}'
+                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+                shellpen --shellpen-private writeSingleCommand append '}'
                 bracesOpen=false
             
               elif [ "$bracesOpen" = true ] && [ "$1" = ',' ]
               then
                 # Write the current command and chomp off its newline then write this ;
-                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-                shellpen --shellpen-private writeDSL append '; '
+                [ "${#currentCommand[@]}" -gt 0 ] && { shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+                shellpen --shellpen-private writeSingleCommand append '; '
             
               else
                 [ "${#currentCommand[@]}" -eq 0 ] && [ "$1" = fn ] && commandIsFunctionDeclaration=true
@@ -114,7 +149,7 @@ shellpen() {
             
             if [ "${#currentCommand[@]}" -gt 0 ]
             then
-              shellpen --shellpen-private writeDSL "${currentCommand[@]}"
+              shellpen --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?
             fi
             unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
             __shellpen__command=("__shellpen__command[@]")
@@ -297,7 +332,7 @@ shellpen() {
             
             local SHELLPEN_CONTEXT_RIGHT_INDEX="$(( SHELLPEN_CONTEXT_DEPTH - 1 ))"
             
-            shellpen --shellpen-private writeShellCommand "$@"
+            shellpen --shellpen-private writeShellCommand "$@" || return $? # TBH this should be implicitly returned, not sure why - but this makes it work.
             unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
             __shellpen__command=("__shellpen__command[@]")
             ;;
@@ -627,6 +662,12 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "map")
+                __shellpen__command+=("map")
+                shellpen --shellpen-private writeDSL array -A "$@"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "writeln")
                 __shellpen__command+=("writeln")
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*${NEWLINE}"
@@ -701,12 +742,6 @@ shellpen() {
                 
                 # Push the DSL command to run to CLOSE this block
                 shellpen --shellpen-private contexts push "fi"
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "hash")
-                __shellpen__command+=("hash")
-                shellpen --shellpen-private writeDSL array -A "$@"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

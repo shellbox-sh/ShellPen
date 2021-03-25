@@ -29,4 +29,4 @@ unset i
 
 local SHELLPEN_CONTEXT_RIGHT_INDEX="$(( SHELLPEN_CONTEXT_DEPTH - 1 ))"
 
-!fn --shellpen-private writeShellCommand "$@"
+!fn --shellpen-private writeShellCommand "$@" || return $? # TBH this should be implicitly returned, not sure why - but this makes it work.

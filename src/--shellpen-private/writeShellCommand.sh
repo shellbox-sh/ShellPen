@@ -9,40 +9,40 @@ do
   if [ "$1" = '|' ]
   then
     # Write the current command and chomp off its newline then write this pipe
-    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-    !fn --shellpen-private writeDSL append ' | '
+    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+    !fn --shellpen-private writeSingleCommand append ' | '
 
   elif [ "$1" = 'AND' ]
   then
     # Write the current command and chomp off its newline then write this &&
-    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-    !fn --shellpen-private writeDSL append ' && '
+    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+    !fn --shellpen-private writeSingleCommand append ' && '
 
   elif [ "$1" = 'OR' ]
   then
     # Write the current command and chomp off its newline then write this ||
-    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-    !fn --shellpen-private writeDSL append ' || '
+    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+    !fn --shellpen-private writeSingleCommand append ' || '
 
   elif [ "$1" = '{' ] && [ "$commandIsFunctionDeclaration" != true ]
   then
     # Write the current command and chomp off its newline then write this {
-    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-    !fn --shellpen-private writeDSL append '{ ' 
+    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+    !fn --shellpen-private writeSingleCommand append '{ ' 
     bracesOpen=true
 
   elif [ "$bracesOpen" = true ] && [ "$1" = '}' ]
   then
     # Write the current command and chomp off its newline then write this }
-    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-    !fn --shellpen-private writeDSL append '}'
+    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+    !fn --shellpen-private writeSingleCommand append '}'
     bracesOpen=false
 
   elif [ "$bracesOpen" = true ] && [ "$1" = ',' ]
   then
     # Write the current command and chomp off its newline then write this ;
-    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeDSL "${currentCommand[@]}"; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
-    !fn --shellpen-private writeDSL append '; '
+    [ "${#currentCommand[@]}" -gt 0 ] && { !fn --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?; currentCommand=(); commandIsFunctionDeclaration=false; __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]%$NEWLINE}"; }
+    !fn --shellpen-private writeSingleCommand append '; '
 
   else
     [ "${#currentCommand[@]}" -eq 0 ] && [ "$1" = fn ] && commandIsFunctionDeclaration=true
@@ -55,5 +55,5 @@ done
 
 if [ "${#currentCommand[@]}" -gt 0 ]
 then
-  !fn --shellpen-private writeDSL "${currentCommand[@]}"
+  !fn --shellpen-private writeSingleCommand "${currentCommand[@]}" || return $?
 fi
