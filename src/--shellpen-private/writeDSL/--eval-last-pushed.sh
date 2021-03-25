@@ -1,3 +1,6 @@
+## $ EXTENSIONS --eval-last-pushed
+## > Evaluate the last item pushed onto the current stack
+
 if [ -z "$BASH_PRE_43" ]
 then
   !fn --shellpen-private writeDSL ${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}

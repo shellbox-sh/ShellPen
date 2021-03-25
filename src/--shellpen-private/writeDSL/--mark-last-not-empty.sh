@@ -1,3 +1,6 @@
+## $ EXTENSIONS --mark-last-not-empty
+## > Mark the last item on current stack as not empty
+
 if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
 then
 

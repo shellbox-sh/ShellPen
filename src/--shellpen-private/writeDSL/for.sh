@@ -6,4 +6,4 @@
 !fn --shellpen-private writeDSL writeln "do"
 
 # Push the DSL command to run to CLOSE this block
-!fn --shellpen-private contexts push "done"
+!fn --shellpen-private writeDSL --push "done"

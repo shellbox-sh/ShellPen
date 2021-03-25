@@ -1,1 +1,0 @@
-!fn --shellpen-private writeDSL "$@"

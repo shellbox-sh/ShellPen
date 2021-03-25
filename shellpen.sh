@@ -38,28 +38,9 @@ shellpen() {
         unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
         __shellpen__command=("__shellpen__command[@]")
         ;;
-      "--extensionWrite")
-        __shellpen__command+=("--extensionWrite")
-        shellpen --shellpen-private writeDSL "$@"
-        unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-        __shellpen__command=("__shellpen__command[@]")
-        ;;
       "--version")
         __shellpen__command+=("--version")
         echo "ShellPen version $SHELLPEN_VERSION"
-        unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-        __shellpen__command=("__shellpen__command[@]")
-        ;;
-      "sources")
-        __shellpen__command+=("sources")
-        local __shellpen__2="$1"
-        shift
-        case "$__shellpen__2" in
-          *)
-            echo "Command not found: '$__shellpen__2'" >&2
-            return 1
-            ;;
-        esac
         unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
         __shellpen__command=("__shellpen__command[@]")
         ;;
@@ -75,7 +56,7 @@ shellpen() {
             for extensionFunction in "${__SHELLPEN_EXTENSIONS[@]}"
             do
               $extensionFunction "$@"
-              extensionReturnCode=$?
+              PEN="$SHELLPEN_PEN" extensionReturnCode=$?
               if [ $extensionReturnCode -eq 0 ]
               then
                 return 0
@@ -173,129 +154,6 @@ shellpen() {
             unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
             __shellpen__command=("__shellpen__command[@]")
             ;;
-          "contexts")
-            __shellpen__command+=("contexts")
-            local __shellpen__3="$1"
-            shift
-            case "$__shellpen__3" in
-              "writeNullIfEmpty")
-                __shellpen__command+=("writeNullIfEmpty")
-                if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
-                then
-                  if [ -z "$BASH_PRE_43" ]
-                  then
-                    if [ "${SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]}" = true ]
-                    then
-                      shellpen --shellpen-private writeDSL : 
-                    fi
-                  else
-                    eval "
-                      if [ \"\${__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[$SHELLPEN_CONTEXT_RIGHT_INDEX]}\" = \"true\" ]
-                      then
-                        shellpen --shellpen-private writeDSL ':'
-                      fi
-                    "
-                  fi
-                fi
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "closeAndWriteAll")
-                __shellpen__command+=("closeAndWriteAll")
-                while [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
-                do
-                  local currentDepth="$SHELLPEN_CONTEXT_DEPTH"
-                  local lastCommand="$( shellpen --shellpen-private contexts getLast )"
-                  shellpen --shellpen-private contexts writeLastUsingDSL
-                  local updatedDepth="$SHELLPEN_CONTEXT_DEPTH"
-                  [ $currentDepth -eq $updatedDepth ] && { echo "shellpen --shellpen-private contexts closeAndWriteAll: Internal DSL Error. Expected '$lastCommand' to pop context stack." >&2; return 1; }
-                done
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "pop")
-                __shellpen__command+=("pop")
-                if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
-                then
-                
-                  if [ -z "$BASH_PRE_43" ]
-                  then
-                    unset "SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]"
-                    unset "SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]"
-                  else
-                    eval "unset \"__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]\""
-                    eval "unset \"__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]\""
-                  fi
-                
-                  (( SHELLPEN_CONTEXT_DEPTH-- ))
-                  (( SHELLPEN_CONTEXT_RIGHT_INDEX-- ))
-                
-                fi
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "writeLastUsingDSL")
-                __shellpen__command+=("writeLastUsingDSL")
-                if [ -z "$BASH_PRE_43" ]
-                then
-                  shellpen --shellpen-private writeDSL ${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}
-                else
-                  eval "shellpen --shellpen-private writeDSL \${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
-                fi
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "getLast")
-                __shellpen__command+=("getLast")
-                if [ -z "$BASH_PRE_43" ]
-                then
-                  printf '%s' "${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
-                else
-                  eval "printf '%s' \"\${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}\""
-                fi
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "push")
-                __shellpen__command+=("push")
-                if [ -z "$BASH_PRE_43" ]
-                then
-                  SHELLPEN_SOURCE_CONTEXT+=("$*")
-                  SHELLPEN_SOURCE_CONTEXT_EMPTY+=("true")
-                else
-                  eval "__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID+=(\"\$*\")"
-                  eval "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID+=(\"true\")"
-                fi
-                
-                (( SHELLPEN_CONTEXT_DEPTH++ ))
-                (( SHELLPEN_CONTEXT_RIGHT_INDEX++ ))
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "markLastNotEmpty")
-                __shellpen__command+=("markLastNotEmpty")
-                if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
-                then
-                
-                  if [ -z "$BASH_PRE_43" ]
-                  then
-                    SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]="false"
-                  else
-                    eval "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]=\"false\""
-                  fi
-                
-                fi
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              *)
-                echo "Command not found: '$__shellpen__3'" >&2
-                return 1
-                ;;
-            esac
-            unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-            __shellpen__command=("__shellpen__command[@]")
-            ;;
           "getCurrentIndent")
             __shellpen__command+=("getCurrentIndent")
             local INDENT=''
@@ -365,7 +223,7 @@ shellpen() {
                 ## $ DSL code
                 ## > Output the code for the current pen (_does not modify source_)
                 
-                shellpen --shellpen-private contexts closeAndWriteAll
+                shellpen --shellpen-private writeDSL --eval-full-stack
                 printf '%s' "${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -395,11 +253,27 @@ shellpen() {
                 ## $ DSL elif
                 ## > Add an `elif` to an `if` conditional block
                 
-                shellpen --shellpen-private contexts writeNullIfEmpty
-                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL --write-null-if-last-empty
+                shellpen --shellpen-private writeDSL --pop
                 shellpen --shellpen-private writeDSL writeln "elif $*"
                 shellpen --shellpen-private writeDSL writeln "then"
-                shellpen --shellpen-private contexts push "fi"
+                shellpen --shellpen-private writeDSL --push "fi"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "--eval-full-stack")
+                __shellpen__command+=("--eval-full-stack")
+                ## $ EXTENSIONS --eval-full-stack
+                ## > Close every item on current stack (_from right to left_)
+                
+                while [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
+                do
+                  local currentDepth="$SHELLPEN_CONTEXT_DEPTH"
+                  local lastCommand="$( shellpen --shellpen-private writeDSL --get-last-pushed )"
+                  shellpen --shellpen-private writeDSL --eval-last-pushed
+                  local updatedDepth="$SHELLPEN_CONTEXT_DEPTH"
+                  [ $currentDepth -eq $updatedDepth ] && { echo "shellpen --shellpen-private writeDSL --eval-full-stack: Internal DSL Error. Expected '$lastCommand' to pop context stack." >&2; return 1; }
+                done
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -489,6 +363,20 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "--get-last-pushed")
+                __shellpen__command+=("--get-last-pushed")
+                ## $ EXTENSIONS --get-last-pushed
+                ## > Get last item pushed onto the current stack
+                
+                if [ -z "$BASH_PRE_43" ]
+                then
+                  printf '%s' "${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
+                else
+                  eval "printf '%s' \"\${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}\""
+                fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "int")
                 __shellpen__command+=("int")
                 ## $ DSL int
@@ -547,6 +435,20 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "--eval-last-pushed")
+                __shellpen__command+=("--eval-last-pushed")
+                ## $ EXTENSIONS --eval-last-pushed
+                ## > Close last item on current stack (_rightmost_)
+                
+                if [ -z "$BASH_PRE_43" ]
+                then
+                  shellpen --shellpen-private writeDSL ${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}
+                else
+                  eval "shellpen --shellpen-private writeDSL \${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
+                fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "unset")
                 __shellpen__command+=("unset")
                 ## $ DSL unset
@@ -579,13 +481,32 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "--push")
+                __shellpen__command+=("--push")
+                ## $ EXTENSIONS --push
+                ## > Push an item onto the current stack
+                
+                if [ -z "$BASH_PRE_43" ]
+                then
+                  SHELLPEN_SOURCE_CONTEXT+=("$*")
+                  SHELLPEN_SOURCE_CONTEXT_EMPTY+=("true")
+                else
+                  eval "__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID+=(\"\$*\")"
+                  eval "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID+=(\"true\")"
+                fi
+                
+                (( SHELLPEN_CONTEXT_DEPTH++ ))
+                (( SHELLPEN_CONTEXT_RIGHT_INDEX++ ))
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "append")
                 __shellpen__command+=("append")
                 ## $ DSL append
                 ## > Append a string of text to source output _without indentation_
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$*"
-                shellpen --shellpen-private contexts markLastNotEmpty
+                shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -596,7 +517,7 @@ shellpen() {
                 
                 shellpen --shellpen-private writeDSL writeln "while $*"
                 shellpen --shellpen-private writeDSL writeln "do"
-                shellpen --shellpen-private contexts push "done"
+                shellpen --shellpen-private writeDSL --push "done"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -631,10 +552,10 @@ shellpen() {
                 ## $ DSL else
                 ## > Add an `else` to an `if` conditional block
                 
-                shellpen --shellpen-private contexts writeNullIfEmpty
-                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL --write-null-if-last-empty
+                shellpen --shellpen-private writeDSL --pop
                 shellpen --shellpen-private writeDSL writeln "else"
-                shellpen --shellpen-private contexts push "fi"
+                shellpen --shellpen-private writeDSL --push "fi"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -654,7 +575,7 @@ shellpen() {
                 ## > Append a line of text to source output _without indentation_
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$*${NEWLINE}"
-                shellpen --shellpen-private contexts markLastNotEmpty
+                shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -664,7 +585,7 @@ shellpen() {
                 ## > Begin a `case` / `esac` statement
                 
                 shellpen --shellpen-private writeDSL writeln "case \"$1\" in"
-                shellpen --shellpen-private contexts push "esac"
+                shellpen --shellpen-private writeDSL --push "esac"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -673,7 +594,7 @@ shellpen() {
                 ## $ DSL esac
                 ## > End a `case` / `esac` statement
                 
-                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL --pop
                 shellpen --shellpen-private writeDSL writeln "esac"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -725,7 +646,7 @@ shellpen() {
                 ## > Add an option to a `case` / `esac` statement
                 
                 shellpen --shellpen-private writeDSL writeln "$1)"
-                shellpen --shellpen-private contexts push "::"
+                shellpen --shellpen-private writeDSL --push "::"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -734,9 +655,9 @@ shellpen() {
                 ## $ DSL ::
                 ## > Write a `;;` for use in `case`/`esac` `option`s
                 
-                shellpen --shellpen-private contexts writeNullIfEmpty
+                shellpen --shellpen-private writeDSL --write-null-if-last-empty
                 shellpen --shellpen-private writeDSL writeln ";;"
-                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL --pop
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -754,8 +675,8 @@ shellpen() {
                 ## $ DSL done
                 ## > End a `for` or `while` loop
                 
-                shellpen --shellpen-private contexts writeNullIfEmpty
-                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL --write-null-if-last-empty
+                shellpen --shellpen-private writeDSL --pop
                 shellpen --shellpen-private writeDSL writeln "done"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -770,7 +691,7 @@ shellpen() {
                 shellpen --shellpen-private writeDSL writeln "do"
                 
                 # Push the DSL command to run to CLOSE this block
-                shellpen --shellpen-private contexts push "done"
+                shellpen --shellpen-private writeDSL --push "done"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -779,8 +700,8 @@ shellpen() {
                 ## $ DSL fi
                 ## > End an `if` conditional block
                 
-                shellpen --shellpen-private contexts writeNullIfEmpty
-                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL --write-null-if-last-empty
+                shellpen --shellpen-private writeDSL --pop
                 shellpen --shellpen-private writeDSL writeln "fi"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -800,7 +721,7 @@ shellpen() {
                 ## > Append a line of text to source output including indentation
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*${NEWLINE}"
-                shellpen --shellpen-private contexts markLastNotEmpty
+                shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -840,7 +761,7 @@ shellpen() {
                 ## > Append a string of text to source output including indentation
                 
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*"
-                shellpen --shellpen-private contexts markLastNotEmpty
+                shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -885,7 +806,7 @@ shellpen() {
                 shellpen --shellpen-private writeDSL writeln "then"
                 
                 # Push the DSL command to run to CLOSE this block
-                shellpen --shellpen-private contexts push "fi"
+                shellpen --shellpen-private writeDSL --push "fi"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -945,6 +866,30 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "--pop")
+                __shellpen__command+=("--pop")
+                ## $ EXTENSIONS --pop
+                ## > Pop the last item off the current stack (_rightmost_)
+                
+                if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
+                then
+                
+                  if [ -z "$BASH_PRE_43" ]
+                  then
+                    unset "SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]"
+                    unset "SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]"
+                  else
+                    eval "unset \"__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]\""
+                    eval "unset \"__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]\""
+                  fi
+                
+                  (( SHELLPEN_CONTEXT_DEPTH-- ))
+                  (( SHELLPEN_CONTEXT_RIGHT_INDEX-- ))
+                
+                fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "fn")
                 __shellpen__command+=("fn")
                 ## $ DSL fn
@@ -956,7 +901,7 @@ shellpen() {
                 shellpen --shellpen-private writeDSL writeln "$functionName() {"
                 
                 # Push the DSL command to run to CLOSE this block
-                shellpen --shellpen-private contexts push "}"
+                shellpen --shellpen-private writeDSL --push "}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -978,6 +923,25 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "--mark-last-not-empty")
+                __shellpen__command+=("--mark-last-not-empty")
+                ## $ EXTENSIONS --mark-last-not-empty
+                ## > Mark the last item on current stack as not empty
+                
+                if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
+                then
+                
+                  if [ -z "$BASH_PRE_43" ]
+                  then
+                    SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]="false"
+                  else
+                    eval "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]=\"false\""
+                  fi
+                
+                fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "[")
                 __shellpen__command+=("[")
                 ## $ DSL [
@@ -987,13 +951,38 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "--write-null-if-last-empty")
+                __shellpen__command+=("--write-null-if-last-empty")
+                ## $ EXTENSIONS --write-null-if-last-empty
+                ## > Append a `:` if the last item in the current stack is empty
+                
+                if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
+                then
+                  if [ -z "$BASH_PRE_43" ]
+                  then
+                    if [ "${SHELLPEN_SOURCE_CONTEXT_EMPTY[$SHELLPEN_CONTEXT_RIGHT_INDEX]}" = true ]
+                    then
+                      shellpen --shellpen-private writeDSL : 
+                    fi
+                  else
+                    eval "
+                      if [ \"\${__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID[$SHELLPEN_CONTEXT_RIGHT_INDEX]}\" = \"true\" ]
+                      then
+                        shellpen --shellpen-private writeDSL ':'
+                      fi
+                    "
+                  fi
+                fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "}")
                 __shellpen__command+=("}")
                 ## $ DSL }
                 ## > Closes a function or an open `{` block
                 
-                shellpen --shellpen-private contexts writeNullIfEmpty
-                shellpen --shellpen-private contexts pop
+                shellpen --shellpen-private writeDSL --write-null-if-last-empty
+                shellpen --shellpen-private writeDSL --pop
                 shellpen --shellpen-private writeDSL writeln "}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")

@@ -1,3 +1,6 @@
+## $ EXTENSIONS --write-null-if-last-empty
+## > Append a `:` if the last item in the current stack is empty
+
 if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
 then
   if [ -z "$BASH_PRE_43" ]

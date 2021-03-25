@@ -1,3 +1,6 @@
+## $ EXTENSIONS --pop
+## > Pop the last item off the current stack (_rightmost_)
+
 if [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
 then
 

@@ -3,7 +3,7 @@ local extensionReturnCode=''
 for extensionFunction in "${__SHELLPEN_EXTENSIONS[@]}"
 do
   $extensionFunction "$@"
-  extensionReturnCode=$?
+  PEN="$SHELLPEN_PEN" extensionReturnCode=$?
   if [ $extensionReturnCode -eq 0 ]
   then
     return 0

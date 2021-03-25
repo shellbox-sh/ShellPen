@@ -1,3 +1,6 @@
+## $ EXTENSIONS --push
+## > Push an item onto the current stack
+
 if [ -z "$BASH_PRE_43" ]
 then
   SHELLPEN_SOURCE_CONTEXT+=("$*")

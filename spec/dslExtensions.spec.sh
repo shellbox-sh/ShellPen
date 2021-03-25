@@ -3,7 +3,7 @@ shellpen -
 extensionOne() {
   if [ "$1" = hello ]
   then
-    shellpen --extensionWrite comment "Hello, world!"
+    $PEN comment "Hello, world!"
     return 0
   fi
   return 1
@@ -15,7 +15,7 @@ extensionTwo() {
     shift
     shift
     [ "$1" = blowUp ] && { echo "KABOOM from extension with $* args" >&2; return 2; }
-    shellpen --extensionWrite echo "foo called with $# arguments: $*"
+    $PEN echo "foo called with $# arguments: $*"
     return 0
   fi
   return 1
@@ -63,4 +63,16 @@ echo "$x"'
   # Nothing was written by foo
   expect { - code } toEqual 'x=5
 # Hello, world!'
+}
+
+@pending.can_push_and_pop_onto_and_off_of_stack() {
+  :
+}
+
+@pending.can_read_stack() {
+  :
+}
+
+@pending.can_use_write_null_if_not_empty() {
+  :
 }
