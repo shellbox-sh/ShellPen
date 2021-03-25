@@ -14,13 +14,22 @@ extensions:
     url: "#item"
   - title: Getting Started
     url: "#item"
-  - title: Writing Code with Pens
+
+- title: "Using Pens"
+  url: "/"
+  children:
+  - title: '<code>shellpen -</code>'
     url: "#item"
+  - title: '<code>- code</code>'
+    url: "#item"
+  - title: '<code>- cleanSlate</code>'
+    url: "#item"
+  - title: '<code>- putAway</code>'
+    url: "#item"
+
 - title: "Writing Basics"
   url: "/"
   children:
-  - title: '<code>code</code>'
-    url: "#item"
   - title: '<code>writeln</code>'
     url: "#item"
   - title: '<code>append</code>'

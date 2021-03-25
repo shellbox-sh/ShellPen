@@ -381,8 +381,23 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
-              "fromSTDIN")
-                __shellpen__command+=("fromSTDIN")
+              "fromStdin")
+                __shellpen__command+=("fromStdin")
+                local stdinSource="$1"
+                shift
+                
+                local command="$1"
+                shift
+                
+                shellpen --shellpen-private writeDSL $command "$@"
+                
+                # Chomp the newline and replace it with ' < "path"newline'
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ < $stdinSource$NEWLINE}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "fromText")
+                __shellpen__command+=("fromText")
                 local string="$1"
                 shift
                 
@@ -398,20 +413,23 @@ shellpen() {
                 ;;
               "int")
                 __shellpen__command+=("int")
+                local globalArgument=''
+                [ "$1" = '-g' ] && { globalArgument='-g '; shift; }
+                
                 if [ $# -eq 1 ]
                 then
                   if [[ "$1" =~ ^([^=]+)=([^=]+)$ ]]
                   then
-                    shellpen --shellpen-private writeDSL writeln "declare -i ${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+                    shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}-i ${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
                   else
-                    shellpen --shellpen-private writeDSL writeln "declare -i $1"
+                    shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}-i $1"
                   fi
                 elif [ $# -eq 2 ]
                 then
-                  shellpen --shellpen-private writeDSL writeln "declare -i $1=$2"
+                  shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}-i $1=$2"
                 elif [ $# -eq 3 ] && [ "$2" = '=' ]
                 then
-                  shellpen --shellpen-private writeDSL writeln "declare -i $1=$3"
+                  shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}-i $1=$3"
                 fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -442,6 +460,12 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "unset")
+                __shellpen__command+=("unset")
+                shellpen --shellpen-private writeDSL writeln "unset $*"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "echo")
                 __shellpen__command+=("echo")
                 shellpen --shellpen-private writeDSL writeln "echo \"$*\""
@@ -460,6 +484,26 @@ shellpen() {
                 shellpen --shellpen-private writeDSL writeln "while $*"
                 shellpen --shellpen-private writeDSL writeln "do"
                 shellpen --shellpen-private contexts push "done"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "declare")
+                __shellpen__command+=("declare")
+                shellpen --shellpen-private writeDSL writeln "declare $*"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "toStderr")
+                __shellpen__command+=("toStderr")
+                # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
+                
+                local command="$1"
+                shift
+                
+                shellpen --shellpen-private writeDSL $command "$@"
+                
+                # Chomp the newline and replace it with ' >&2newline'
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ >&2$NEWLINE}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -496,20 +540,6 @@ shellpen() {
                 __shellpen__command+=("esac")
                 shellpen --shellpen-private contexts pop
                 shellpen --shellpen-private writeDSL writeln "esac"
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "stderr")
-                __shellpen__command+=("stderr")
-                # Because '%s' and similar formatters are so common, look for a '%' formatter (but only one, and not after the --)
-                
-                local command="$1"
-                shift
-                
-                shellpen --shellpen-private writeDSL $command "$@"
-                
-                # Chomp the newline and replace it with ' >&2newline'
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ >&2$NEWLINE}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -594,20 +624,27 @@ shellpen() {
                 ;;
               "array")
                 __shellpen__command+=("array")
+                local typeArgument='-a '
+                local globalArgument=''
+                
+                [ "$1" = "-g" ] && { globalArgument='-g '; shift; }
+                [ "$1" = "-A" ] && { typeArgument='-A '; shift; }
+                [ "$1" = "-g" ] && { globalArgument='-g '; shift; }
+                
                 if [ $# -eq 1 ]
                 then
                   if [[ "$1" =~ ^([^=]+)=([^=]+)$ ]]
                   then
-                    shellpen --shellpen-private writeDSL writeln "declare -a ${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+                    shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
                   else
-                    shellpen --shellpen-private writeDSL writeln "declare -a $1"
+                    shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1"
                   fi
                 elif [ $# -eq 2 ]
                 then
-                  shellpen --shellpen-private writeDSL writeln "declare -a $1=$2"
+                  shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1=$2"
                 elif [ $# -eq 3 ] && [ "$2" = '=' ]
                 then
-                  shellpen --shellpen-private writeDSL writeln "declare -a $1=$3"
+                  shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1=$3"
                 fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -652,6 +689,12 @@ shellpen() {
                 
                 # Push the DSL command to run to CLOSE this block
                 shellpen --shellpen-private contexts push "fi"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "hash")
+                __shellpen__command+=("hash")
+                shellpen --shellpen-private writeDSL array -A "$@"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

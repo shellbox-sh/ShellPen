@@ -24,16 +24,16 @@ shellpen -
 }
 
 @spec.can_echo_to_STDERR() {
-  - stderr echo "Hello"
+  - toStderr echo "Hello"
   expect { - code } toEqual 'echo "Hello" >&2'
 }
 
 @spec.can_printf_to_STDERR() {
-  - stderr printf "Hello"
+  - toStderr printf "Hello"
   expect { - code } toEqual 'printf "Hello" >&2'
 
   - cleanSlate
-  - stderr printf '%s' "Hello"
+  - toStderr printf '%s' "Hello"
   expect { - code } toEqual "printf '%s' \"Hello\" >&2"
 }
 

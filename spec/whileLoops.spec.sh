@@ -32,7 +32,7 @@ done'
   - while [ '$#' -gt 0 ]
   - do
     - echo "Hi"
-  - fromSTDIN "This is a string" done
+  - fromText "This is a string" done
   expect { - code } toEqual 'while [ $# -gt 0 ]
 do
   echo "Hi"
@@ -59,6 +59,17 @@ done < <(printf '%s' \"\$something\")"
 do
   echo "Hi"
 done < "some/file/path"'
+}
+
+@spec.while_from_STDIN_arbitrary() {
+  - while [ '$#' -gt 0 ]
+  - do
+    - echo "Hi"
+  - fromStdin some/file/path done
+  expect { - code } toEqual 'while [ $# -gt 0 ]
+do
+  echo "Hi"
+done < some/file/path'
 }
 
 @spec.while_read_with_IFS_and_an_OR() {

@@ -31,6 +31,6 @@ shellpen -
 }
 
 @spec.supports_the_classic_return_error_conditional() {
-  - [ '$#' -eq 0 ] AND { stderr echo "No arguments" , return 1 , }
+  - [ '$#' -eq 0 ] AND { toStderr echo "No arguments" , return 1 , }
   expect { - code } toEqual '[ $# -eq 0 ] && { echo "No arguments" >&2; return 1; }'
 }

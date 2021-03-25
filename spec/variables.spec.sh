@@ -59,12 +59,29 @@ shellpen -
   expect { - code } toEqual "declare -i x"
 }
 
-@pending.declare.array() {
+@spec.declare.int.global() {
+  - int -g x=5
+  expect { - code } toEqual "declare -g -i x=5"
+
+  - cleanSlate
+  - int -g x 5
+  expect { - code } toEqual "declare -g -i x=5"
+
+  - cleanSlate
+  - int -g x = 5
+  expect { - code } toEqual "declare -g -i x=5"
+
+  - cleanSlate
+  - int -g x
+  expect { - code } toEqual "declare -g -i x"
+}
+
+@spec.declare.array() {
   - array x
   expect { - code } toEqual "declare -a x"
 
   - cleanSlate
-  - array x=()
+  - array 'x=()'
   expect { - code } toEqual "declare -a x=()"
 
   - cleanSlate
@@ -72,7 +89,7 @@ shellpen -
   expect { - code } toEqual "declare -a x=(\"\$@\")"
 
   - cleanSlate
-  - array x ()
+  - array x '()'
   expect { - code } toEqual "declare -a x=()"
 
   - cleanSlate
@@ -88,18 +105,165 @@ shellpen -
   expect { - code } toEqual "declare -a x"
 }
 
-@pending.declare.array.global() {
-  :
+@spec.declare.array.global() {
+  - array -g x
+  expect { - code } toEqual "declare -g -a x"
+
+  - cleanSlate
+  - array -g 'x=()'
+  expect { - code } toEqual "declare -g -a x=()"
+
+  - cleanSlate
+  - array -g 'x=("$@")'
+  expect { - code } toEqual "declare -g -a x=(\"\$@\")"
+
+  - cleanSlate
+  - array -g x '()'
+  expect { - code } toEqual "declare -g -a x=()"
+
+  - cleanSlate
+  - array -g x '("$@")'
+  expect { - code } toEqual "declare -g -a x=(\"\$@\")"
+
+  - cleanSlate
+  - array -g x = 5
+  expect { - code } toEqual "declare -g -a x=5"
+
+  - cleanSlate
+  - array -g x
+  expect { - code } toEqual "declare -g -a x"
 }
 
-@pending.declare.array.associative() {
-  :
+@spec.declare.array.associative() {
+  - hash x
+  expect { - code } toEqual "declare -A x"
+
+  - cleanSlate
+  - hash 'x=()'
+  expect { - code } toEqual "declare -A x=()"
+
+  - cleanSlate
+  - hash 'x=("$@")'
+  expect { - code } toEqual "declare -A x=(\"\$@\")"
+
+  - cleanSlate
+  - hash x '()'
+  expect { - code } toEqual "declare -A x=()"
+
+  - cleanSlate
+  - hash x '("$@")'
+  expect { - code } toEqual "declare -A x=(\"\$@\")"
+
+  - cleanSlate
+  - hash x = 5
+  expect { - code } toEqual "declare -A x=5"
+
+  - cleanSlate
+  - hash x
+  expect { - code } toEqual "declare -A x"
+
+  - cleanSlate
+  - array -A x
+  expect { - code } toEqual "declare -A x"
+
+  - cleanSlate
+  - array -A 'x=()'
+  expect { - code } toEqual "declare -A x=()"
+
+  - cleanSlate
+  - array -A 'x=("$@")'
+  expect { - code } toEqual "declare -A x=(\"\$@\")"
+
+  - cleanSlate
+  - array -A x '()'
+  expect { - code } toEqual "declare -A x=()"
+
+  - cleanSlate
+  - array -A x '("$@")'
+  expect { - code } toEqual "declare -A x=(\"\$@\")"
+
+  - cleanSlate
+  - array -A x = 5
+  expect { - code } toEqual "declare -A x=5"
+
+  - cleanSlate
+  - array -A x
+  expect { - code } toEqual "declare -A x"
 }
 
-@pending.unset() {
-  :
+@spec.declare.array.associative.global() {
+  - hash -g x
+  expect { - code } toEqual "declare -g -A x"
+
+  - cleanSlate
+  - hash -g 'x=()'
+  expect { - code } toEqual "declare -g -A x=()"
+
+  - cleanSlate
+  - hash -g 'x=("$@")'
+  expect { - code } toEqual "declare -g -A x=(\"\$@\")"
+
+  - cleanSlate
+  - hash -g x '()'
+  expect { - code } toEqual "declare -g -A x=()"
+
+  - cleanSlate
+  - hash -g x '("$@")'
+  expect { - code } toEqual "declare -g -A x=(\"\$@\")"
+
+  - cleanSlate
+  - hash -g x = 5
+  expect { - code } toEqual "declare -g -A x=5"
+
+  - cleanSlate
+  - hash -g x
+  expect { - code } toEqual "declare -g -A x"
+
+  - cleanSlate
+  - array -g -A x
+  expect { - code } toEqual "declare -g -A x"
+
+  - cleanSlate
+  - array -g -A 'x=()'
+  expect { - code } toEqual "declare -g -A x=()"
+
+  - cleanSlate
+  - array -g -A 'x=("$@")'
+  expect { - code } toEqual "declare -g -A x=(\"\$@\")"
+
+  - cleanSlate
+  - array -g -A x '()'
+  expect { - code } toEqual "declare -g -A x=()"
+
+  - cleanSlate
+  - array -g -A x '("$@")'
+  expect { - code } toEqual "declare -g -A x=(\"\$@\")"
+
+  - cleanSlate
+  - array -g -A x = 5
+  expect { - code } toEqual "declare -g -A x=5"
+
+  - cleanSlate
+  - array -g -A x
+  expect { - code } toEqual "declare -g -A x"
 }
 
-@pending.dump() {
-  :
+@spec.unset() {
+  - unset variableName
+  expect { - code } toEqual "unset variableName"
+
+  - cleanSlate
+  - unset '"variableName"'
+  expect { - code } toEqual 'unset "variableName"'
+}
+
+@spec.declare() {
+  - declare '"foo=bar"'
+  - declare -p foo
+  - declare -g -i x=5
+  - declare -g -A 'items=([hi]="there")'
+  expect { - code } toEqual 'declare "foo=bar"
+declare -p foo
+declare -g -i x=5
+declare -g -A items=([hi]="there")'
 }
