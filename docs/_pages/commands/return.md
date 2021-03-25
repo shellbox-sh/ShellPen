@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `return`
-
 
 
 <details>
@@ -19,6 +17,7 @@ sidebar:
 {% endhighlight %}
 
 </details>
+
 
 
 

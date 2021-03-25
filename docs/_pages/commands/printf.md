@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `printf`
-
 
 
 <details>
@@ -42,6 +40,7 @@ done
 {% endhighlight %}
 
 </details>
+
 
 
 

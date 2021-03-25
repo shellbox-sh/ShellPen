@@ -6,7 +6,7 @@ sidebar:
   nav: 'command_reference'
 ---
 
-| [`$`](/docs/$) |  |
+| [`$`](/docs/$) | Run any arbitrary command |
 | [`:`](/docs/colon) |  |
 | [`::`](/docs/colon-colon) | Description of `::` |
 | [`[`](/docs/[) |  |

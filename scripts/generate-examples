@@ -1,0 +1,103 @@
+#! /usr/bin/env bash
+
+source scripts/dsl_commands.sh
+source vendor/docgen.sh
+source vendor/shx.sh
+
+if [ "$1" = "--tree" ]
+then
+  shift
+  tree="$1"
+  shift
+else
+  tree="$( mktemp -d )"
+fi
+
+docgen parseTree setRoot "$tree"
+
+if [ "$1" = "--parse" ]
+then
+  shift
+  [ -d "$tree" ] && rm -r "$tree"
+  mkdir -p "$tree"
+  docgen parseToTree src/
+else
+  [ -d "$tree" ] || { echo "Tree not found '$tree' - try calling with --tree [tree] --parse to create new" >&2; exit 1; }
+fi
+
+context() { docgen context "$@"; }
+command() { docgen context commands "$@"; }
+
+saveExample() {
+  exampleOutputFile="${exampleOutputFile/\$/dollar}"
+  mkdir -p "$( dirname "$exampleOutputFile" )"
+  echo "source shellpen.sh" > "$exampleOutputFile"
+  echo >> "$exampleOutputFile"
+  echo "shellpen -" > "$exampleOutputFile"
+  echo >> "$exampleOutputFile"
+  echo "$exampleSourceCode" >> "$exampleOutputFile"
+}
+
+saveSpec() {
+  specOutputFile="${specOutputFile/\$/dollar}"
+  specName="${specOutputFile%.sh}"
+  specName="${specName##*/}"
+  exampleOutputFile="${exampleOutputFile/\$/dollar}"
+  expectedOutput="$specSourceCode"
+  mkdir -p "$( dirname "$specOutputFile" )"
+
+  echo "source \"$exampleOutputFile\"" > "$specOutputFile"
+  echo >> "$specOutputFile"
+  echo "@spec.${specName}() {" >> "$specOutputFile"
+  echo "  read -r -d '' expected <<'EXPECTED'" >> "$specOutputFile"
+  echo -e "$expectedOutput" >> "$specOutputFile"
+  echo "EXPECTED" >> "$specOutputFile"
+  echo "  expect { - code } toContain \"\$expected\""  >> "$specOutputFile"
+  echo "}" >> "$specOutputFile"
+  echo >> "$specOutputFile"
+}
+
+docgen context create new
+
+[ -d ./examples/documentation ] && rm -r ./examples/documentation
+
+for command in "${DSL_COMMANDS[@]}"
+do
+  context goto path "@commands/DSL/$command"
+  if docgen context has examples
+  then
+    examples=()
+    docgen context getList examples examples
+    for exampleName in "${examples[@]}"
+    do
+      if [ "$exampleName" = "default" ]
+      then
+        docgen context getValue "examples/$exampleName" exampleSourceCode
+        exampleOutputFile="examples/documentation/$command/example.sh"
+        saveExample 
+      elif [ "$exampleName" = "output" ]
+      then
+        exampleOutputFile="examples/documentation/$command/example.sh"
+        docgen context getValue "examples/$exampleName" specSourceCode
+        specOutputFile="examples/documentation/$command/spec/example.spec.sh"
+        saveSpec
+      elif [[ "${exampleName,,}" = *"output" ]]
+      then
+        docgen context getValue "examples/$exampleName" specSourceCode
+        specFileName="${exampleName// /_}"
+        specFileName="${specFileName/%_output}"
+        specFileName="${specFileName/%_Output}"
+        specOutputFile="examples/documentation/$command/spec/${specFileName,,}.spec.sh"
+        exampleOutputFile="examples/documentation/$command/${specFileName,,}.sh"
+        saveSpec
+      else
+        docgen context getValue "examples/$exampleName" exampleSourceCode
+        exampleFileName="${exampleName// /_}"
+        exampleOutputFile="examples/documentation/$command/${exampleFileName,,}.sh"
+        saveExample
+      fi
+    done
+  else
+    echo "Command has no examples: $command" >&2
+  fi
+done

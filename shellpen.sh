@@ -870,6 +870,18 @@ shellpen() {
               "$")
                 __shellpen__command+=("$")
                 ## $ DSL $
+                ## > Run any arbitrary command
+                ## $* Command name and arguments
+                ## @example
+                ##   - echo "Hello" \| $ sed "'s/foo/bar'"
+                ## @example output
+                ##   echo "Hello" | sed "'s/foo/bar'
+                ## @example Different
+                ##   - echo "Hello FOO BAR" \| $ sed "'s/foo/bar'"
+                ## @example Different output
+                ##   echo "Hello FOO BAR" | sed "'s/foo/bar'
+                ##
+                ## You must supply your own quotations.
                 
                 shellpen --shellpen-private writeDSL writeln "$@"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]

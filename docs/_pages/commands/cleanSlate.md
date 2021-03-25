@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `cleanSlate`
-
 
 
 <details>
@@ -32,6 +30,7 @@ fi
 {% endhighlight %}
 
 </details>
+
 
 
 

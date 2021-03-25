@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `appendln`
-
 
 
 <details>
@@ -20,6 +18,7 @@ __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$*${NEWLINE}"
 {% endhighlight %}
 
 </details>
+
 
 
 

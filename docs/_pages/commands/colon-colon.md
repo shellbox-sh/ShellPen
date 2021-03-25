@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `::`
-
 
 
 <details>
@@ -25,6 +23,7 @@ sidebar:
 
 
 > Description of `::`
+
 
 
 

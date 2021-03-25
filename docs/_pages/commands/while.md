@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `while`
-
 
 
 <details>
@@ -21,6 +19,7 @@ sidebar:
 {% endhighlight %}
 
 </details>
+
 
 
 

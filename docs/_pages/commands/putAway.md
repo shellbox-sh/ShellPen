@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `putAway`
-
 
 
 <details>
@@ -23,6 +21,7 @@ unset "__SHELLPEN_CONTEXT_EMPTY_$SHELLPEN_SOURCE_ID"
 {% endhighlight %}
 
 </details>
+
 
 
 

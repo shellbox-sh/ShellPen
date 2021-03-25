@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `array`
-
 
 
 <details>
@@ -40,6 +38,7 @@ fi
 {% endhighlight %}
 
 </details>
+
 
 
 

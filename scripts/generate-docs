@@ -1,56 +1,8 @@
 #! /usr/bin/env bash
 
-# Hand-write this for manual sorting:
-DSL_COMMANDS=(
-'$'
-':'
-'::'
-'['
-'[['
-'{{'
-'}'
-'appendln'
-'append'
-'array'
-'case'
-'cleanSlate'
-'code'
-'comment'
-'declare'
-'done'
-'do'
-'echo'
-'elif'
-'else'
-'esac'
-'fi'
-'fn'
-'for'
-'fromCommand'
-'fromFile'
-'fromStdin'
-'fromText'
-'if'
-'int'
-'local'
-'map'
-'option'
-'printf'
-'putAway'
-'return'
-'shift'
-'then'
-'toFile'
-'toStderr'
-'unset'
-'var'
-'while'
-'writeln'
-'write'
-)
-
 ./scripts/compile
 
+source scripts/dsl_commands.sh
 source vendor/docgen.sh
 source vendor/shx.sh
 
@@ -81,11 +33,11 @@ command() { docgen context commands "$@"; }
 
 docgen context create new
 
-# if [ "$1" = "--examples" ]
-# then
-#   shift
-#   ./scripts/generate-examples --tree "$tree"
-# fi
+if [ "$1" = "--examples" ]
+then
+  shift
+  ./scripts/generate-examples --tree "$tree"
+fi
 
 [ "$1" = "-x" ] && exit 0
 

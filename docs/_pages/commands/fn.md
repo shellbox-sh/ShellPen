@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `fn`
-
 
 
 <details>
@@ -25,6 +23,7 @@ local functionName="$1"
 {% endhighlight %}
 
 </details>
+
 
 
 

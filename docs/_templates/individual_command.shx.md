@@ -22,13 +22,14 @@ sidebar:
 <%= $(command getDescription) %>
 <% fi %>
 
+<% parameterNames=() -%>
 <% if command getParameterNames parameterNames; then -%>
 #### Parameters
 
 | | Description |
 |-|-------------|
 <% for parameterName in "${parameterNames[@]}"; do -%>
-| `<%= $parameterName %>` | <%= $(command getParameterDescription "$parameterName" ) %> |
+| `<%= $parameterName %>` | <%= $(context getValue "parameters/$parameterName/description" ) %> |
 <% done %>
 <% fi %>
 
@@ -42,39 +43,36 @@ sidebar:
 <% done %>
 <% fi %>
 
+<% exampleNames=() %>
 <% if context getList examples exampleNames; then %>
 <% for exampleName in "${exampleNames[@]}"; do %>
-<% if ! [[ "$exampleName" = *"spec"* ]]; then %>
+<% if ! [[ "$exampleName" = *"output"* ]]; then %>
 
 <% if [ "$exampleName" = default ]; then %>
-<% specExampleName="spec" %>
+<% outputExampleName="output" %>
 
 #### Example
 
 <% else %>
-<% specExampleName="$exampleName spec" %>
+<% outputExampleName="$exampleName output" %>
 
 #### <%= $exampleName %>
 
 <% fi %>
 
-{% endraw %}
 {% highlight sh %}
 <%= $( context getValue "examples/$exampleName"  | sed "s/{{/{{ '{{' }}/g" ) %>
 {% endhighlight %}
-{% raw %}
 
-<% if context has "examples/$specExampleName spec"; then %>
+<% if context has "examples/$outputExampleName output"; then %>
 <% fi %>
 
 <details>
-  <summary>View Spec</summary>
+  <summary>View Output</summary>
 
-{% endraw %}
 {% highlight sh %}
-<%= $( context getValue "examples/$specExampleName" | sed "s/{{/{{ '{{' }}/g" ) %>
+<%= $( context getValue "examples/$outputExampleName" | sed "s/{{/{{ '{{' }}/g" ) %>
 {% endhighlight %}
-{% raw %}
 
 </details>
 

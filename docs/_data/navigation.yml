@@ -9,9 +9,11 @@ sidebar:
   url: "/"
   children:
   - title: Installation
-    url: "#item"
+    url: "#%EF%B8%8F-shell-pen"
   - title: Getting Started
     url: "#item"
+  - title: Command Reference
+    url: "/docs"
   - title: Why?
     url: "#item"
 

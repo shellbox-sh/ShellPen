@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `echo`
-
 
 
 <details>
@@ -24,6 +22,7 @@ fi
 {% endhighlight %}
 
 </details>
+
 
 
 

@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `if`
-
 
 
 <details>
@@ -24,6 +22,7 @@ sidebar:
 {% endhighlight %}
 
 </details>
+
 
 
 

@@ -20,3 +20,8 @@ curl -o- https://shellpen.sh/installer.sh | bash
 
 ---
 
+# Getting Started
+
+# Command Reference
+
+# Why?

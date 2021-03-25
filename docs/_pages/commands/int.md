@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `int`
-
 
 
 <details>
@@ -36,6 +34,7 @@ fi
 {% endhighlight %}
 
 </details>
+
 
 
 

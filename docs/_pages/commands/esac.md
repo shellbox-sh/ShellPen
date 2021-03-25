@@ -6,8 +6,6 @@ sidebar:
   nav: 'command_reference'
 ---
 
-# `esac`
-
 
 
 <details>
@@ -20,6 +18,7 @@ sidebar:
 {% endhighlight %}
 
 </details>
+
 
 
 
