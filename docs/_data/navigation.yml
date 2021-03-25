@@ -1,0 +1,86 @@
+---
+main:
+- title: '🐙 GitHub'
+  url: "https://github.com/shellbox-sh/ShellPen"
+- title: '📥 Download v2'
+  url: "https://github.com/shellbox-sh/ShellPen"
+- title: '🐚 More Shell Utilities'
+  url: "https://shellbox.sh"
+extensions:
+- title: ""
+  url: "/"
+  children:
+  - title: Installation
+    url: "#item"
+  - title: Getting Started
+    url: "#item"
+  - title: Writing Code with Pens
+    url: "#item"
+- title: "Writing Basics"
+  url: "/"
+  children:
+  - title: '<code>code</code>'
+    url: "#item"
+  - title: '<code>writeln</code>'
+    url: "#item"
+  - title: '<code>append</code>'
+    url: "#item"
+  - title: '<code>$ command</code>'
+    url: "#item"
+  - title: '<code>fn</code>'
+    url: "#item"
+  - title: '<code>main</code>'
+    url: "#item"
+  - title: '<code>shebang</code>'
+    url: "#item"
+- title: "Variables"
+  url: "/"
+  children:
+  - title: '<code>var</code>'
+    url: "#item"
+  - title: '<code>local</code>'
+    url: "#item"
+  - title: '<code>int</code>'
+    url: "#item"
+  - title: '<code>array</code>'
+    url: "#item"
+  - title: '<code>map</code>'
+    url: "#item"
+- title: "Output"
+  url: "/"
+  children:
+  - title: '<code>echo</code>'
+    url: "#item"
+  - title: '<code>printf</code>'
+    url: "#item"
+  - title: '<code>toStderr</code>'
+    url: "#item"
+  - title: '<code>toFile</code>'
+    url: "#item"
+- title: "Conditionals"
+  url: "/"
+  children:
+  - title: '<code>if</code> / <code>fi</code>'
+    url: "#item"
+  - title: '<code>case</code> / <code>esac</code>'
+    url: "#item"
+  - title: '<code>[ ... ]</code> <code>AND</code> / <code>OR</code>'
+    url: "#item"
+- title: "Loops"
+  url: "/"
+  children:
+  - title: '<code>for</code>'
+    url: "#item"
+  - title: '<code>while</code>'
+    url: "#item"
+- title: "Pipes | STDIN"
+  url: "/"
+  children:
+  - title: '<code>|</code>'
+    url: "#item"
+  - title: '<code>fromStdin</code>'
+    url: "#item"
+  - title: '<code>fromFile</code>'
+    url: "#item"
+  - title: '<code>fromCommand</code>'
+    url: "#item"

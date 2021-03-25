@@ -1,0 +1,3 @@
+@pending.shift_argument() {
+  :
+}

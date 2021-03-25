@@ -355,6 +355,26 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "var")
+                __shellpen__command+=("var")
+                if [ $# -eq 1 ]
+                then
+                  if [[ "$1" =~ ^([^=]+)=([^=]+)$ ]]
+                  then
+                    shellpen --shellpen-private writeDSL writeln "${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+                  else
+                    shellpen --shellpen-private writeDSL writeln "$1=''"
+                  fi
+                elif [ $# -eq 2 ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "$1=$2"
+                elif [ $# -eq 3 ] && [ "$2" = '=' ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "$1=$3"
+                fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               ":")
                 __shellpen__command+=(":")
                 shellpen --shellpen-private writeDSL writeln ":"
@@ -376,9 +396,49 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "int")
+                __shellpen__command+=("int")
+                if [ $# -eq 1 ]
+                then
+                  if [[ "$1" =~ ^([^=]+)=([^=]+)$ ]]
+                  then
+                    shellpen --shellpen-private writeDSL writeln "declare -i ${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+                  else
+                    shellpen --shellpen-private writeDSL writeln "declare -i $1"
+                  fi
+                elif [ $# -eq 2 ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "declare -i $1=$2"
+                elif [ $# -eq 3 ] && [ "$2" = '=' ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "declare -i $1=$3"
+                fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "do")
                 __shellpen__command+=("do")
                 # No-op
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "local")
+                __shellpen__command+=("local")
+                if [ $# -eq 1 ]
+                then
+                  if [[ "$1" =~ ^([^=]+)=([^=]+)$ ]]
+                  then
+                    shellpen --shellpen-private writeDSL writeln "local ${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+                  else
+                    shellpen --shellpen-private writeDSL writeln "local $1"
+                  fi
+                elif [ $# -eq 2 ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "local $1=$2"
+                elif [ $# -eq 3 ] && [ "$2" = '=' ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "local $1=$3"
+                fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -529,6 +589,26 @@ shellpen() {
                 __shellpen__command+=("writeln")
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private getCurrentIndent)$*${NEWLINE}"
                 shellpen --shellpen-private contexts markLastNotEmpty
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "array")
+                __shellpen__command+=("array")
+                if [ $# -eq 1 ]
+                then
+                  if [[ "$1" =~ ^([^=]+)=([^=]+)$ ]]
+                  then
+                    shellpen --shellpen-private writeDSL writeln "declare -a ${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+                  else
+                    shellpen --shellpen-private writeDSL writeln "declare -a $1"
+                  fi
+                elif [ $# -eq 2 ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "declare -a $1=$2"
+                elif [ $# -eq 3 ] && [ "$2" = '=' ]
+                then
+                  shellpen --shellpen-private writeDSL writeln "declare -a $1=$3"
+                fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
