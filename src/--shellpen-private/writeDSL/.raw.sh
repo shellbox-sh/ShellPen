@@ -1,2 +1,2 @@
 ## $ DSL raw
-## > Perform the following command _without_ `ShellPen` processing of `,`, `AND`, `OR`, `\|`, etc
+## > Perform command _without_ processing `,` `AND` `OR` `\|`
