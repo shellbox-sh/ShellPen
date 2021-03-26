@@ -554,7 +554,7 @@ shellpen() {
               "declare")
                 __shellpen__command+=("declare")
                 ## $ DSL declare
-                ## > Declare a variable (shortcuts available: [`int`](/docs/int), [`array`](/docs/array), [`map`](/docs/map))
+                ## > Declare a variable (shortcuts available: `int`, `array`, and `map`)
                 
                 shellpen --shellpen-private writeDSL writeln "declare $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -819,12 +819,25 @@ shellpen() {
                   else
                     shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1"
                   fi
-                elif [ $# -eq 2 ]
-                then
-                  shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1=$2"
-                elif [ $# -eq 3 ] && [ "$2" = '=' ]
-                then
-                  shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1=$3"
+                else
+                  shellpen --shellpen-private writeDSL append "declare ${globalArgument}${typeArgument}$1"
+                  shift
+                  if [ $# -gt 0 ]
+                  then
+                    shellpen --shellpen-private writeDSL append '=('
+                    while [ $# -gt 0 ]
+                    do
+                      if [ $# -eq 1 ]
+                      then
+                        shellpen --shellpen-private writeDSL append "\"$1\""
+                      else
+                        shellpen --shellpen-private writeDSL append "\"$1\" "
+                      fi
+                      shift
+                    done
+                    shellpen --shellpen-private writeDSL append ')'
+                  fi
+                  shellpen --shellpen-private writeDSL writeln
                 fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")

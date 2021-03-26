@@ -16,10 +16,23 @@ then
   else
     !fn --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1"
   fi
-elif [ $# -eq 2 ]
-then
-  !fn --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1=$2"
-elif [ $# -eq 3 ] && [ "$2" = '=' ]
-then
-  !fn --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1=$3"
+else
+  !fn --shellpen-private writeDSL append "declare ${globalArgument}${typeArgument}$1"
+  shift
+  if [ $# -gt 0 ]
+  then
+    !fn --shellpen-private writeDSL append '=('
+    while [ $# -gt 0 ]
+    do
+      if [ $# -eq 1 ]
+      then
+        !fn --shellpen-private writeDSL append "\"$1\""
+      else
+        !fn --shellpen-private writeDSL append "\"$1\" "
+      fi
+      shift
+    done
+    !fn --shellpen-private writeDSL append ')'
+  fi
+  !fn --shellpen-private writeDSL writeln
 fi

@@ -2,7 +2,7 @@ source shellpen.sh
 
 shellpen -
 
-commandGroup() {
+commandGroup1() {
   # Create a pen
   # shellpen - # Skipped recreating - pen
   
@@ -13,10 +13,10 @@ commandGroup() {
   - code
 }
 
-@spec.commandGroup() {
+@spec.commandGroup1() {
   read -r -d '' expected <<'EXPECTED'
 echo "Hello, world!"
 EXPECTED
-  expect { commandGroup } toContain "$expected"
+  expect { commandGroup1 } toContain "$expected"
 }
 

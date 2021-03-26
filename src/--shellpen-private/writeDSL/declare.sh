@@ -1,4 +1,4 @@
 ## $ DSL declare
-## > Declare a variable (shortcuts available: [`int`](/docs/int), [`array`](/docs/array), [`map`](/docs/map))
+## > Declare a variable (shortcuts available: `int`, `array`, and `map`)
 
 !fn --shellpen-private writeDSL writeln "declare $*"

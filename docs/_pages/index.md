@@ -219,15 +219,92 @@ hello() {
 
 ## `main`
 
+Use `main` to add conventional code to run a function when the script is run:
 
+```sh
+- function hello
+  - :
+- }
+
+- main hello
+```
+
+<!-- OUTPUT -->
+```sh
+hello() {
+  :
+}
+[ "${BASH_SOURCE[0]}" = "$0" ] && "hello" "$@"
+```
 
 # Variables
 
-## `var`
-## `local`
-## `int`
-## `array`
-## `map`
+Helper functions are provided for declaring different types of BASH variables:
+
+## [`var`](/docs/var)
+
+```sh
+- var x = 10
+```
+
+<!-- OUTPUT -->
+
+```sh
+x=10
+```
+
+## [`local`](/docs/local)
+
+```sh
+- fn hello
+  - local x = 10
+```
+
+<!-- OUTPUT -->
+
+```sh
+hello() {
+  local x=10
+}
+```
+## [`int`](/docs/int)
+
+```sh
+- int x = 10
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -i x=10
+```
+
+## [`array`](/docs/array)
+
+```sh
+- array x
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -a x
+```
+
+##### With Items
+
+```sh
+- array x Hello World '$@'
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -a x=("Hello" "World" "$@")
+```
+
+## [`map`](/docs/map)
+
 
 # Output
 

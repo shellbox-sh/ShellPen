@@ -2,16 +2,16 @@ source shellpen.sh
 
 shellpen -
 
-commandGroup5() {
+commandGroup1() {
   - $$ someCommand "Argument1" "Hello, world!"
   
   - code
 }
 
-@spec.commandGroup5() {
+@spec.commandGroup1() {
   read -r -d '' expected <<'EXPECTED'
 someCommand "Argument1" "Hello, world!"
 EXPECTED
-  expect { commandGroup5 } toContain "$expected"
+  expect { commandGroup1 } toContain "$expected"
 }
 

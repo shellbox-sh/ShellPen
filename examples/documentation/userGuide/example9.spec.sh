@@ -3,14 +3,14 @@ source shellpen.sh
 shellpen -
 
 commandGroup1() {
-  - $ someCommand "Argument1" "Hello, world!"
-  
+  - var x = 10
   - code
 }
 
 @spec.commandGroup1() {
   read -r -d '' expected <<'EXPECTED'
-someCommand Argument1 Hello, world!
+x=10
+
 EXPECTED
   expect { commandGroup1 } toContain "$expected"
 }
