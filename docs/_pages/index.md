@@ -448,8 +448,41 @@ myCommand arg1 arg2 > "log.log"
 # Conditionals
 
 ## `if / fi`
+
+- `if` conditionals are supported (`then` _is an optional keyword_)
+
+```sh
+- if [ '$#' -eq 0 ]
+  - comment Hello
+- elif [ '$#' -eq 1 ]
+- else
+  - echo "Hello, world"
+- fi
+```
+
+<!-- OUTPUT -->
+
+```sh
+if [ $# -eq 0 ]
+then
+  # Hello
+  :
+elif [ $# -eq 1 ]
+then
+  :
+else
+  echo "Hello, world"
+fi
+```
+
+ℹ️ Empty blocks (_or those with only comments_) automatically have a `:` added
+
 ## `case / option / esac`
+
+
+
 ## `[ ... ] AND / OR`
+
 
 # Loops
 
