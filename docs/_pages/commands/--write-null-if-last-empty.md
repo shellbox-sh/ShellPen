@@ -1,9 +1,15 @@
 ---
-title: '--write-null-if-last-empty'
+title: '🖋️ Extending Syntax'
 permalink: /extensions/--write-null-if-last-empty
 layout: single
 sidebar:
   nav: 'extensions_reference'
+---
+
+---
+
+# `--write-null-if-last-empty`
+
 ---
 
 

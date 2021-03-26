@@ -1,9 +1,15 @@
 ---
-title: 'while'
+title: '🖋️ Command Reference'
 permalink: /docs/while
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `while`
+
 ---
 
 

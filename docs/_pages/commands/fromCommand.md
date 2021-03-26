@@ -1,9 +1,15 @@
 ---
-title: 'fromCommand'
+title: '🖋️ Command Reference'
 permalink: /docs/fromCommand
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `fromCommand`
+
 ---
 
 

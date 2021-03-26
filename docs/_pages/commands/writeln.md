@@ -1,9 +1,15 @@
 ---
-title: 'writeln'
+title: '🖋️ Command Reference'
 permalink: /docs/writeln
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `writeln`
+
 ---
 
 

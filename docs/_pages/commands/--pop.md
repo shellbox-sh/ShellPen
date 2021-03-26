@@ -1,9 +1,15 @@
 ---
-title: '--pop'
+title: '🖋️ Extending Syntax'
 permalink: /extensions/--pop
 layout: single
 sidebar:
   nav: 'extensions_reference'
+---
+
+---
+
+# `--pop`
+
 ---
 
 

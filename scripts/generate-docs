@@ -77,6 +77,7 @@ do
   echo "Generating $commandName.md"
   pageLink="/docs/$pageName"
   sidebar=command_reference
+  title="🖋️ Command Reference"
   shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
 done
 
@@ -89,6 +90,7 @@ do
   context goto path "@commands/EXTENSIONS/$commandName"
   echo "Generating $commandName.md"
   pageLink="/extensions/$pageName"
+  title="🖋️ Extending Syntax"
   sidebar=extensions_reference
   shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
 done

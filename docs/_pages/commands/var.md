@@ -1,9 +1,15 @@
 ---
-title: 'var'
+title: '🖋️ Command Reference'
 permalink: /docs/var
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `var`
+
 ---
 
 

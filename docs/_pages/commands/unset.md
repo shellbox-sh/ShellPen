@@ -1,9 +1,15 @@
 ---
-title: 'unset'
+title: '🖋️ Command Reference'
 permalink: /docs/unset
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `unset`
+
 ---
 
 

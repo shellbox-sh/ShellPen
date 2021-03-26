@@ -1,9 +1,15 @@
 ---
-title: 'then'
+title: '🖋️ Command Reference'
 permalink: /docs/then
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `then`
+
 ---
 
 

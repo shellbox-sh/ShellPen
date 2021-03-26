@@ -1,9 +1,15 @@
 ---
-title: 'extend'
+title: '🖋️ Extending Syntax'
 permalink: /extensions/extend
 layout: single
 sidebar:
   nav: 'extensions_reference'
+---
+
+---
+
+# `extend`
+
 ---
 
 

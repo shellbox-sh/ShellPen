@@ -1,9 +1,15 @@
 ---
-title: 'esac'
+title: '🖋️ Command Reference'
 permalink: /docs/esac
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `esac`
+
 ---
 
 

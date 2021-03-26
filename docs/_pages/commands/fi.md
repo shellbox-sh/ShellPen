@@ -1,9 +1,15 @@
 ---
-title: 'fi'
+title: '🖋️ Command Reference'
 permalink: /docs/fi
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `fi`
+
 ---
 
 

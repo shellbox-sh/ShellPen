@@ -1,9 +1,15 @@
 ---
-title: '--push'
+title: '🖋️ Extending Syntax'
 permalink: /extensions/--push
 layout: single
 sidebar:
   nav: 'extensions_reference'
+---
+
+---
+
+# `--push`
+
 ---
 
 

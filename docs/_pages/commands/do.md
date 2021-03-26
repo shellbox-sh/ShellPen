@@ -1,9 +1,15 @@
 ---
-title: 'do'
+title: '🖋️ Command Reference'
 permalink: /docs/do
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `do`
+
 ---
 
 

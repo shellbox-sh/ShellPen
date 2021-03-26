@@ -1,9 +1,15 @@
 ---
-title: '<%= $commandName %>'
+title: '<%= $title %>'
 permalink: <%= $pageLink %>
 layout: single
 sidebar:
   nav: '<%= $sidebar %>'
+---
+
+---
+
+# `<%= $( echo "$commandName" | sed "s/{{/{{ '{{' }}/g" ) %>`
+
 ---
 
 <% if context has sourceCode.sh; then %>
@@ -26,8 +32,6 @@ sidebar:
 <% if command getParameterNames parameterNames; then -%>
 #### Parameters
 
-| | Description |
-|-|-------------|
 <% for parameterName in "${parameterNames[@]}"; do -%>
 | `<%= $parameterName %>` | <%= $(context getValue "parameters/$parameterName/description" ) %> |
 <% done %>
@@ -36,8 +40,6 @@ sidebar:
 <% if context getList returnValues returnValues; then %>
 #### Return Values
 
-| | Description |
-|-|-------------|
 <% for returnValue in "${returnValues[@]}"; do -%>
 | `<%= $returnValue %>` | <%= $(context getValue "returnValues/$returnValue") %> |
 <% done %>

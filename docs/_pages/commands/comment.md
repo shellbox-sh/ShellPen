@@ -1,9 +1,15 @@
 ---
-title: 'comment'
+title: '🖋️ Command Reference'
 permalink: /docs/comment
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `comment`
+
 ---
 
 

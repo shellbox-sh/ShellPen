@@ -1,9 +1,15 @@
 ---
-title: 'putAway'
+title: '🖋️ Command Reference'
 permalink: /docs/putAway
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `putAway`
+
 ---
 
 

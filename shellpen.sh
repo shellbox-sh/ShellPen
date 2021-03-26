@@ -70,7 +70,7 @@ shellpen() {
               fi
             done
             
-            shellpen --shellpen-private writeDSL "$@"
+            shellpen --shellpen-private writeDSL "$@" || return $?
             unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
             __shellpen__command=("__shellpen__command[@]")
             ;;

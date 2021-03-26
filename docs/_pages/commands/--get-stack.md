@@ -1,9 +1,15 @@
 ---
-title: '--get-stack'
+title: '🖋️ Extending Syntax'
 permalink: /extensions/--get-stack
 layout: single
 sidebar:
   nav: 'extensions_reference'
+---
+
+---
+
+# `--get-stack`
+
 ---
 
 

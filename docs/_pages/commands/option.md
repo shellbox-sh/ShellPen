@@ -1,9 +1,15 @@
 ---
-title: 'option'
+title: '🖋️ Command Reference'
 permalink: /docs/option
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `option`
+
 ---
 
 

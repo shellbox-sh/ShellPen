@@ -1,9 +1,15 @@
 ---
-title: '::'
+title: '🖋️ Command Reference'
 permalink: /docs/colon-colon
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `::`
+
 ---
 
 

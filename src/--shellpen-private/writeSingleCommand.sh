@@ -14,4 +14,4 @@ do
   fi
 done
 
-!fn --shellpen-private writeDSL "$@"
+!fn --shellpen-private writeDSL "$@" || return $?

@@ -1,9 +1,15 @@
 ---
-title: 'cleanSlate'
+title: '🖋️ Command Reference'
 permalink: /docs/cleanSlate
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `cleanSlate`
+
 ---
 
 

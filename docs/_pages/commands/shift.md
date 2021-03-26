@@ -1,9 +1,15 @@
 ---
-title: 'shift'
+title: '🖋️ Command Reference'
 permalink: /docs/shift
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `shift`
+
 ---
 
 

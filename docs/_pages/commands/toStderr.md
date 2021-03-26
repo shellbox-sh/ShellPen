@@ -1,9 +1,15 @@
 ---
-title: 'toStderr'
+title: '🖋️ Command Reference'
 permalink: /docs/toStderr
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `toStderr`
+
 ---
 
 

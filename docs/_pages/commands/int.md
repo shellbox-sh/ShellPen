@@ -1,9 +1,15 @@
 ---
-title: 'int'
+title: '🖋️ Command Reference'
 permalink: /docs/int
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `int`
+
 ---
 
 

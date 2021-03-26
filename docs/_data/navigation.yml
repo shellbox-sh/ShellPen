@@ -1,9 +1,7 @@
 ---
 main:
-- title: '🐙 GitHub'
-  url: "https://github.com/shellbox-sh/ShellPen"
 - title: '🐚 More Shell Utilities'
-  url: "https://shellbox.sh"
+  url: "http://shellbox.sh"
 
 sidebar:
 - title: ""
@@ -224,7 +222,7 @@ command_reference:
     url: '/docs/write'
 
 - title: "🖋️ Extending Syntax"
-  url: "/docs"
+  url: "/extensions"
   children:
   - title: '<code>extend</code>'
     url: '/extensions/extend'
@@ -250,6 +248,11 @@ command_reference:
     url: '/extensions/--write-null-if-last-empty'
 
 extensions_reference:
+- title: "🔙 to ShellPen"
+  url: "/"
+  children:
+  - title: 'Command Reference'
+    url: '/docs'
 - title: "🖋️ Extending Syntax"
   url: "/extensions"
   children:

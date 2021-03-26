@@ -1,9 +1,15 @@
 ---
-title: 'if'
+title: '🖋️ Command Reference'
 permalink: /docs/if
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `if`
+
 ---
 
 

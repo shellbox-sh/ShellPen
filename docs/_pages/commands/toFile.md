@@ -1,9 +1,15 @@
 ---
-title: 'toFile'
+title: '🖋️ Command Reference'
 permalink: /docs/toFile
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `toFile`
+
 ---
 
 

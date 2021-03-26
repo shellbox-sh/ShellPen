@@ -1,9 +1,15 @@
 ---
-title: 'for'
+title: '🖋️ Command Reference'
 permalink: /docs/for
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `for`
+
 ---
 
 

@@ -1,9 +1,15 @@
 ---
-title: '--get-indent'
+title: '🖋️ Extending Syntax'
 permalink: /extensions/--get-indent
 layout: single
 sidebar:
   nav: 'extensions_reference'
+---
+
+---
+
+# `--get-indent`
+
 ---
 
 

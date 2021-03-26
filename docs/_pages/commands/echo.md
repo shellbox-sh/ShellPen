@@ -1,9 +1,15 @@
 ---
-title: 'echo'
+title: '🖋️ Command Reference'
 permalink: /docs/echo
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `echo`
+
 ---
 
 

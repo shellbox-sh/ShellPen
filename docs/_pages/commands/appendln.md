@@ -1,9 +1,15 @@
 ---
-title: 'appendln'
+title: '🖋️ Command Reference'
 permalink: /docs/appendln
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `appendln`
+
 ---
 
 

@@ -1,9 +1,15 @@
 ---
-title: 'fromText'
+title: '🖋️ Command Reference'
 permalink: /docs/fromText
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `fromText`
+
 ---
 
 

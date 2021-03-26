@@ -1,9 +1,15 @@
 ---
-title: 'declare'
+title: '🖋️ Command Reference'
 permalink: /docs/declare
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `declare`
+
 ---
 
 

@@ -1,9 +1,15 @@
 ---
-title: 'array'
+title: '🖋️ Command Reference'
 permalink: /docs/array
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `array`
+
 ---
 
 

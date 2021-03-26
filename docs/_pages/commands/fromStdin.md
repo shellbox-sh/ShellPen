@@ -1,9 +1,15 @@
 ---
-title: 'fromStdin'
+title: '🖋️ Command Reference'
 permalink: /docs/fromStdin
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `fromStdin`
+
 ---
 
 

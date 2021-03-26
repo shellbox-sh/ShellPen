@@ -1,9 +1,15 @@
 ---
-title: 'printf'
+title: '🖋️ Command Reference'
 permalink: /docs/printf
 layout: single
 sidebar:
   nav: 'command_reference'
+---
+
+---
+
+# `printf`
+
 ---
 
 

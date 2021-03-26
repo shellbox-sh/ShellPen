@@ -1,9 +1,15 @@
 ---
-title: '--eval-full-stack'
+title: '🖋️ Extending Syntax'
 permalink: /extensions/--eval-full-stack
 layout: single
 sidebar:
   nav: 'extensions_reference'
+---
+
+---
+
+# `--eval-full-stack`
+
 ---
 
 
