@@ -1025,7 +1025,12 @@ shellpen() {
                 ## $ DSL {{
                 ## > Write a `((` arithmetic statement (_replaces `}}` with `))`_)
                 
-                shellpen --shellpen-private writeDSL writeln "(( ${*/\}\}/\)\)}"
+                # if [ -z "$BASH_PRE_43" ]
+                # then
+                  shellpen --shellpen-private writeDSL writeln "(( ${*/\}\}/))}"
+                # else
+                #   shellpen --shellpen-private writeDSL writeln "(( ${*/\}\}/))}"
+                # fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
