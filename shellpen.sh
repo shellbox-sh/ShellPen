@@ -741,7 +741,45 @@ shellpen() {
                 ## $ DSL map
                 ## > Define an associative array variable
                 
-                shellpen --shellpen-private writeDSL array -A "$@"
+                local typeArgument='-A '
+                local globalArgument=''
+                
+                [ "$1" = "-g" ] && { globalArgument='-g '; shift; }
+                
+                if [ $# -eq 1 ]
+                then
+                  if [[ "$1" =~ ^([^=]+)=([^=]+)$ ]]
+                  then
+                    shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+                  else
+                    shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1"
+                  fi
+                else
+                  shellpen --shellpen-private writeDSL append "declare ${globalArgument}${typeArgument}$1"
+                  shift
+                  if [ $# -gt 0 ]
+                  then
+                    shellpen --shellpen-private writeDSL append '=('
+                    while [ $# -gt 0 ]
+                    do
+                      if [[ "$1" =~ ^\[([^\]]+)\]=(.*)$ ]]
+                      then
+                        if [ $# -eq 1 ]
+                        then
+                          shellpen --shellpen-private writeDSL append "[${BASH_REMATCH[1]}]=\"${BASH_REMATCH[2]}\""
+                        else
+                          shellpen --shellpen-private writeDSL append "[${BASH_REMATCH[1]}]=\"${BASH_REMATCH[2]}\" "
+                        fi
+                      else
+                        echo "shellpen --shellpen-private writeDSL map: invalid map argument '$1', expected [key]=value" >&2
+                        return 2
+                      fi
+                      shift
+                    done
+                    shellpen --shellpen-private writeDSL append ')'
+                  fi
+                  shellpen --shellpen-private writeDSL writeln
+                fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

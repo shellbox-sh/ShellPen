@@ -3,13 +3,13 @@ source shellpen.sh
 shellpen -
 
 commandGroup1() {
-  - array x Hello World '$@'
+  - map x
   - code
 }
 
 @spec.commandGroup1() {
   read -r -d '' expected <<'EXPECTED'
-declare -a x=("Hello" "World" "$@")
+declare -A x
 
 EXPECTED
   expect { commandGroup1 } toContain "$expected"

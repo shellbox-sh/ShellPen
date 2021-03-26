@@ -305,6 +305,29 @@ declare -a x=("Hello" "World" "$@")
 
 ## [`map`](/docs/map)
 
+"Map" is shorthand for defining an associative-array:
+
+```sh
+- map x
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -A x
+```
+
+##### With Items
+
+```sh
+- map x [Hello]=World [Foo]="Foo Bar"
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -A x=([Hello]="World" [Foo]="Foo Bar")
+```
 
 # Output
 
