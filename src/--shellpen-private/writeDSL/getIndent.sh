@@ -1,4 +1,4 @@
-## $ EXTENSIONS --get-indent
+## $ DSL getIndent
 ## > Get the text string to use to indent appended text
 
 local INDENT=''

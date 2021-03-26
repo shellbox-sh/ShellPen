@@ -10,6 +10,10 @@ html div#main article.page section.page__content table a {
   text-decoration: none;
 }
 
+a:visited, html div#main article.page section.page__content a:visited, html div#main article.page section.page__content a:visited em, html div#main article.page section.page__content table a:visited, html div#main article.page section.page__content table a em {
+  color: #393e46;
+}
+
 .nav__sub-title {
   text-transform: none;
 }

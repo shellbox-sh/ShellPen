@@ -1,6 +1,6 @@
 ---
 title: '🖋️ Command Reference'
-permalink: /docs/fn
+permalink: /docs/main
 layout: single
 sidebar:
   nav: 'command_reference'
@@ -8,7 +8,7 @@ sidebar:
 
 ---
 
-# `fn`
+# `main`
 
 ---
 
@@ -19,14 +19,14 @@ sidebar:
 
 {% highlight sh %}
 
-!fn --shellpen-private writeDSL function "$@"
+!fn --shellpen-private writeDSL writeln "[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ] && \"$1\" \"\$@\""
 {% endhighlight %}
 
 </details>
 
 
 
-> Alias for `function`
+> Write a 'main' execution statement for provided function
 
 
 

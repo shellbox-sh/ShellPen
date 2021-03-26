@@ -1,6 +1,6 @@
 ---
 title: '🖋️ Command Reference'
-permalink: /docs/writeln
+permalink: /docs/prependln
 layout: single
 sidebar:
   nav: 'command_reference'
@@ -8,7 +8,7 @@ sidebar:
 
 ---
 
-# `writeln`
+# `prependln`
 
 ---
 
@@ -19,7 +19,7 @@ sidebar:
 
 {% highlight sh %}
 
-__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(!fn --shellpen-private writeDSL getIndent)$*${NEWLINE}"
+__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="$*${NEWLINE}${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
 !fn --shellpen-private writeDSL --mark-last-not-empty
 {% endhighlight %}
 
@@ -27,7 +27,7 @@ __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(!fn --shellpen-private writeDS
 
 
 
-> Append a line of text to source output including indentation
+> Prepend a line of text to source output _without indentation_
 
 
 

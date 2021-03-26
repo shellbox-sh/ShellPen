@@ -33,11 +33,18 @@ command() { docgen context commands "$@"; }
 
 docgen context create new
 
+shouldGenerateExamples=false
+
 if [ "$1" = "--examples" ]
 then
   shift
-  ./scripts/generate-examples --tree "$tree"
+  shouldGenerateExamples=true
 fi
+
+generateExamples() {
+  ./scripts/generate-examples --tree "$tree"
+  ./scripts/generate-index-example-specs
+}
 
 [ "$1" = "-x" ] && exit 0
 
@@ -94,5 +101,7 @@ do
   sidebar=extensions_reference
   shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
 done
+
+[ "$shouldGenerateExamples" = true ] && generateExamples
 
 echo "Done."

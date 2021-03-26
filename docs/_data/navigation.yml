@@ -1,5 +1,13 @@
 ---
 main:
+- title: '📓 Command Reference'
+  url: "/docs"
+- title: '⚙️ Extending Syntax'
+  url: "/extensions"
+- title: '⬇️ Download V2'
+  url: "#link"
+- title: '🐙 View on GitHub'
+  url: "https://github.com/shellbox-sh/ShellPen"
 - title: '🐚 More Shell Utilities'
   url: "http://shellbox.sh"
 
@@ -10,106 +18,109 @@ sidebar:
   - title: Installation
     url: "#%EF%B8%8F-shell-pen"
   - title: Getting Started
-    url: "#item"
-  - title: Command Reference
-    url: "/docs"
-  - title: Why?
-    url: "#item"
+    url: "#getting-started"
+  - title: Documentation
+    url: "#documentation"
 
 - title: "Using Pens"
-  url: "/"
+  url: "#using-pens"
   children:
   - title: '<code>shellpen -</code>'
-    url: "#item"
-  - title: '<code>- code</code>'
-    url: "#item"
-  - title: '<code>- cleanSlate</code>'
-    url: "#item"
-  - title: '<code>- putAway</code>'
-    url: "#item"
+    url: "#shellpen--"
+  - title: '<code>$pen code</code>'
+    url: "#pen-code"
+  - title: '<code>$pen cleanSlate</code>'
+    url: "#pen-cleanslate"
+  - title: '<code>$pen putAway</code>'
+    url: "#pen-putaway"
 
 - title: "Writing Basics"
-  url: "/"
+  url: "#writing-basics"
   children:
   - title: '<code>writeln</code>'
-    url: "#item"
-  - title: '<code>append</code>'
-    url: "#item"
+    url: "#writeln"
   - title: '<code>$ command</code>'
-    url: "#item"
-  - title: '<code>fn</code>'
-    url: "#item"
-  - title: '<code>main</code>'
-    url: "#item"
+    url: "#-command"
   - title: '<code>shebang</code>'
-    url: "#item"
+    url: "#shebang"
+  - title: '<code>fn</code>'
+    url: "#fn"
+  - title: '<code>main</code>'
+    url: "#main"
+
 - title: "Variables"
-  url: "/"
+  url: "#variables"
   children:
   - title: '<code>var</code>'
-    url: "#item"
+    url: "#var"
   - title: '<code>local</code>'
-    url: "#item"
+    url: "#local"
   - title: '<code>int</code>'
-    url: "#item"
+    url: "#int"
   - title: '<code>array</code>'
-    url: "#item"
+    url: "#array"
   - title: '<code>map</code>'
-    url: "#item"
+    url: "#map"
+
 - title: "Output"
-  url: "/"
+  url: "#output"
   children:
   - title: '<code>echo</code>'
-    url: "#item"
+    url: "#echo"
   - title: '<code>printf</code>'
-    url: "#item"
+    url: "#printf"
   - title: '<code>toStderr</code>'
-    url: "#item"
+    url: "#tostderr"
   - title: '<code>toFile</code>'
-    url: "#item"
+    url: "#tofile"
+
 - title: "Conditionals"
-  url: "/"
+  url: "#conditionals"
   children:
   - title: '<code>if</code> / <code>fi</code>'
-    url: "#item"
+    url: "#if--fi"
   - title: '<code>case</code> / <code>option</code> / <code>esac</code>'
-    url: "#item"
+    url: "#case--option--esac"
   - title: '<code>[ ... ]</code> <code>AND</code> / <code>OR</code>'
-    url: "#item"
+    url: "#---and--or"
+
 - title: "Loops"
-  url: "/"
+  url: "#loops"
   children:
   - title: '<code>for</code>'
-    url: "#item"
+    url: "#for"
   - title: '<code>while</code>'
-    url: "#item"
+    url: "#while"
 - title: "Arithmetic"
-  url: "/"
+  url: "#arithmetic"
   children:
   - title: '<code>{{ ... }}</code>'
-    url: "#item"
+    url: "#--"
+
 - title: "Pipes | STDIN"
-  url: "/"
+  url: "#pipes--stdin"
   children:
-  - title: '<code>|</code>'
-    url: "#item"
+  - title: '<code>\|</code>'
+    url: "#pipes--stdin"
   - title: '<code>fromStdin</code>'
-    url: "#item"
+    url: "#fromstdin"
   - title: '<code>fromFile</code>'
-    url: "#item"
+    url: "#fromfile"
   - title: '<code>fromCommand</code>'
-    url: "#item"
+    url: "#fromcommand"
+
 - title: "Extending the Syntax"
-  url: "/"
+  url: "#extending-the-syntax"
   children:
   - title: '<code>shellpen extend</code>'
-    url: "#item"
+    url: "#shellpen-extend"
   - title: '<code>return 0</code> or <code>return 1</code>'
-    url: "#item"
+    url: "#return-0-or-return-1m"
   - title: '<code>return 2</code>'
-    url: "#item"
-  - title: '<code>|</code> <code>AND</code> <code>OR</code>'
-    url: "#item"
+    url: "#return-2"
+  - title: '<code>\|</code> <code>AND</code> <code>OR</code>'
+    url: "#-and-or"
+
 command_reference:
 - title: "🔙 to ShellPen"
   url: "/"
@@ -122,6 +133,8 @@ command_reference:
     url: '/docs/,'
   - title: '<code>$</code>'
     url: '/docs/$'
+  - title: '<code>$$</code>'
+    url: '/docs/$$'
   - title: '<code>:</code>'
     url: '/docs/colon'
   - title: '<code>::</code>'
@@ -180,18 +193,28 @@ command_reference:
     url: '/docs/fromStdin'
   - title: '<code>fromText</code>'
     url: '/docs/fromText'
+  - title: '<code>function</code>'
+    url: '/docs/function'
   - title: '<code>if</code>'
+    url: '/docs/getIndent'
+  - title: '<code>getIndent</code>'
     url: '/docs/if'
   - title: '<code>int</code>'
     url: '/docs/int'
   - title: '<code>local</code>'
     url: '/docs/local'
+  - title: '<code>main</code>'
+    url: '/docs/main'
   - title: '<code>map</code>'
     url: '/docs/map'
   - title: '<code>option</code>'
     url: '/docs/option'
   - title: '<code>OR</code>'
     url: '/docs/OR'
+  - title: '<code>prepend</code>'
+    url: '/docs/prepend'
+  - title: '<code>prependln</code>'
+    url: '/docs/prependln'
   - title: '<code>printf</code>'
     url: '/docs/printf'
   - title: '<code>putAway</code>'
@@ -200,6 +223,8 @@ command_reference:
     url: '/docs/raw'
   - title: '<code>return</code>'
     url: '/docs/return'
+  - title: '<code>shebang</code>'
+    url: '/docs/shebang'
   - title: '<code>shift</code>'
     url: '/docs/shift'
   - title: '<code>source</code>'
@@ -232,8 +257,6 @@ command_reference:
     url: '/extensions/--push'
   - title: '<code>--pop</code>'
     url: '/extensions/--pop'
-  - title: '<code>--get-indent</code>'
-    url: '/extensions/--get-indent'
   - title: '<code>--get-stack</code>'
     url: '/extensions/--get-stack'
   - title: '<code>--get-last-pushed</code>'
@@ -251,11 +274,8 @@ extensions_reference:
 - title: "🔙 to ShellPen"
   url: "/"
   children:
-  - title: 'Command Reference'
-    url: '/docs'
-- title: "🖋️ Extending Syntax"
-  url: "/extensions"
-  children:
+  - title: "🖋️ Extending Syntax"
+    url: "/extensions"
   - title: 'Create an extension'
     url: '#link'
   - title: 'Write custom syntax'
@@ -286,8 +306,6 @@ extensions_reference:
     url: '/extensions/--push'
   - title: '<code>--pop</code>'
     url: '/extensions/--pop'
-  - title: '<code>--get-indent</code>'
-    url: '/extensions/--get-indent'
   - title: '<code>--get-stack</code>'
     url: '/extensions/--get-stack'
   - title: '<code>--get-last-pushed</code>'

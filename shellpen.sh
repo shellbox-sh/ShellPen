@@ -288,6 +288,21 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "function")
+                __shellpen__command+=("function")
+                ## $ DSL function
+                ## > Begin a `function` definition block
+                
+                local functionName="$1"
+                
+                # Write the function
+                shellpen --shellpen-private writeDSL writeln "$functionName() {"
+                
+                # Push the DSL command to run to CLOSE this block
+                shellpen --shellpen-private writeDSL --push "}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "var")
                 __shellpen__command+=("var")
                 ## $ DSL var
@@ -308,6 +323,18 @@ shellpen() {
                 then
                   shellpen --shellpen-private writeDSL writeln "$1=$3"
                 fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "shebang")
+                __shellpen__command+=("shebang")
+                ## $ DSL shebang
+                ## > Write '#!' hashbang with provided command path (default: `/bin/bash`)
+                
+                local commandPath=/bin/bash
+                [ $# -gt 0 ] && commandPath="$*"
+                
+                shellpen --shellpen-private writeDSL prependln "#! $commandPath"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -335,6 +362,16 @@ shellpen() {
                 
                 # Chomp the newline and replace it with ' < "path"newline'
                 __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]/%$NEWLINE/ < $stdinSource$NEWLINE}"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "prependln")
+                __shellpen__command+=("prependln")
+                ## $ DSL prependln
+                ## > Prepend a line of text to source output _without indentation_
+                
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="$*${NEWLINE}${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
+                shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -439,31 +476,6 @@ shellpen() {
                 else
                   eval "shellpen --shellpen-private writeShellCommand \${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
                 fi
-                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
-                __shellpen__command=("__shellpen__command[@]")
-                ;;
-              "--get-indent")
-                __shellpen__command+=("--get-indent")
-                ## $ EXTENSIONS --get-indent
-                ## > Get the text string to use to indent appended text
-                
-                local INDENT=''
-                
-                if [ -z "$BASH_PRE_43" ]
-                then
-                  declare -i SHELLPEN_CONTEXT_DEPTH="${#SHELLPEN_SOURCE_CONTEXT[@]}"
-                else
-                  eval "declare -i SHELLPEN_CONTEXT_DEPTH=\"\${#__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[@]}\""
-                fi
-                
-                declare -i i=0
-                while [ $i -lt $SHELLPEN_CONTEXT_DEPTH ]
-                do
-                  INDENT+="$SHELLPEN_INDENT"
-                  (( i++ ))
-                done
-                
-                printf '%s' "$INDENT"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -583,7 +595,7 @@ shellpen() {
                 ## > Append a `#` command line
                 
                 # Do not use writeln because comments should not mark blocks as not empty
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --get-indent)# $*${NEWLINE}"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL getIndent)# $*${NEWLINE}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -733,12 +745,56 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "$$")
+                __shellpen__command+=("$$")
+                ## $ DSL $$
+                ## > Run any arbitrary command double quoting all provided arguments
+                
+                local command="$1"
+                shift
+                shellpen --shellpen-private writeDSL write "$command"
+                
+                local arg=''
+                for arg in "$@"
+                do
+                  shellpen --shellpen-private writeDSL append " \"$arg\""
+                done
+                
+                shellpen --shellpen-private writeDSL appendln
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "getIndent")
+                __shellpen__command+=("getIndent")
+                ## $ DSL getIndent
+                ## > Get the text string to use to indent appended text
+                
+                local INDENT=''
+                
+                if [ -z "$BASH_PRE_43" ]
+                then
+                  declare -i SHELLPEN_CONTEXT_DEPTH="${#SHELLPEN_SOURCE_CONTEXT[@]}"
+                else
+                  eval "declare -i SHELLPEN_CONTEXT_DEPTH=\"\${#__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[@]}\""
+                fi
+                
+                declare -i i=0
+                while [ $i -lt $SHELLPEN_CONTEXT_DEPTH ]
+                do
+                  INDENT+="$SHELLPEN_INDENT"
+                  (( i++ ))
+                done
+                
+                printf '%s' "$INDENT"
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "writeln")
                 __shellpen__command+=("writeln")
                 ## $ DSL writeln
                 ## > Append a line of text to source output including indentation
                 
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --get-indent)$*${NEWLINE}"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL getIndent)$*${NEWLINE}"
                 shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -778,7 +834,7 @@ shellpen() {
                 ## $ DSL write
                 ## > Append a string of text to source output including indentation
                 
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --get-indent)$*"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL getIndent)$*"
                 shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -936,18 +992,22 @@ shellpen() {
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
+              "prepend")
+                __shellpen__command+=("prepend")
+                ## $ DSL prepend
+                ## > Prepend a string of text to source output _without indentation_
+                
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]="$*${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
+                shellpen --shellpen-private writeDSL --mark-last-not-empty
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
               "fn")
                 __shellpen__command+=("fn")
                 ## $ DSL fn
-                ## > Begin a `function` definition block
+                ## > Alias for `function`
                 
-                local functionName="$1"
-                
-                # Write the function
-                shellpen --shellpen-private writeDSL writeln "$functionName() {"
-                
-                # Push the DSL command to run to CLOSE this block
-                shellpen --shellpen-private writeDSL --push "}"
+                shellpen --shellpen-private writeDSL function "$@"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -1019,6 +1079,15 @@ shellpen() {
                     "
                   fi
                 fi
+                unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
+                __shellpen__command=("__shellpen__command[@]")
+                ;;
+              "main")
+                __shellpen__command+=("main")
+                ## $ DSL main
+                ## > Write a 'main' execution statement for provided function
+                
+                shellpen --shellpen-private writeDSL writeln "[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ] && \"$1\" \"\$@\""
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

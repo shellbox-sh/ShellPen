@@ -1,0 +1,85 @@
+#! /usr/bin/env bash
+
+newline=$'\n'
+
+examples=()
+readingExample=false
+
+while IFS="" read -r line || [ -n "$line" ]
+do
+  if [[ "$line" =~ ^\`\`\`sh ]]
+  then
+    examples+=("") 
+    readingExample=true
+  elif [[ "$line" =~ ^\`\`\` ]]
+  then
+    readingExample=false
+  elif [ "$readingExample" = true ]
+  then
+    examples[$(( ${#examples[@]} - 1 ))]+="$line${newline}"
+  fi
+done < docs/_pages/index.md
+
+echo "Found ${#examples[@]} examples."
+
+dir=examples/documentation/userGuide
+
+[ -d "$dir" ] && rm -r "$dir"
+mkdir -p "$dir"
+
+exampleIndex=0
+specNumber=1
+
+while [ $exampleIndex -lt "${#examples[@]}" ]
+do
+  source="${examples[$exampleIndex]}"
+  specFile="$dir/example$specNumber.spec.sh"
+
+  commands=()
+
+  while IFS="" read -r line || [ -n "$line" ]
+  do
+    if [[ "$line" =~ ^\#[[:space:]]\=\>[[:space:]][\'\"](.*)[\'\"]$ ]]
+    then
+      expectedOutput="${BASH_REMATCH[1]}"
+
+      # Ah ha! It's good for speccing!
+      if [ ! -f "$specFile" ]
+      then
+        echo -e "source shellpen.sh${newline}" >> "$specFile"
+        echo -e "shellpen -${newline}" >> "$specFile"
+        echo "Writing $specFile"
+        (( specNumber++ ))
+      fi
+
+      # First the function wrapping all of the called commands
+      echo "commandGroup$exampleNumber() {" >> "$specFile"
+      command=''
+      for command in "${commands[@]}"
+      do
+        echo -e "  $command" >> "$specFile"
+      done
+      echo -e "}${newline}" >> "$specFile"
+
+      # Now a spec which executes the commandgroup and verifies its output
+      echo "@spec.commandGroup$exampleNumber() {" >> "$specFile"
+      echo "  read -r -d '' expected <<'EXPECTED'" >> "$specFile"
+      echo -e "$expectedOutput" >> "$specFile"
+      echo "EXPECTED" >> "$specFile"
+      echo "  expect { commandGroup$exampleNumber } toContain \"\$expected\"" >> "$specFile"
+      echo -e "}${newline}" >> "$specFile"
+
+      (( exampleNumber++ ))
+    else
+      # Skip lines which recreate 'shellpen -'
+      if [[ "$line" = *"shellpen -"* ]]
+      then
+        commands+=("# $line # Skipped recreating - pen")
+      else
+        commands+=("$line")
+      fi
+    fi
+  done <<< "$source"
+
+  (( exampleIndex++ ))
+done
