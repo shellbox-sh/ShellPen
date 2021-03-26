@@ -108,6 +108,8 @@ sidebar:
     url: "#fromfile"
   - title: '<code>fromCommand</code>'
     url: "#fromcommand"
+  - title: '<code>fromText</code>'
+    url: "#fromtext"
 
 - title: "Extending the Syntax"
   url: "#extending-the-syntax"

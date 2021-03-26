@@ -479,26 +479,209 @@ fi
 
 ## `case / option / esac`
 
+- `case` / `esac` conditionals are supported
+  - `option` is used for options
+  - `::` is used in place of `;;` for closing each option
 
+```sh
+- case '$1' in
+  - option "foo"
+    - echo "Hello from foo"
+    - ::
+  - option "bar"
+    - ::
+  - option '*'
+    - echo "Other option!"
+    - ::
+- esac
+```
+
+<!-- OUTPUT -->
+
+```sh
+case "$1" in
+  foo)
+    echo "Hello from foo"
+    ;;
+  bar)
+    :
+    ;;
+  *)
+    echo "Other option!"
+    ;;
+esac
+```
 
 ## `[ ... ] AND / OR`
 
+- One-liner conditionals are supported with the use of `AND` and/or `OR`
+
+```sh
+- [ '$#' -eq 0 ] AND toStderr echo "At least one argument is required"
+```
+
+<!-- OUTPUT -->
+
+```sh
+[ $# -eq 0 ] && echo "At least one argument is required" >&2
+```
+
+##### `{` ... `;` ... `}`
+
+- One liner statements with `{ ... }` are supported using `,` in place of `;`
+
+
+```sh
+- [ '$#' -eq 0 ] AND { toStderr echo "Argument is required" , return 1 , }
+```
+
+<!-- OUTPUT -->
+
+```sh
+[ $# -eq 0 ] && { echo "Argument is required" >&2; return 1; }
+```
 
 # Loops
 
 ## `for`
+
+- `for` loops are supported (`do` _is an optional keyword_)
+
+```sh
+- for arg in '"$@"'
+  - echo Argument: '$@'
+- done
+```
+
+<!-- OUTPUT -->
+
+```sh
+for arg in "$@"
+do
+  echo "Argument:" "$@"
+done
+```
+
 ## `while`
+
+- `while` loops are supported (`do` _is an optional keyword_)
+
+```sh
+- while [ '$#' -gt 0 ]
+  - echo Argument: '$1'
+  - shift
+- done
+```
+
+<!-- OUTPUT -->
+
+```sh
+while [ $# -gt 0 ]
+do
+  echo "Argument:" "$1"
+  shift
+done
+```
 
 # Arithmetic
 
 ## `{{ '{{' }} ... }}`
 
+- `(( ... ))` arithmetic is supported using `{{ '{{' }} ... }}` in place of parenthesis
+
+```sh
+- int i=42
+- {{ '{{' }} i++ }}
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -i i=42
+(( i++ ))
+```
+
 # Pipes | STDIN
 
+It's common to need to use `|` pipes in generated BASH source code.
+
 ## `\|`
+
+- Pipes are supported by providing an escaped `\|` in place of a `|` pipe character
+
+```sh
+- echo '$1' \| $ sed "'s/foo/bar/'" \| $ head -1 \| $ xargs -n1 echo
+```
+
+<!-- OUTPUT -->
+
+```sh
+echo "$1" | sed 's/foo/bar/' | head -1 | xargs -n1 echo
+```
+
 ## `fromStdin`
+
+- Any command can accept input from STDIN by prepending the command with `fromStdin [source of stdin]`
+
+```sh
+- while 'IFS=""' read -r line OR [ -n '"$line"' ]
+  - echo '$line'
+- fromStdin some/file.txt done
+```
+
+<!-- OUTPUT -->
+
+```sh
+while IFS="" read -r line || [ -n "$line" ]
+do
+  echo "$line"
+done < some/file.txt
+```
+
+ℹ️ The previous example uses an escaped OR (`\|\|`) instead of `OR`
+
+ - Because `OR` adds an `||` after the previous command's output, this would result
+   in the `||` being added after the while's `do` is automatically added.
+
 ## `fromFile`
+
+- Any command can accept STDIN from a file path by prepending the command with `fromFile [file path]`
+  - _This is the same as `fromStdin` but wraps provided arguments in_ `"`
+
+```sh
+- while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
+  - echo '$line'
+- fromFile some/file.txt done
+```
+
+<!-- OUTPUT -->
+
+```sh
+while IFS="" read -r line || [ -n "$line" ]
+do
+  echo "$line"
+done < "some/file.txt"
+```
 ## `fromCommand`
+
+- Any command can accept input from a command by prepending the command with `fromCommand "[command with args]"`
+
+```sh
+- var text = '"$(<"$filePath")"'
+- while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
+  - echo '$line'
+- fromCommand "printf '%s' \"\$text\"" done
+```
+
+<!-- OUTPUT -->
+
+```sh
+text="$(<"$filePath")"
+while IFS="" read -r line || [ -n "$line" ]
+do
+  echo "$line"
+done < <(printf '%s' "$text")
+```
 
 # Extending the Syntax
 
