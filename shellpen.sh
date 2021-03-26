@@ -1145,9 +1145,9 @@ shellpen() {
               [ "$existingPenName" = "$penName" ] && { echo "shellpen pens new: pen already exists '$penName'" >&2; return 1; }
             done
             
-            if [ -n "$SHELLPEN_RANDOM_SOURCE" ] # This is specifically to support GitHub Actions which blocks on urandom
+            if [ "$SHELLPEN_URANDOM" = false ] # This is specifically to support GitHub Actions which blocks on /dev/urandom
             then
-              local sourceId="$( cat $SHELLPEN_RANDOM_SOURCE | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
+              local sourceId="${RANDOM}${RANDOM}${RANDOM}"
             else
               local sourceId="$( cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
             fi

@@ -14,11 +14,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: 'bash --version | head -1'
         shell: bash
-      - run: echo Will read from random
+      - run: bin/spec
         shell: bash
-      - run: cat /dev/random | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
-        shell: bash
-      - run: echo Next read from urandom
-        shell: bash
-      - run: cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
-        shell: bash
+        env:
+          VERBOSE: true
+          SHELLPEN_URANDOM: false
