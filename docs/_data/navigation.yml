@@ -43,8 +43,8 @@ sidebar:
     url: "#-command"
   - title: '<code>shebang</code>'
     url: "#shebang"
-  - title: '<code>fn</code>'
-    url: "#fn"
+  - title: '<code>function</code>'
+    url: "#function"
   - title: '<code>main</code>'
     url: "#main"
 

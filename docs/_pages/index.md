@@ -198,9 +198,24 @@ If you would like to add a "shebang" or "hashbang" to your source:
 
 - You can also provide your own path, e.g. `- shebang /usr/bin/env bash`
 
-## `fn`
+## `function`
 
+Use `function` to start the definition of a function and `}` to finish:
 
+```sh
+- function hello
+  - echo Hello
+- }
+```
+
+<!-- OUTPUT -->
+```sh
+hello() {
+  echo "Hello"
+}
+```
+
+ℹ️ Levels of indentation are automatically added in functions et al.
 
 ## `main`
 

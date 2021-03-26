@@ -4,16 +4,34 @@ newline=$'\n'
 
 examples=()
 readingExample=false
+waitingForOutputBlock=false
+readingOutputBlock=false
 
 while IFS="" read -r line || [ -n "$line" ]
 do
-  if [[ "$line" =~ ^\`\`\`sh ]]
+  if [ "$line" = "<!-- OUTPUT -->" ]
+  then
+    # Add a `- code` to the previous example block
+    # and now continue reading into it
+    examples[$(( ${#examples[@]} - 1 ))]+="- code${newline}# => '"
+    waitingForOutputBlock=true
+  elif [[ "$line" =~ ^\`\`\`sh ]] && [ "$waitingForOutputBlock" = true ]
+  then
+    readingExample=true
+    readingOutputBlock=true
+    waitingForOutputBlock=false
+  elif [[ "$line" =~ ^\`\`\`sh ]]
   then
     examples+=("") 
     readingExample=true
   elif [[ "$line" =~ ^\`\`\` ]]
   then
+    [ "$readingOutputBlock" = true ] && examples[$(( ${#examples[@]} - 1 ))]+="'"
     readingExample=false
+    readingOutputBlock=false
+  elif [ "$readingExample" = true ] && [ "$readingOutputBlock" = true ]
+  then
+    examples[$(( ${#examples[@]} - 1 ))]+="$line\n"
   elif [ "$readingExample" = true ]
   then
     examples[$(( ${#examples[@]} - 1 ))]+="$line${newline}"
