@@ -243,6 +243,8 @@ Helper functions are provided for declaring different types of BASH variables:
 
 ## [`var`](/docs/var)
 
+- `var` Defines a generic BASH variable
+
 ```sh
 - var x = 10
 ```
@@ -254,6 +256,8 @@ x=10
 ```
 
 ## [`local`](/docs/local)
+
+- `local` Defines a `local` variable for use in a BASH function
 
 ```sh
 - fn hello
@@ -269,6 +273,8 @@ hello() {
 ```
 ## [`int`](/docs/int)
 
+- `int` declares a BASH integer value variable
+
 ```sh
 - int x = 10
 ```
@@ -280,6 +286,8 @@ declare -i x=10
 ```
 
 ## [`array`](/docs/array)
+
+- `array` declares a single-dimensional BASH array
 
 ```sh
 - array x
@@ -305,7 +313,7 @@ declare -a x=("Hello" "World" "$@")
 
 ## [`map`](/docs/map)
 
-"Map" is shorthand for defining an associative-array:
+- "Map" is shorthand for defining an associative-array:
 
 ```sh
 - map x
@@ -331,7 +339,22 @@ declare -A x=([Hello]="World" [Foo]="Foo Bar")
 
 # Output
 
+ShellPen provides helpers for generating `echo` and `printf` commands.
+
 ## `echo`
+
+- Any commands provided to `echo` will be wrapped in `"` quotes
+
+```sh
+- echo "Hello, world" foo bar
+```
+
+<!-- OUTPUT -->
+
+```sh
+echo "Hello, world" "foo" "bar"
+```
+
 ## `printf`
 ## `toStderr`
 ## `toFile`

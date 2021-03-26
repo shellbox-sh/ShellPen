@@ -493,12 +493,22 @@ shellpen() {
                 ## $ DSL echo
                 ## > `echo` the provided arguments (_wrapped in `"..."`_)
                 
-                if [ $# -eq 0 ]
-                then
-                  shellpen --shellpen-private writeDSL writeln "echo"
-                else
-                  shellpen --shellpen-private writeDSL writeln "echo \"$*\""
-                fi
+                shellpen --shellpen-private writeDSL write "echo"
+                
+                [ $# -gt 0 ] && shellpen --shellpen-private writeDSL append " "
+                
+                while [ $# -gt 0 ]
+                do
+                  if [ $# -eq 1 ]
+                  then
+                    shellpen --shellpen-private writeDSL append "\"$1\""
+                  else
+                    shellpen --shellpen-private writeDSL append "\"$1\" "
+                  fi
+                  shift
+                done
+                
+                shellpen --shellpen-private writeDSL appendln
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;

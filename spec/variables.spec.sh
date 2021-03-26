@@ -111,8 +111,8 @@ shellpen -
   expect { - code } toEqual "declare -A x=()"
 
   - cleanSlate
-  - map x item1 "item two"
-  expect { - code } toEqual 'declare -A x=("item1" "item two")'
+  - map x [a]=A [b]="Hello, world!"
+  expect { - code } toEqual 'declare -A x=([a]="A" [b]="Hello, world!")'
 }
 
 @spec.declare.array.associative.global() {
@@ -124,8 +124,8 @@ shellpen -
   expect { - code } toEqual "declare -g -A x=()"
 
   - cleanSlate
-  - map -g x item1 "item two"
-  expect { - code } toEqual 'declare -g -A x=("item1" "item two")'
+  - map -g x [a]=A [b]="Hello, world!"
+  expect { - code } toEqual 'declare -g -A x=([a]="A" [b]="Hello, world!")'
 }
 
 @spec.unset() {
