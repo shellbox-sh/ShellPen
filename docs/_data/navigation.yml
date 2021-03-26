@@ -4,6 +4,7 @@ main:
   url: "https://github.com/shellbox-sh/ShellPen"
 - title: '🐚 More Shell Utilities'
   url: "https://shellbox.sh"
+
 sidebar:
 - title: ""
   url: "/"
@@ -221,28 +222,78 @@ command_reference:
     url: '/docs/writeln'
   - title: '<code>write</code>'
     url: '/docs/write'
+
 - title: "🖋️ Extending Syntax"
   url: "/docs"
   children:
   - title: '<code>extend</code>'
-    url: '/docs/extend'
+    url: '/extensions/extend'
   - title: '<code>$PEN</code>'
-    url: '/docs/PEN'
+    url: '/extensions/PEN'
   - title: '<code>--push</code>'
-    url: '/docs/--push'
+    url: '/extensions/--push'
   - title: '<code>--pop</code>'
-    url: '/docs/--pop'
+    url: '/extensions/--pop'
   - title: '<code>--get-indent</code>'
-    url: '/docs/--get-indent'
+    url: '/extensions/--get-indent'
   - title: '<code>--get-stack</code>'
-    url: '/docs/--get-stack'
+    url: '/extensions/--get-stack'
   - title: '<code>--get-last-pushed</code>'
-    url: '/docs/--get-last-pushed'
+    url: '/extensions/--get-last-pushed'
   - title: '<code>--eval-last-pushed</code>'
-    url: '/docs/--eval-last-pushed'
+    url: '/extensions/--eval-last-pushed'
   - title: '<code>--eval-full-stack</code>'
-    url: '/docs/--eval-full-stack'
+    url: '/extensions/--eval-full-stack'
   - title: '<code>--mark-last-not-empty</code>'
-    url: '/docs/--mark-last-not-empty'
+    url: '/extensions/--mark-last-not-empty'
   - title: '<code>--write-null-if-last-empty</code>'
-    url: '/docs/--write-null-if-last-empty'
+    url: '/extensions/--write-null-if-last-empty'
+
+extensions_reference:
+- title: "🖋️ Extending Syntax"
+  url: "/extensions"
+  children:
+  - title: 'Create an extension'
+    url: '#link'
+  - title: 'Write custom syntax'
+    url: '#link'
+  - title: 'Indentation with blocks'
+    url: '#link'
+  - title: 'Cleanup on block close'
+    url: '#link'
+  - title: 'Supporting empty blocks'
+    url: '#link'
+- title: "🖋️ Examples"
+  url: "/extensions"
+  children:
+  - title: 'Hello, Extension!'
+    url: '#link'
+  - title: 'Printing Pretty Errors'
+    url: '#link'
+  - title: 'Branch on BASH version'
+    url: '#link'
+- title: "🖋️ API Reference"
+  url: "/extensions"
+  children:
+  - title: '<code>extend</code>'
+    url: '/extensions/extend'
+  - title: '<code>$PEN</code>'
+    url: '/extensions/PEN'
+  - title: '<code>--push</code>'
+    url: '/extensions/--push'
+  - title: '<code>--pop</code>'
+    url: '/extensions/--pop'
+  - title: '<code>--get-indent</code>'
+    url: '/extensions/--get-indent'
+  - title: '<code>--get-stack</code>'
+    url: '/extensions/--get-stack'
+  - title: '<code>--get-last-pushed</code>'
+    url: '/extensions/--get-last-pushed'
+  - title: '<code>--eval-last-pushed</code>'
+    url: '/extensions/--eval-last-pushed'
+  - title: '<code>--eval-full-stack</code>'
+    url: '/extensions/--eval-full-stack'
+  - title: '<code>--mark-last-not-empty</code>'
+    url: '/extensions/--mark-last-not-empty'
+  - title: '<code>--write-null-if-last-empty</code>'
+    url: '/extensions/--write-null-if-last-empty'

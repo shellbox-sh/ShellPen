@@ -56,7 +56,6 @@ echo "$x"'
   - hello
 
   run - foo blowUp boom
-  echo "DID IT BLOW UP? RETURN CODE [$EXITCODE]"
 
   expect { - foo blowUp boom } toFail "KABOOM from extension with blowUp boom args"
 
@@ -65,14 +64,79 @@ echo "$x"'
 # Hello, world!'
 }
 
-@pending.can_push_and_pop_onto_and_off_of_stack() {
-  :
+extensionUsingTheStack() {
+  case "$1" in
+    openBlock)
+      shift
+      $PEN comment Opened Block $*
+      $PEN --push "closeBlock"
+      return 0
+      ;;
+    closeBlock)
+      $PEN --write-null-if-last-empty
+      $PEN --pop
+      $PEN comment Closed Block
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
 }
 
-@pending.can_read_stack() {
+@spec.can_push_and_pop_onto_and_off_of_stack() {
+  shellpen extend extensionUsingTheStack
+
+  - openBlock foo
+  
+  expect { - code } toEqual '# Opened Block foo
   :
+# Closed Block'
+
+  - cleanSlate
+  - openBlock foo
+    - echo "Hello"
+  
+  expect { - code } toEqual '# Opened Block foo
+  echo "Hello"
+# Closed Block'
+
+  - cleanSlate
+  - openBlock foo
+    - echo "Hello"
+    - echo "World"
+  - closeBlock
+  
+  expect { - code } toEqual '# Opened Block foo
+  echo "Hello"
+  echo "World"
+# Closed Block'
 }
 
-@pending.can_use_write_null_if_not_empty() {
-  :
+brokenExtensionUsingTheStack() {
+  case "$1" in
+    openBlock)
+      shift
+      $PEN comment Opened Block $*
+      $PEN --push "closeBlock"
+      return 0
+      ;;
+    closeBlock)
+      $PEN --write-null-if-last-empty
+      # $PEN --pop # <--- example where this was forgotten, will result in an error.
+      $PEN comment Closed Block
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+@spec.provides_an_error_if_your_pushed_command_does_not_pop() {
+  shellpen extend brokenExtensionUsingTheStack
+
+  - openBlock foo
+  
+  expect { - code } toFail "shellpen [Extension Error] Expected 'closeBlock' to --pop stack"
 }

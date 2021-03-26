@@ -1,9 +1,9 @@
 ---
 title: '--mark-last-not-empty'
-permalink: /docs/--mark-last-not-empty
+permalink: /extensions/--mark-last-not-empty
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 

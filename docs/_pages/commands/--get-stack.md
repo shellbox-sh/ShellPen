@@ -1,9 +1,9 @@
 ---
 title: '--get-stack'
-permalink: /docs/--get-stack
+permalink: /extensions/--get-stack
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 

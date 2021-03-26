@@ -1,9 +1,9 @@
 ---
 title: '--push'
-permalink: /docs/--push
+permalink: /extensions/--push
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 

@@ -1,9 +1,9 @@
 ---
 title: '--write-null-if-last-empty'
-permalink: /docs/--write-null-if-last-empty
+permalink: /extensions/--write-null-if-last-empty
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 

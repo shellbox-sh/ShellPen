@@ -58,8 +58,8 @@ shellpen() {
             local extensionReturnCode=''
             for extensionFunction in "${__SHELLPEN_EXTENSIONS[@]}"
             do
-              $extensionFunction "$@"
-              PEN="$SHELLPEN_PEN" extensionReturnCode=$?
+              PEN="$SHELLPEN_PEN" $extensionFunction "$@"
+              extensionReturnCode=$?
               if [ $extensionReturnCode -eq 0 ]
               then
                 return 0
@@ -204,7 +204,7 @@ shellpen() {
                 ## $ DSL code
                 ## > Output the code for the current pen (_does not modify source_)
                 
-                shellpen --shellpen-private writeDSL --eval-full-stack
+                shellpen --shellpen-private writeDSL --eval-full-stack || return $?
                 printf '%s' "${__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -249,11 +249,23 @@ shellpen() {
                 
                 while [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
                 do
-                  local currentDepth="$SHELLPEN_CONTEXT_DEPTH"
+                  local depthBeforeEval="$SHELLPEN_CONTEXT_DEPTH"
                   local lastCommand="$( shellpen --shellpen-private writeDSL --get-last-pushed )"
+                
                   shellpen --shellpen-private writeDSL --eval-last-pushed
-                  local updatedDepth="$SHELLPEN_CONTEXT_DEPTH"
-                  [ $currentDepth -eq $updatedDepth ] && { echo "shellpen --shellpen-private writeDSL --eval-full-stack: Internal DSL Error. Expected '$lastCommand' to pop context stack." >&2; return 1; }
+                
+                  # Recalculate the context depth and right index from the context
+                  if [ -z "$BASH_PRE_43" ]
+                  then
+                    SHELLPEN_CONTEXT_DEPTH="${#SHELLPEN_SOURCE_CONTEXT[@]}"
+                  else
+                    eval "SHELLPEN_CONTEXT_DEPTH=\"\${#__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[@]}\""
+                  fi
+                  SHELLPEN_CONTEXT_RIGHT_INDEX="$(( SHELLPEN_CONTEXT_DEPTH - 1 ))"
+                
+                  local depthAfterEval="$SHELLPEN_CONTEXT_DEPTH"
+                
+                  [ $depthBeforeEval -eq $depthAfterEval ] && { echo "shellpen [Extension Error] Expected '$lastCommand' to --pop stack" >&2; return 1; }
                 done
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -423,9 +435,9 @@ shellpen() {
                 
                 if [ -z "$BASH_PRE_43" ]
                 then
-                  shellpen --shellpen-private writeDSL ${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}
+                  shellpen --shellpen-private writeSingleCommand ${SHELLPEN_SOURCE_CONTEXT[$SHELLPEN_CONTEXT_RIGHT_INDEX]}
                 else
-                  eval "shellpen --shellpen-private writeDSL \${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
+                  eval "shellpen --shellpen-private writeShellCommand \${__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[\$SHELLPEN_CONTEXT_RIGHT_INDEX]}"
                 fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -571,7 +583,7 @@ shellpen() {
                 ## > Append a `#` command line
                 
                 # Do not use writeln because comments should not mark blocks as not empty
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --getIndent)# $*${NEWLINE}"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --get-indent)# $*${NEWLINE}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -726,7 +738,7 @@ shellpen() {
                 ## $ DSL writeln
                 ## > Append a line of text to source output including indentation
                 
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --getIndent)$*${NEWLINE}"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --get-indent)$*${NEWLINE}"
                 shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
@@ -766,7 +778,7 @@ shellpen() {
                 ## $ DSL write
                 ## > Append a string of text to source output including indentation
                 
-                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --getIndent)$*"
+                __SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(shellpen --shellpen-private writeDSL --get-indent)$*"
                 shellpen --shellpen-private writeDSL --mark-last-not-empty
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")

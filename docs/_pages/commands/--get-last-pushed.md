@@ -1,9 +1,9 @@
 ---
 title: '--get-last-pushed'
-permalink: /docs/--get-last-pushed
+permalink: /extensions/--get-last-pushed
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 

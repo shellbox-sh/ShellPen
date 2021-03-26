@@ -1,9 +1,9 @@
 ---
 title: '--get-indent'
-permalink: /docs/--get-indent
+permalink: /extensions/--get-indent
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 

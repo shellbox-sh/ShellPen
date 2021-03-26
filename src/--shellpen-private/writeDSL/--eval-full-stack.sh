@@ -3,9 +3,21 @@
 
 while [ "$SHELLPEN_CONTEXT_RIGHT_INDEX" -ge 0 ]
 do
-  local currentDepth="$SHELLPEN_CONTEXT_DEPTH"
+  local depthBeforeEval="$SHELLPEN_CONTEXT_DEPTH"
   local lastCommand="$( !fn --shellpen-private writeDSL --get-last-pushed )"
+
   !fn --shellpen-private writeDSL --eval-last-pushed
-  local updatedDepth="$SHELLPEN_CONTEXT_DEPTH"
-  [ $currentDepth -eq $updatedDepth ] && { echo "!command: Internal DSL Error. Expected '$lastCommand' to pop context stack." >&2; return 1; }
+
+  # Recalculate the context depth and right index from the context
+  if [ -z "$BASH_PRE_43" ]
+  then
+    SHELLPEN_CONTEXT_DEPTH="${#SHELLPEN_SOURCE_CONTEXT[@]}"
+  else
+    eval "SHELLPEN_CONTEXT_DEPTH=\"\${#__SHELLPEN_CONTEXT_$SHELLPEN_SOURCE_ID[@]}\""
+  fi
+  SHELLPEN_CONTEXT_RIGHT_INDEX="$(( SHELLPEN_CONTEXT_DEPTH - 1 ))"
+
+  local depthAfterEval="$SHELLPEN_CONTEXT_DEPTH"
+
+  [ $depthBeforeEval -eq $depthAfterEval ] && { echo "!fn [Extension Error] Expected '$lastCommand' to --pop stack" >&2; return 1; }
 done

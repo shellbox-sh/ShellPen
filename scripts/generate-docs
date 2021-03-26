@@ -75,6 +75,8 @@ do
   [ "$pageName" = '::' ] && pageName='colon-colon'
   context goto path "@commands/DSL/$commandName"
   echo "Generating $commandName.md"
+  pageLink="/docs/$pageName"
+  sidebar=command_reference
   shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
 done
 
@@ -86,6 +88,8 @@ do
   [ "$pageName" = '$PEN' ] && pageName='PEN'
   context goto path "@commands/EXTENSIONS/$commandName"
   echo "Generating $commandName.md"
+  pageLink="/extensions/$pageName"
+  sidebar=extensions_reference
   shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
 done
 

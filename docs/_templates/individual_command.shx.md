@@ -1,9 +1,9 @@
 ---
 title: '<%= $commandName %>'
-permalink: /docs/<%= $pageName %>
+permalink: <%= $pageLink %>
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: '<%= $sidebar %>'
 ---
 
 <% if context has sourceCode.sh; then %>

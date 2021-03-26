@@ -1,9 +1,9 @@
 ---
 title: '--pop'
-permalink: /docs/--pop
+permalink: /extensions/--pop
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 

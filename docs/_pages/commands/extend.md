@@ -1,9 +1,9 @@
 ---
 title: 'extend'
-permalink: /docs/extend
+permalink: /extensions/extend
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 

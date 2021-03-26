@@ -13,7 +13,7 @@ sidebar:
 
 {% highlight sh %}
 
-__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(!fn --shellpen-private writeDSL --getIndent)$*${NEWLINE}"
+__SHELLPEN_SOURCES_TEXTS[$SHELLPEN_PEN_INDEX]+="$(!fn --shellpen-private writeDSL --get-indent)$*${NEWLINE}"
 !fn --shellpen-private writeDSL --mark-last-not-empty
 {% endhighlight %}
 

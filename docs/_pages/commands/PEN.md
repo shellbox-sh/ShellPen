@@ -1,9 +1,9 @@
 ---
 title: '$PEN'
-permalink: /docs/PEN
+permalink: /extensions/PEN
 layout: single
 sidebar:
-  nav: 'command_reference'
+  nav: 'extensions_reference'
 ---
 
 
