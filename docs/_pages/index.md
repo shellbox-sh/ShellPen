@@ -356,8 +356,94 @@ echo "Hello, world" "foo" "bar"
 ```
 
 ## `printf`
+
+- `printf` specifically supports providing a `'` single quoted formatter string
+
+```sh
+- printf "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+printf "Hello"
+```
+
+##### With Formatter
+
+```sh
+- printf '%s' "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+printf '%s' "Hello"
+```
+
+##### With Flags
+
+```sh
+- printf -v varname '%s' -- "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+printf -v "varname" '%s' -- "Hello"
+```
+
 ## `toStderr`
+
+- Any command can have output sent to STDERR by prepending the command with `toStderr`
+
+```sh
+- toStderr echo "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+echo "Hello" >&2
+```
+
+##### Arbitrary Command
+
+```sh
+- toStderr $ myCommand arg1 arg2
+```
+
+<!-- OUTPUT -->
+
+```sh
+myCommand arg1 arg2 >&2
+```
+
 ## `toFile`
+
+- Any command can have output sent to a file by prepending the command with `toFile [path]`
+
+```sh
+- toFile log.log echo "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+echo "Hello" > "log.log"
+```
+
+##### Arbitrary Command
+
+```sh
+- toFile log.log $ myCommand arg1 arg2
+```
+
+<!-- OUTPUT -->
+
+```sh
+myCommand arg1 arg2 > "log.log"
+```
 
 # Conditionals
 
