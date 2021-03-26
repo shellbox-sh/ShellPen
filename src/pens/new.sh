@@ -9,7 +9,13 @@ do
   [ "$existingPenName" = "$penName" ] && { echo "!command: pen already exists '$penName'" >&2; return 1; }
 done
 
-local sourceId="$( cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
+if [ -n "$SHELLPEN_RANDOM_SOURCE" ] # This is specifically to support GitHub Actions which blocks on urandom
+then
+  local sourceId="$( cat $SHELLPEN_RANDOM_SOURCE | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
+else
+  local sourceId="$( cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
+fi
+
 local sourceIndex="${#__SHELLPEN_SOURCES[@]}"
 
 local penFunctionSource="

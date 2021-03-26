@@ -1025,12 +1025,7 @@ shellpen() {
                 ## $ DSL {{
                 ## > Write a `((` arithmetic statement (_replaces `}}` with `))`_)
                 
-                # if [ -z "$BASH_PRE_43" ]
-                # then
-                  shellpen --shellpen-private writeDSL writeln "(( ${*/\}\}/))}"
-                # else
-                #   shellpen --shellpen-private writeDSL writeln "(( ${*/\}\}/))}"
-                # fi
+                shellpen --shellpen-private writeDSL writeln "(( ${*/\}\}/))}"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -1150,7 +1145,13 @@ shellpen() {
               [ "$existingPenName" = "$penName" ] && { echo "shellpen pens new: pen already exists '$penName'" >&2; return 1; }
             done
             
-            local sourceId="$( cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
+            if [ -n "$SHELLPEN_RANDOM_SOURCE" ] # This is specifically to support GitHub Actions which blocks on urandom
+            then
+              local sourceId="$( cat $SHELLPEN_RANDOM_SOURCE | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
+            else
+              local sourceId="$( cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 )"
+            fi
+            
             local sourceIndex="${#__SHELLPEN_SOURCES[@]}"
             
             local penFunctionSource="

@@ -18,3 +18,4 @@ jobs:
         shell: bash
         env:
           VERBOSE: true
+          SHELLPEN_RANDOM_SOURCE: /dev/random
