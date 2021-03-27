@@ -150,6 +150,10 @@ The most basic pen function is `writeln` which appends one line of source code.
 # => "Hello this is some code text\nMore code goes here"
 ```
 
+Similar commands:
+
+| Command | Description |
+|-|-----------------------------------------------------------------------------------------------|
 | [`write`](https://shellpen.sh/docs/write) | [Appends text _without newlines_ but _with indentation_](https://shellpen.sh/docs/write) |
 | [`writeln`](https://shellpen.sh/docs/writeln) | [Appends a line of text _with indentation_](https://shellpen.sh/docs/writeln)  |
 | [`append`](https://shellpen.sh/docs/append) | [Appends text _without newlines or indentation_](https://shellpen.sh/docs/append)  |
