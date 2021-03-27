@@ -5,7 +5,7 @@ shellpen -
 commandGroup1() {
   - while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
     - echo '$line'
-  - fromStdin some/file.txt done
+  - fromText '$text' done
   - code
 }
 
@@ -14,7 +14,7 @@ commandGroup1() {
 while IFS="" read -r line || [ -n "$line" ]
 do
   echo "$line"
-done < some/file.txt
+done <<< "$text"
 
 EXPECTED
   expect { commandGroup1 } toContain "$expected"

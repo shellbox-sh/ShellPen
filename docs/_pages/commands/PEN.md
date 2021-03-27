@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Extending Syntax'
+title: '$PEN • 🖋️ Extending Syntax'
 permalink: /extensions/PEN
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'extensions_reference'
 ---
+
+# 🖋️ Extending Syntax
 
 ---
 

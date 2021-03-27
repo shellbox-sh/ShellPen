@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Extending Syntax'
+title: '--mark-last-not-empty • 🖋️ Extending Syntax'
 permalink: /extensions/--mark-last-not-empty
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'extensions_reference'
 ---
+
+# 🖋️ Extending Syntax
 
 ---
 

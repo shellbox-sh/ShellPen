@@ -137,6 +137,12 @@ shellpen -
 # => -: command not found
 ```
 
+## `shellpen extend`
+
+This page describes the basic features of ShellPen.
+
+To extend the syntax, view the [⚙️ Extending Syntax Reference](/extensions).
+
 # Writing Basics
 
 The most basic pen function is `writeln` which appends one line of source code.
@@ -624,7 +630,7 @@ echo "$1" | sed 's/foo/bar/' | head -1 | xargs -n1 echo
 - Any command can accept input from STDIN by prepending the command with `fromStdin [source of stdin]`
 
 ```sh
-- while 'IFS=""' read -r line OR [ -n '"$line"' ]
+- while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
   - echo '$line'
 - fromStdin some/file.txt done
 ```
@@ -683,10 +689,21 @@ do
 done < <(printf '%s' "$text")
 ```
 
-# Extending the Syntax
+## `fromText`
 
-## `shellpen extend`
-## `return 0 or return 1`
-## `return 2`
-## `\| AND OR`
+- Any command can accept input from a string with `fromText "string"`
 
+```sh
+- while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
+  - echo '$line'
+- fromText '$text' done
+```
+
+<!-- OUTPUT -->
+
+```sh
+while IFS="" read -r line || [ -n "$line" ]
+do
+  echo "$line"
+done <<< "$text"
+```

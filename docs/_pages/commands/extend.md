@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Extending Syntax'
+title: 'extend • 🖋️ Extending Syntax'
 permalink: /extensions/extend
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'extensions_reference'
 ---
+
+# 🖋️ Extending Syntax
 
 ---
 

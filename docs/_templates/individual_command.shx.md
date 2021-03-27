@@ -1,10 +1,12 @@
 ---
-title: '<%= $title %>'
+title: '<%= $commandName %> • <%= $title %>'
 permalink: <%= $pageLink %>
-layout: single
+layout: '<%= $layout %>'
 sidebar:
   nav: '<%= $sidebar %>'
 ---
+
+# <%= $title %>
 
 ---
 

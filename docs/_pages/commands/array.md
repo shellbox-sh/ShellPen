@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Command Reference'
+title: 'array • 🖋️ Command Reference'
 permalink: /docs/array
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'command_reference'
 ---
+
+# 🖋️ Command Reference
 
 ---
 

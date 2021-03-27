@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Command Reference'
+title: 'shift • 🖋️ Command Reference'
 permalink: /docs/shift
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'command_reference'
 ---
+
+# 🖋️ Command Reference
 
 ---
 
