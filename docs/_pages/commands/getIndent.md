@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Command Reference'
+title: 'getIndent • 🖋️ Command Reference'
 permalink: /docs/getIndent
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'command_reference'
 ---
+
+# 🖋️ Command Reference
 
 ---
 

@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Command Reference'
+title: '. • 🖋️ Command Reference'
 permalink: /docs/dot
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'command_reference'
 ---
+
+# 🖋️ Command Reference
 
 ---
 

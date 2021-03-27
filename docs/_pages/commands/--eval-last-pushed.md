@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Extending Syntax'
+title: '--eval-last-pushed • 🖋️ Extending Syntax'
 permalink: /extensions/--eval-last-pushed
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'extensions_reference'
 ---
+
+# 🖋️ Extending Syntax
 
 ---
 

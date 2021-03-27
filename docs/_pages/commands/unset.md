@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Command Reference'
+title: 'unset • 🖋️ Command Reference'
 permalink: /docs/unset
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'command_reference'
 ---
+
+# 🖋️ Command Reference
 
 ---
 

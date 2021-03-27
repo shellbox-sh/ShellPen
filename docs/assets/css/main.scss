@@ -6,7 +6,7 @@
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import 'minimal-mistakes'; // main partials
 
-html div#main article.page section.page__content table a {
+html div#main article.page section.page__content a {
   text-decoration: none;
 }
 
@@ -78,6 +78,26 @@ html {
   }
 
   div#main article.page section.page__content h1 {
+    font-size: 16px; // change to whatever
+
+    @include breakpoint($small) {
+      font-size: 18px; // change to whatever
+    }
+
+    @include breakpoint($medium) {
+      font-size: 22px; // change to whatever
+    }
+
+    @include breakpoint($large) {
+      font-size: 24px; // change to whatever
+    }
+
+    @include breakpoint($x-large) {
+      font-size: 30px; // change to whatever
+    }
+  }
+
+  div#main article.page section.page__content h2 {
     font-size: 14px; // change to whatever
 
     @include breakpoint($small) {
@@ -93,27 +113,7 @@ html {
     }
 
     @include breakpoint($x-large) {
-      font-size: 22px; // change to whatever
-    }
-  }
-
-  div#main article.page section.page__content h2 {
-    font-size: 10px; // change to whatever
-
-    @include breakpoint($small) {
-      font-size: 10px; // change to whatever
-    }
-
-    @include breakpoint($medium) {
-      font-size: 14px; // change to whatever
-    }
-
-    @include breakpoint($large) {
-      font-size: 16px; // change to whatever
-    }
-
-    @include breakpoint($x-large) {
-      font-size: 18px; // change to whatever
+      font-size: 24px; // change to whatever
     }
   }
 

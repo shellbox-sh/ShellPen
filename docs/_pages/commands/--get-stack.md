@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Extending Syntax'
+title: '--get-stack • 🖋️ Extending Syntax'
 permalink: /extensions/--get-stack
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'extensions_reference'
 ---
+
+# 🖋️ Extending Syntax
 
 ---
 

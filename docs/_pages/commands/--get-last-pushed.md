@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Extending Syntax'
+title: '--get-last-pushed • 🖋️ Extending Syntax'
 permalink: /extensions/--get-last-pushed
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'extensions_reference'
 ---
+
+# 🖋️ Extending Syntax
 
 ---
 

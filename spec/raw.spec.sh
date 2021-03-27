@@ -12,5 +12,5 @@ shellpen -
 
 @spec.echo_with_all_the_things() {
   - raw echo , AND OR \| , cool
-  expect { - code } toEqual 'echo ", AND OR | , cool"'
+  expect { - code } toEqual 'echo "," "AND" "OR" "|" "," "cool"'
 }

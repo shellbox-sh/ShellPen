@@ -33,6 +33,8 @@ sidebar:
     url: "#pen-cleanslate"
   - title: '<code>$pen putAway</code>'
     url: "#pen-putaway"
+  - title: '<code>shellpen extend</code>'
+    url: "#shellpen-extend"
 
 - title: "Writing Basics"
   url: "#writing-basics"
@@ -43,8 +45,8 @@ sidebar:
     url: "#-command"
   - title: '<code>shebang</code>'
     url: "#shebang"
-  - title: '<code>fn</code>'
-    url: "#fn"
+  - title: '<code>function</code>'
+    url: "#function"
   - title: '<code>main</code>'
     url: "#main"
 
@@ -108,18 +110,8 @@ sidebar:
     url: "#fromfile"
   - title: '<code>fromCommand</code>'
     url: "#fromcommand"
-
-- title: "Extending the Syntax"
-  url: "#extending-the-syntax"
-  children:
-  - title: '<code>shellpen extend</code>'
-    url: "#shellpen-extend"
-  - title: '<code>return 0</code> or <code>return 1</code>'
-    url: "#return-0-or-return-1m"
-  - title: '<code>return 2</code>'
-    url: "#return-2"
-  - title: '<code>\|</code> <code>AND</code> <code>OR</code>'
-    url: "#-and-or"
+  - title: '<code>fromText</code>'
+    url: "#fromtext"
 
 command_reference:
 - title: "🔙 to ShellPen"
@@ -274,31 +266,19 @@ extensions_reference:
 - title: "🔙 to ShellPen"
   url: "/"
   children:
-  - title: "🖋️ Extending Syntax"
-    url: "/extensions"
   - title: 'Create an extension'
-    url: '#link'
-  - title: 'Write custom syntax'
-    url: '#link'
+    url: '/extensions/#create-an-extension'
   - title: 'Indentation with blocks'
-    url: '#link'
-  - title: 'Cleanup on block close'
-    url: '#link'
-  - title: 'Supporting empty blocks'
-    url: '#link'
+    url: '/extensions/#indentation-with-blocks'
 - title: "🖋️ Examples"
-  url: "/extensions"
+  url: "/extensions/hello"
   children:
   - title: 'Hello, Extension!'
-    url: '#link'
-  - title: 'Printing Pretty Errors'
-    url: '#link'
-  - title: 'Branch on BASH version'
-    url: '#link'
+    url: '/extensions/hello'
 - title: "🖋️ API Reference"
   url: "/extensions"
   children:
-  - title: '<code>extend</code>'
+  - title: '<code>shellpen extend</code>'
     url: '/extensions/extend'
   - title: '<code>$PEN</code>'
     url: '/extensions/PEN'

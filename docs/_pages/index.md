@@ -137,6 +137,12 @@ shellpen -
 # => -: command not found
 ```
 
+## `shellpen extend`
+
+This page describes the basic features of ShellPen.
+
+To extend the syntax, view the [⚙️ Extending Syntax Reference](/extensions).
+
 # Writing Basics
 
 The most basic pen function is `writeln` which appends one line of source code.
@@ -198,55 +204,506 @@ If you would like to add a "shebang" or "hashbang" to your source:
 
 - You can also provide your own path, e.g. `- shebang /usr/bin/env bash`
 
-## `fn`
+## `function`
 
+Use `function` to start the definition of a function and `}` to finish:
 
+```sh
+- function hello
+  - echo Hello
+- }
+```
+
+<!-- OUTPUT -->
+```sh
+hello() {
+  echo "Hello"
+}
+```
+
+ℹ️ Levels of indentation are automatically added in functions et al.
 
 ## `main`
 
+Use `main` to add conventional code to run a function when the script is run:
 
+```sh
+- function hello
+  - :
+- }
+
+- main hello
+```
+
+<!-- OUTPUT -->
+```sh
+hello() {
+  :
+}
+[ "${BASH_SOURCE[0]}" = "$0" ] && "hello" "$@"
+```
 
 # Variables
 
-## `var`
-## `local`
-## `int`
-## `array`
-## `map`
+Helper functions are provided for declaring different types of BASH variables:
+
+## [`var`](/docs/var)
+
+- `var` Defines a generic BASH variable
+
+```sh
+- var x = 10
+```
+
+<!-- OUTPUT -->
+
+```sh
+x=10
+```
+
+## [`local`](/docs/local)
+
+- `local` Defines a `local` variable for use in a BASH function
+
+```sh
+- fn hello
+  - local x = 10
+```
+
+<!-- OUTPUT -->
+
+```sh
+hello() {
+  local x=10
+}
+```
+## [`int`](/docs/int)
+
+- `int` declares a BASH integer value variable
+
+```sh
+- int x = 10
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -i x=10
+```
+
+## [`array`](/docs/array)
+
+- `array` declares a single-dimensional BASH array
+
+```sh
+- array x
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -a x
+```
+
+##### With Items
+
+```sh
+- array x Hello World '$@'
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -a x=("Hello" "World" "$@")
+```
+
+## [`map`](/docs/map)
+
+- "Map" is shorthand for defining an associative-array:
+
+```sh
+- map x
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -A x
+```
+
+##### With Items
+
+```sh
+- map x [Hello]=World [Foo]="Foo Bar"
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -A x=([Hello]="World" [Foo]="Foo Bar")
+```
 
 # Output
 
+ShellPen provides helpers for generating `echo` and `printf` commands.
+
 ## `echo`
+
+- Any commands provided to `echo` will be wrapped in `"` quotes
+
+```sh
+- echo "Hello, world" foo bar
+```
+
+<!-- OUTPUT -->
+
+```sh
+echo "Hello, world" "foo" "bar"
+```
+
 ## `printf`
+
+- `printf` specifically supports providing a `'` single quoted formatter string
+
+```sh
+- printf "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+printf "Hello"
+```
+
+##### With Formatter
+
+```sh
+- printf '%s' "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+printf '%s' "Hello"
+```
+
+##### With Flags
+
+```sh
+- printf -v varname '%s' -- "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+printf -v "varname" '%s' -- "Hello"
+```
+
 ## `toStderr`
+
+- Any command can have output sent to STDERR by prepending the command with `toStderr`
+
+```sh
+- toStderr echo "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+echo "Hello" >&2
+```
+
+##### Arbitrary Command
+
+```sh
+- toStderr $ myCommand arg1 arg2
+```
+
+<!-- OUTPUT -->
+
+```sh
+myCommand arg1 arg2 >&2
+```
+
 ## `toFile`
+
+- Any command can have output sent to a file by prepending the command with `toFile [path]`
+
+```sh
+- toFile log.log echo "Hello"
+```
+
+<!-- OUTPUT -->
+
+```sh
+echo "Hello" > "log.log"
+```
+
+##### Arbitrary Command
+
+```sh
+- toFile log.log $ myCommand arg1 arg2
+```
+
+<!-- OUTPUT -->
+
+```sh
+myCommand arg1 arg2 > "log.log"
+```
 
 # Conditionals
 
 ## `if / fi`
+
+- `if` conditionals are supported (`then` _is an optional keyword_)
+
+```sh
+- if [ '$#' -eq 0 ]
+  - comment Hello
+- elif [ '$#' -eq 1 ]
+- else
+  - echo "Hello, world"
+- fi
+```
+
+<!-- OUTPUT -->
+
+```sh
+if [ $# -eq 0 ]
+then
+  # Hello
+  :
+elif [ $# -eq 1 ]
+then
+  :
+else
+  echo "Hello, world"
+fi
+```
+
+ℹ️ Empty blocks (_or those with only comments_) automatically have a `:` added
+
 ## `case / option / esac`
+
+- `case` / `esac` conditionals are supported
+  - `option` is used for options
+  - `::` is used in place of `;;` for closing each option
+
+```sh
+- case '$1' in
+  - option "foo"
+    - echo "Hello from foo"
+    - ::
+  - option "bar"
+    - ::
+  - option '*'
+    - echo "Other option!"
+    - ::
+- esac
+```
+
+<!-- OUTPUT -->
+
+```sh
+case "$1" in
+  foo)
+    echo "Hello from foo"
+    ;;
+  bar)
+    :
+    ;;
+  *)
+    echo "Other option!"
+    ;;
+esac
+```
+
 ## `[ ... ] AND / OR`
+
+- One-liner conditionals are supported with the use of `AND` and/or `OR`
+
+```sh
+- [ '$#' -eq 0 ] AND toStderr echo "At least one argument is required"
+```
+
+<!-- OUTPUT -->
+
+```sh
+[ $# -eq 0 ] && echo "At least one argument is required" >&2
+```
+
+##### `{` ... `;` ... `}`
+
+- One liner statements with `{ ... }` are supported using `,` in place of `;`
+
+
+```sh
+- [ '$#' -eq 0 ] AND { toStderr echo "Argument is required" , return 1 , }
+```
+
+<!-- OUTPUT -->
+
+```sh
+[ $# -eq 0 ] && { echo "Argument is required" >&2; return 1; }
+```
 
 # Loops
 
 ## `for`
+
+- `for` loops are supported (`do` _is an optional keyword_)
+
+```sh
+- for arg in '"$@"'
+  - echo Argument: '$@'
+- done
+```
+
+<!-- OUTPUT -->
+
+```sh
+for arg in "$@"
+do
+  echo "Argument:" "$@"
+done
+```
+
 ## `while`
+
+- `while` loops are supported (`do` _is an optional keyword_)
+
+```sh
+- while [ '$#' -gt 0 ]
+  - echo Argument: '$1'
+  - shift
+- done
+```
+
+<!-- OUTPUT -->
+
+```sh
+while [ $# -gt 0 ]
+do
+  echo "Argument:" "$1"
+  shift
+done
+```
 
 # Arithmetic
 
 ## `{{ '{{' }} ... }}`
 
+- `(( ... ))` arithmetic is supported using `{{ '{{' }} ... }}` in place of parenthesis
+
+```sh
+- int i=42
+- {{ '{{' }} i++ }}
+```
+
+<!-- OUTPUT -->
+
+```sh
+declare -i i=42
+(( i++ ))
+```
+
 # Pipes | STDIN
 
+It's common to need to use `|` pipes in generated BASH source code.
+
 ## `\|`
+
+- Pipes are supported by providing an escaped `\|` in place of a `|` pipe character
+
+```sh
+- echo '$1' \| $ sed "'s/foo/bar/'" \| $ head -1 \| $ xargs -n1 echo
+```
+
+<!-- OUTPUT -->
+
+```sh
+echo "$1" | sed 's/foo/bar/' | head -1 | xargs -n1 echo
+```
+
 ## `fromStdin`
+
+- Any command can accept input from STDIN by prepending the command with `fromStdin [source of stdin]`
+
+```sh
+- while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
+  - echo '$line'
+- fromStdin some/file.txt done
+```
+
+<!-- OUTPUT -->
+
+```sh
+while IFS="" read -r line || [ -n "$line" ]
+do
+  echo "$line"
+done < some/file.txt
+```
+
+ℹ️ The previous example uses an escaped OR (`\|\|`) instead of `OR`
+
+ - Because `OR` adds an `||` after the previous command's output, this would result
+   in the `||` being added after the while's `do` is automatically added.
+
 ## `fromFile`
+
+- Any command can accept STDIN from a file path by prepending the command with `fromFile [file path]`
+  - _This is the same as `fromStdin` but wraps provided arguments in_ `"`
+
+```sh
+- while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
+  - echo '$line'
+- fromFile some/file.txt done
+```
+
+<!-- OUTPUT -->
+
+```sh
+while IFS="" read -r line || [ -n "$line" ]
+do
+  echo "$line"
+done < "some/file.txt"
+```
 ## `fromCommand`
 
-# Extending the Syntax
+- Any command can accept input from a command by prepending the command with `fromCommand "[command with args]"`
 
-## `shellpen extend`
-## `return 0 or return 1`
-## `return 2`
-## `\| AND OR`
+```sh
+- var text = '"$(<"$filePath")"'
+- while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
+  - echo '$line'
+- fromCommand "printf '%s' \"\$text\"" done
+```
 
+<!-- OUTPUT -->
+
+```sh
+text="$(<"$filePath")"
+while IFS="" read -r line || [ -n "$line" ]
+do
+  echo "$line"
+done < <(printf '%s' "$text")
+```
+
+## `fromText`
+
+- Any command can accept input from a string with `fromText "string"`
+
+```sh
+- while 'IFS=""' read -r line \|\| [ -n '"$line"' ]
+  - echo '$line'
+- fromText '$text' done
+```
+
+<!-- OUTPUT -->
+
+```sh
+while IFS="" read -r line || [ -n "$line" ]
+do
+  echo "$line"
+done <<< "$text"
+```

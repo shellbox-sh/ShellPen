@@ -493,12 +493,22 @@ shellpen() {
                 ## $ DSL echo
                 ## > `echo` the provided arguments (_wrapped in `"..."`_)
                 
-                if [ $# -eq 0 ]
-                then
-                  shellpen --shellpen-private writeDSL writeln "echo"
-                else
-                  shellpen --shellpen-private writeDSL writeln "echo \"$*\""
-                fi
+                shellpen --shellpen-private writeDSL write "echo"
+                
+                [ $# -gt 0 ] && shellpen --shellpen-private writeDSL append " "
+                
+                while [ $# -gt 0 ]
+                do
+                  if [ $# -eq 1 ]
+                  then
+                    shellpen --shellpen-private writeDSL append "\"$1\""
+                  else
+                    shellpen --shellpen-private writeDSL append "\"$1\" "
+                  fi
+                  shift
+                done
+                
+                shellpen --shellpen-private writeDSL appendln
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -554,7 +564,7 @@ shellpen() {
               "declare")
                 __shellpen__command+=("declare")
                 ## $ DSL declare
-                ## > Declare a variable (shortcuts available: [`int`](/docs/int), [`array`](/docs/array), [`map`](/docs/map))
+                ## > Declare a variable (shortcuts available: `int`, `array`, and `map`)
                 
                 shellpen --shellpen-private writeDSL writeln "declare $*"
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
@@ -741,7 +751,45 @@ shellpen() {
                 ## $ DSL map
                 ## > Define an associative array variable
                 
-                shellpen --shellpen-private writeDSL array -A "$@"
+                local typeArgument='-A '
+                local globalArgument=''
+                
+                [ "$1" = "-g" ] && { globalArgument='-g '; shift; }
+                
+                if [ $# -eq 1 ]
+                then
+                  if [[ "$1" =~ ^([^=]+)=([^=]+)$ ]]
+                  then
+                    shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+                  else
+                    shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1"
+                  fi
+                else
+                  shellpen --shellpen-private writeDSL append "declare ${globalArgument}${typeArgument}$1"
+                  shift
+                  if [ $# -gt 0 ]
+                  then
+                    shellpen --shellpen-private writeDSL append '=('
+                    while [ $# -gt 0 ]
+                    do
+                      if [[ "$1" =~ ^\[([^\]]+)\]=(.*)$ ]]
+                      then
+                        if [ $# -eq 1 ]
+                        then
+                          shellpen --shellpen-private writeDSL append "[${BASH_REMATCH[1]}]=\"${BASH_REMATCH[2]}\""
+                        else
+                          shellpen --shellpen-private writeDSL append "[${BASH_REMATCH[1]}]=\"${BASH_REMATCH[2]}\" "
+                        fi
+                      else
+                        echo "shellpen --shellpen-private writeDSL map: invalid map argument '$1', expected [key]=value" >&2
+                        return 2
+                      fi
+                      shift
+                    done
+                    shellpen --shellpen-private writeDSL append ')'
+                  fi
+                  shellpen --shellpen-private writeDSL writeln
+                fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")
                 ;;
@@ -819,12 +867,25 @@ shellpen() {
                   else
                     shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1"
                   fi
-                elif [ $# -eq 2 ]
-                then
-                  shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1=$2"
-                elif [ $# -eq 3 ] && [ "$2" = '=' ]
-                then
-                  shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1=$3"
+                else
+                  shellpen --shellpen-private writeDSL append "declare ${globalArgument}${typeArgument}$1"
+                  shift
+                  if [ $# -gt 0 ]
+                  then
+                    shellpen --shellpen-private writeDSL append '=('
+                    while [ $# -gt 0 ]
+                    do
+                      if [ $# -eq 1 ]
+                      then
+                        shellpen --shellpen-private writeDSL append "\"$1\""
+                      else
+                        shellpen --shellpen-private writeDSL append "\"$1\" "
+                      fi
+                      shift
+                    done
+                    shellpen --shellpen-private writeDSL append ')'
+                  fi
+                  shellpen --shellpen-private writeDSL writeln
                 fi
                 unset __shellpen__command[$(( ${#__shellpen__command[@]} - 1 ))]
                 __shellpen__command=("__shellpen__command[@]")

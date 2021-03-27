@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Command Reference'
+title: 'prependln • 🖋️ Command Reference'
 permalink: /docs/prependln
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'command_reference'
 ---
+
+# 🖋️ Command Reference
 
 ---
 

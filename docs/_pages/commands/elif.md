@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Command Reference'
+title: 'elif • 🖋️ Command Reference'
 permalink: /docs/elif
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'command_reference'
 ---
+
+# 🖋️ Command Reference
 
 ---
 

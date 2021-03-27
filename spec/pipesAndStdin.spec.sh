@@ -11,8 +11,12 @@ shellpen -
 }
 
 @spec.can_pipe_commands.echo_phrase() {
-  - echo Hello how are you? \| $ sed "'s/foo/bar/g'"
+  - echo "Hello how are you?" \| $ sed "'s/foo/bar/g'"
   expect { - code } toEqual "echo \"Hello how are you?\" | sed 's/foo/bar/g'"
+
+  - cleanSlate
+  - echo Hello how are you? \| $ sed "'s/foo/bar/g'"
+  expect { - code } toEqual "echo \"Hello\" \"how\" \"are\" \"you?\" | sed 's/foo/bar/g'"
 }
 
 @spec.can_pipe_commands.printf_phrase() {

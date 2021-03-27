@@ -2,16 +2,16 @@ source shellpen.sh
 
 shellpen -
 
-commandGroup6() {
+commandGroup1() {
   - shebang
   
   - code
 }
 
-@spec.commandGroup6() {
+@spec.commandGroup1() {
   read -r -d '' expected <<'EXPECTED'
 #! /bin/bash
 EXPECTED
-  expect { commandGroup6 } toContain "$expected"
+  expect { commandGroup1 } toContain "$expected"
 }
 

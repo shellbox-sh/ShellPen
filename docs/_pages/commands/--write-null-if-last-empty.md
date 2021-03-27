@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Extending Syntax'
+title: '--write-null-if-last-empty • 🖋️ Extending Syntax'
 permalink: /extensions/--write-null-if-last-empty
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'extensions_reference'
 ---
+
+# 🖋️ Extending Syntax
 
 ---
 

@@ -85,53 +85,21 @@ shellpen -
   expect { - code } toEqual "declare -a x=()"
 
   - cleanSlate
-  - array 'x=("$@")'
-  expect { - code } toEqual "declare -a x=(\"\$@\")"
-
-  - cleanSlate
-  - array x '()'
-  expect { - code } toEqual "declare -a x=()"
-
-  - cleanSlate
-  - array x '("$@")'
-  expect { - code } toEqual "declare -a x=(\"\$@\")"
-
-  - cleanSlate
-  - array x = 5
-  expect { - code } toEqual "declare -a x=5"
-
-  - cleanSlate
-  - array x
-  expect { - code } toEqual "declare -a x"
+  - array x item1 "item two"
+  expect { - code } toEqual 'declare -a x=("item1" "item two")'
 }
 
 @spec.declare.array.global() {
-  - array -g x
-  expect { - code } toEqual "declare -g -a x"
+  - array x
+  expect { - code } toEqual "declare -a x"
 
   - cleanSlate
-  - array -g 'x=()'
-  expect { - code } toEqual "declare -g -a x=()"
+  - array 'x=()'
+  expect { - code } toEqual "declare -a x=()"
 
   - cleanSlate
-  - array -g 'x=("$@")'
-  expect { - code } toEqual "declare -g -a x=(\"\$@\")"
-
-  - cleanSlate
-  - array -g x '()'
-  expect { - code } toEqual "declare -g -a x=()"
-
-  - cleanSlate
-  - array -g x '("$@")'
-  expect { - code } toEqual "declare -g -a x=(\"\$@\")"
-
-  - cleanSlate
-  - array -g x = 5
-  expect { - code } toEqual "declare -g -a x=5"
-
-  - cleanSlate
-  - array -g x
-  expect { - code } toEqual "declare -g -a x"
+  - array x item1 "item two"
+  expect { - code } toEqual 'declare -a x=("item1" "item two")'
 }
 
 @spec.declare.array.associative() {
@@ -143,52 +111,8 @@ shellpen -
   expect { - code } toEqual "declare -A x=()"
 
   - cleanSlate
-  - map 'x=("$@")'
-  expect { - code } toEqual "declare -A x=(\"\$@\")"
-
-  - cleanSlate
-  - map x '()'
-  expect { - code } toEqual "declare -A x=()"
-
-  - cleanSlate
-  - map x '("$@")'
-  expect { - code } toEqual "declare -A x=(\"\$@\")"
-
-  - cleanSlate
-  - map x = 5
-  expect { - code } toEqual "declare -A x=5"
-
-  - cleanSlate
-  - map x
-  expect { - code } toEqual "declare -A x"
-
-  - cleanSlate
-  - array -A x
-  expect { - code } toEqual "declare -A x"
-
-  - cleanSlate
-  - array -A 'x=()'
-  expect { - code } toEqual "declare -A x=()"
-
-  - cleanSlate
-  - array -A 'x=("$@")'
-  expect { - code } toEqual "declare -A x=(\"\$@\")"
-
-  - cleanSlate
-  - array -A x '()'
-  expect { - code } toEqual "declare -A x=()"
-
-  - cleanSlate
-  - array -A x '("$@")'
-  expect { - code } toEqual "declare -A x=(\"\$@\")"
-
-  - cleanSlate
-  - array -A x = 5
-  expect { - code } toEqual "declare -A x=5"
-
-  - cleanSlate
-  - array -A x
-  expect { - code } toEqual "declare -A x"
+  - map x [a]=A [b]="Hello, world!"
+  expect { - code } toEqual 'declare -A x=([a]="A" [b]="Hello, world!")'
 }
 
 @spec.declare.array.associative.global() {
@@ -200,52 +124,8 @@ shellpen -
   expect { - code } toEqual "declare -g -A x=()"
 
   - cleanSlate
-  - map -g 'x=("$@")'
-  expect { - code } toEqual "declare -g -A x=(\"\$@\")"
-
-  - cleanSlate
-  - map -g x '()'
-  expect { - code } toEqual "declare -g -A x=()"
-
-  - cleanSlate
-  - map -g x '("$@")'
-  expect { - code } toEqual "declare -g -A x=(\"\$@\")"
-
-  - cleanSlate
-  - map -g x = 5
-  expect { - code } toEqual "declare -g -A x=5"
-
-  - cleanSlate
-  - map -g x
-  expect { - code } toEqual "declare -g -A x"
-
-  - cleanSlate
-  - array -g -A x
-  expect { - code } toEqual "declare -g -A x"
-
-  - cleanSlate
-  - array -g -A 'x=()'
-  expect { - code } toEqual "declare -g -A x=()"
-
-  - cleanSlate
-  - array -g -A 'x=("$@")'
-  expect { - code } toEqual "declare -g -A x=(\"\$@\")"
-
-  - cleanSlate
-  - array -g -A x '()'
-  expect { - code } toEqual "declare -g -A x=()"
-
-  - cleanSlate
-  - array -g -A x '("$@")'
-  expect { - code } toEqual "declare -g -A x=(\"\$@\")"
-
-  - cleanSlate
-  - array -g -A x = 5
-  expect { - code } toEqual "declare -g -A x=5"
-
-  - cleanSlate
-  - array -g -A x
-  expect { - code } toEqual "declare -g -A x"
+  - map -g x [a]=A [b]="Hello, world!"
+  expect { - code } toEqual 'declare -g -A x=([a]="A" [b]="Hello, world!")'
 }
 
 @spec.unset() {

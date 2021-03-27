@@ -46,6 +46,8 @@ generateExamples() {
   ./scripts/generate-index-example-specs
 }
 
+./scripts/generate-readme
+
 [ "$1" = "-x" ] && exit 0
 
 if [ "$1" = "--recurse" ]
@@ -84,6 +86,7 @@ do
   echo "Generating $commandName.md"
   pageLink="/docs/$pageName"
   sidebar=command_reference
+  layout=singleWithoutTitle
   title="🖋️ Command Reference"
   shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"
 done
@@ -97,6 +100,7 @@ do
   context goto path "@commands/EXTENSIONS/$commandName"
   echo "Generating $commandName.md"
   pageLink="/extensions/$pageName"
+  layout=singleWithoutTitle
   title="🖋️ Extending Syntax"
   sidebar=extensions_reference
   shx render docs/_templates/individual_command.shx.md > "docs/_pages/commands/$pageName.md"

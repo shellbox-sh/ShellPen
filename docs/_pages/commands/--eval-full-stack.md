@@ -1,10 +1,12 @@
 ---
-title: '🖋️ Extending Syntax'
+title: '--eval-full-stack • 🖋️ Extending Syntax'
 permalink: /extensions/--eval-full-stack
-layout: single
+layout: 'singleWithoutTitle'
 sidebar:
   nav: 'extensions_reference'
 ---
+
+# 🖋️ Extending Syntax
 
 ---
 
