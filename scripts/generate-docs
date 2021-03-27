@@ -46,6 +46,8 @@ generateExamples() {
   ./scripts/generate-index-example-specs
 }
 
+./scripts/generate-readme
+
 [ "$1" = "-x" ] && exit 0
 
 if [ "$1" = "--recurse" ]
