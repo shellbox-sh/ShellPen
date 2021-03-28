@@ -868,7 +868,7 @@ shellpen() {
                     shellpen --shellpen-private writeDSL writeln "declare ${globalArgument}${typeArgument}$1"
                   fi
                 else
-                  shellpen --shellpen-private writeDSL append "declare ${globalArgument}${typeArgument}$1"
+                  shellpen --shellpen-private writeDSL write "declare ${globalArgument}${typeArgument}$1"
                   shift
                   if [ $# -gt 0 ]
                   then
