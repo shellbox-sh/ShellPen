@@ -1,0 +1,1 @@
+- [ ] Allow `declare` options for `local`, e.g. `local -a/A/i`
